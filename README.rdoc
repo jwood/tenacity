@@ -1,0 +1,63 @@
+= Tenacity
+
+A ORM independent way of specifying simple relationships between models.
+
+It is sometimes necessary, or advantageous, to use more than one database in a
+given application.  However, most ORMs do not support inter-database
+relationships.  While supporting such relationships isn't difficult, it can
+add quite a bit of boilerplate code to your project.
+
+Tenacity aims to address this by providing an ORM independent way of specifying
+simple relationships between models backed by different databases.
+
+
+== Example
+
+  class User
+    include MongoMapper::Document
+    include Tenacity
+
+    t_has_many :entries
+  end
+
+  class Entry < ActiveRecord::Base
+    include Tenacity
+
+    t_belongs_to :user
+  end
+
+
+  # Fetch related object from the respective database
+  entry.user
+
+  # Set the related object
+  entry.user = some_user
+  entry.save
+
+  # Fetch related objects from the respective database
+  user.entries
+
+  # Add a related object to the collection
+  user.entries << some_entry
+  user.save
+
+
+== Details
+
+Defining a relationship will create a property on the object to  store the id(s)
+of the related objects.
+
+* For one-to-one relationships, the property will store the id of the related object (user_id).
+* For one-to-many relationships, the property will store an array of ids of the related objects (entry_ids).
+
+
+== TODO
+* Start with support for ActiveRecord, MongoMapper, and CouchRest
+* Define a standard interface for the ORM adapters
+** get(id)
+** set(object)
+** add(object)
+** remove(object)
+** etc
+* Create adaptors to implement interface for different ORMs
+
