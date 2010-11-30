@@ -11,6 +11,11 @@ Tenacity aims to address this by providing an ORM independent way of specifying
 simple relationships between models backed by different databases.
 
 
+== WARNING
+
+This gem is pre-alpha, and is nowhere ready for use.
+
+
 == Example
 
   class User
