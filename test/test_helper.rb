@@ -7,8 +7,11 @@ rescue Bundler::BundlerError => e
   $stderr.puts "Run `bundle install` to install missing gems"
   exit e.status_code
 end
+
 require 'test/unit'
 require 'shoulda'
+
+Dir[File.join(File.dirname(__FILE__), 'fixtures/*.rb')].each { |file| require file }
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
