@@ -13,7 +13,7 @@ simple relationships between models backed by different databases.
 
 == WARNING
 
-This gem is pre-alpha, and is nowhere ready for use.
+This gem is pre-alpha, and is nowhere near ready for use.
 
 
 == Example
