@@ -15,7 +15,7 @@ Jeweler::Tasks.new do |gem|
   gem.name = "tenacity"
   gem.homepage = "http://github.com/jwood/tenacity"
   gem.license = "MIT"
-  gem.summary = %Q{A ORM independent way of specifying simple relationships between models.}
+  gem.summary = %Q{A ORM independent way of specifying simple relationships between models backed by different databases.}
   gem.description = %Q{Tenacity provides an ORM independent way of specifying simple relationships between models backed by different databases.}
   gem.email = "john@johnpwood.com"
   gem.authors = ["John Wood"]

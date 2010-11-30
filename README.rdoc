@@ -1,6 +1,6 @@
 = Tenacity
 
-A ORM independent way of specifying simple relationships between models.
+A ORM independent way of specifying simple relationships between models backed by different databases.
 
 It is sometimes necessary, or advantageous, to use more than one database in a
 given application.  However, most ORMs do not support inter-database
@@ -65,16 +65,3 @@ of the related objects.
 == Copyright
 
 Copyright (c) 2010 John Wood. See LICENSE.txt for further details.
-
-
-
-== TODO
-* Start with support for ActiveRecord, MongoMapper, and CouchRest
-* Define a standard interface for the ORM adapters
-** get(id)
-** set(object)
-** add(object)
-** remove(object)
-** etc
-* Create adaptors to implement interface for different ORMs
-
