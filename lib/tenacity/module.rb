@@ -6,25 +6,25 @@ module Tenacity
   end 
 
   module ClassMethods
-    def t_belongs_to(associate, args={})
-      send :define_method, associate do
+    def t_belongs_to(association_id, args={})
+      redefine_method(association_id) do
       end
 
-      send :define_method, "#{associate}=" do
+      redefine_method("#{association_id}=") do
       end
 
-      send :define_method, "#{associate}_id" do
+      redefine_method("#{association_id}_id") do
       end
     end
 
-    def t_has_many(associate, args={})
-      send :define_method, associate do
+    def t_has_many(association_id, args={})
+      redefine_method(association_id) do
       end
 
-      send :define_method, "#{associate}=" do
+      redefine_method("#{association_id}=") do
       end
 
-      send :define_method, "#{ActiveSupport::Inflector.singularize(associate.to_s)}_ids" do
+      redefine_method("#{ActiveSupport::Inflector.singularize(association_id.to_s)}_ids") do
       end
     end
   end
