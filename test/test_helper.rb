@@ -11,8 +11,6 @@ end
 require 'test/unit'
 require 'shoulda'
 
-Dir[File.join(File.dirname(__FILE__), 'fixtures/*.rb')].each { |file| require file }
-
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'tenacity'
@@ -20,3 +18,4 @@ require 'tenacity'
 class Test::Unit::TestCase
 end
 
+Dir[File.join(File.dirname(__FILE__), 'fixtures/*.rb')].each { |file| require file }

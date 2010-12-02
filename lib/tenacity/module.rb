@@ -2,6 +2,7 @@ require 'active_support/inflector'
 
 module Tenacity
   def self.included(model)
+    raise "Tenacity does not support the ORM used by #{model}" unless model.respond_to?(:_t_find)
     model.extend(ClassMethods)
   end 
 

@@ -1,5 +1,4 @@
 require 'mongo_mapper'
-require 'tenacity'
 
 class Person
   include MongoMapper::Document
