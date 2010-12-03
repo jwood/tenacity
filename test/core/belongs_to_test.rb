@@ -2,7 +2,7 @@ require 'test_helper'
 
 class BelongsToTest < Test::Unit::TestCase
 
-  context "A class with a belongs_to association" do
+  context "A class with a belongs_to association to an ActiveRecord class" do
     account = Account.create
     person = Person.new
 

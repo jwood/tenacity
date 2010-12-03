@@ -9,29 +9,29 @@ module Tenacity
 
   module ClassMethods
     def t_belongs_to(association_id, args={})
-      redefine_method(association_id) do
+      define_method(association_id) do
         associate_id = self.send("#{association_id}_id")
         clazz = Kernel.const_get(association_id.to_s.capitalize.to_sym)
         clazz.send(:_t_find, associate_id)
       end
 
-      redefine_method("#{association_id}=") do |associate|
+      define_method("#{association_id}=") do |associate|
         self.send "#{association_id}_id=".to_sym, associate.id
       end
     end
 
     def t_has_many(association_id, args={})
-      redefine_method(association_id) do
+      define_method(association_id) do
         []
       end
 
-      redefine_method("#{association_id}=") do
+      define_method("#{association_id}=") do
       end
 
-      redefine_method("#{ActiveSupport::Inflector.singularize(association_id.to_s)}_ids") do
+      define_method("#{ActiveSupport::Inflector.singularize(association_id.to_s)}_ids") do
       end
 
-      redefine_method("#{ActiveSupport::Inflector.singularize(association_id.to_s)}_ids=") do
+      define_method("#{ActiveSupport::Inflector.singularize(association_id.to_s)}_ids=") do
       end
     end
   end
