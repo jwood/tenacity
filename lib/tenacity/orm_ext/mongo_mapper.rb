@@ -1,7 +1,7 @@
 module TenacityPlugin
   module ClassMethods
     def _t_find(id)
-      # Find the record using MongoMapper syntax
+      self.find(id)
     end
   end
 
