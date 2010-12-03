@@ -66,7 +66,7 @@ namespace :db do
     desc "Setup the test databases"
     task :prepare do
       ActiveRecord::Schema.define :version => 0 do
-        create_table :accounts, :force => true do |t|
+        create_table :active_record_accounts, :force => true do |t|
         end
       end
     end

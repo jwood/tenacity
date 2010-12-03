@@ -3,25 +3,25 @@ require 'test_helper'
 class ModuleTest < Test::Unit::TestCase
 
   context "A class with a belongs_to :account association" do
-    person = Person.new
+    person = MongoMapperPerson.new
 
-    should("respond to account") { assert person.respond_to?(:account) }
-    should("respond to account=") { assert person.respond_to?(:account=) }
-    should("respond to account_id") { assert person.respond_to?(:account_id) }
+    should("respond to active_record_account") { assert person.respond_to?(:active_record_account) }
+    should("respond to active_record_account=") { assert person.respond_to?(:active_record_account=) }
+    should("respond to active_record_account_id") { assert person.respond_to?(:active_record_account_id) }
   end
 
   context "A class with a has_many :transactions association" do
-    person = Person.new
+    person = MongoMapperPerson.new
 
-    should("respond to transactions") { assert person.respond_to?(:transactions) }
-    should("respond to transactions=") { assert person.respond_to?(:transactions=) }
-    should("respond to transaction_ids") { assert person.respond_to?(:transaction_ids) }
-    should("respond to transaction_ids=") { assert person.respond_to?(:transaction_ids=) }
+    should("respond to active_record_transactions") { assert person.respond_to?(:active_record_transactions) }
+    should("respond to active_record_transactions=") { assert person.respond_to?(:active_record_transactions=) }
+    should("respond to active_record_transaction_ids") { assert person.respond_to?(:active_record_transaction_ids) }
+    should("respond to active_record_transaction_ids=") { assert person.respond_to?(:active_record_transaction_ids=) }
   end
 
   context "The object returned by a has_many association" do
-    person = Person.new
-    transactions = person.transactions
+    person = MongoMapperPerson.new
+    transactions = person.active_record_transactions
 
     should("respond to <<") { assert transactions.respond_to?(:<<) }
     should("respond to delete") { assert transactions.respond_to?(:delete) }
