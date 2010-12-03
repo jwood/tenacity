@@ -8,18 +8,21 @@ class BelongsToTest < Test::Unit::TestCase
 
     should "be able to fetch the id of the associated object" do
       person.active_record_account_id = account.id
-      assert_equal account.id, person.active_record_account_id
+      person.save
+      assert_equal account.id, MongoMapperPerson.find(person.id).active_record_account_id
     end
 
     should "be able to load the associated object" do
       person.active_record_account = account
-      assert_equal account.id, person.active_record_account_id
-      assert_equal account, person.active_record_account
+      person.save
+      assert_equal account.id, MongoMapperPerson.find(person.id).active_record_account_id
+      assert_equal account, MongoMapperPerson.find(person.id).active_record_account
     end
 
     should "be able to load the associated object if all we have is the id" do
       person.active_record_account_id = account.id
-      assert_equal account, person.active_record_account
+      person.save
+      assert_equal account, MongoMapperPerson.find(person.id).active_record_account
     end
   end
 
