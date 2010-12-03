@@ -10,12 +10,11 @@ end
 
 require 'test/unit'
 require 'shoulda'
+require 'active_record_test_helper'
+require 'mongo_mapper'
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'tenacity'
-
-class Test::Unit::TestCase
-end
 
 Dir[File.join(File.dirname(__FILE__), 'fixtures/*.rb')].each { |file| require file }

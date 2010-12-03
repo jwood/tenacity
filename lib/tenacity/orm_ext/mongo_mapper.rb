@@ -1,5 +1,3 @@
-require 'mongo_mapper'
-
 module TenacityPlugin
   module ClassMethods
     def _t_find(id)

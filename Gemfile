@@ -7,6 +7,7 @@ group :development do
   gem "mongo_mapper"
   gem "bson_ext"
   gem "activerecord"
+  gem "mysql"
 
   gem "shoulda"
   gem "rcov"

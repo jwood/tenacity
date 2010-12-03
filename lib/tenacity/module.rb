@@ -1,4 +1,5 @@
-require 'active_support/inflector'
+require 'active_support/inflector' # For singularize
+require 'active_support/multibyte/chars' # For capitalize
 
 module Tenacity
   def self.included(model)
@@ -9,12 +10,13 @@ module Tenacity
   module ClassMethods
     def t_belongs_to(association_id, args={})
       redefine_method(association_id) do
+        associate_id = self.send("#{association_id}_id")
+        clazz = Kernel.const_get(association_id.to_s.capitalize.to_sym)
+        clazz.send(:_t_find, associate_id)
       end
 
-      redefine_method("#{association_id}=") do
-      end
-
-      redefine_method("#{association_id}_id") do
+      redefine_method("#{association_id}=") do |associate|
+        self.send "#{association_id}_id=".to_sym, associate.id
       end
     end
 

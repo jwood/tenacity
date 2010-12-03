@@ -49,3 +49,26 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
+
+require 'test/active_record_test_helper'
+namespace :db do
+  desc "Create the test databases"
+  task :create do
+    system "mysqladmin -u root create tenacity_test"
+  end
+
+  desc "Drop the test databases"
+  task :drop do
+    system "mysqladmin -u root drop tenacity_test"
+  end
+
+  namespace :test do
+    desc "Setup the test databases"
+    task :prepare do
+      ActiveRecord::Schema.define :version => 0 do
+        create_table :accounts, :force => true do |t|
+        end
+      end
+    end
+  end
+end

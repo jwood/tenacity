@@ -1,4 +1,3 @@
-require 'active_record'
-
 class Transaction < ActiveRecord::Base
+  include Tenacity
 end

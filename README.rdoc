@@ -67,6 +67,28 @@ of the related objects.
 * Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
 
 
+== Development
+
+* MySQL, MongoDB, and CouchDB must be installed and configured.
+* Install the dependencies
+
+  bundler install
+
+* Create the test databases
+
+  rake db:create
+
+* Setup the test databases
+
+  rake db:test:prepare
+
+* Run the tests
+
+  rake test
+
+* Code away!
+
+
 == Copyright
 
 Copyright (c) 2010 John Wood. See LICENSE.txt for further details.

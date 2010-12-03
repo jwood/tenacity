@@ -29,6 +29,7 @@ GEM
       activesupport (>= 2.3.4)
       jnunemaker-validatable (~> 1.8.4)
       plucky (~> 0.3.6)
+    mysql (2.8.1)
     plucky (0.3.6)
       mongo (~> 1.1)
     rake (0.8.7)
@@ -45,5 +46,6 @@ DEPENDENCIES
   bundler
   jeweler
   mongo_mapper
+  mysql
   rcov
   shoulda
