@@ -2,7 +2,7 @@ require 'test_helper'
 
 class BelongsToTest < Test::Unit::TestCase
 
-  context "A class with a belongs_to association to an ActiveRecord class" do
+  context "A class with a belongs_to association" do
     account = ActiveRecordAccount.create
     person = MongoMapperPerson.new
 
