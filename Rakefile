@@ -59,15 +59,36 @@ namespace :db do
 
   desc "Drop the test databases"
   task :drop do
-    system "mysqladmin -u root drop tenacity_test"
+    system "mysqladmin -u root drop -f tenacity_test"
+  end
+
+  desc "Reset the test databases"
+  task :reset => [:drop, :create] do
+    Rake::Task['db:test:prepare'].invoke
   end
 
   namespace :test do
     desc "Setup the test databases"
     task :prepare do
       ActiveRecord::Schema.define :version => 0 do
+
         create_table :active_record_accounts, :force => true do |t|
         end
+
+        create_table :active_record_accounts_mongo_mapper_people, :force => true do |t|
+          t.integer :active_record_account_id
+          t.string :mongo_mapper_person_id
+        end
+
+        create_table :active_record_transactions, :force => true do |t|
+          t.string :mongo_mapper_person_id
+        end
+
+        create_table :active_record_transactions_mongo_mapper_people, :force => true do |t|
+          t.integer :active_record_transaction_id
+          t.string :mongo_mapper_person_id
+        end
+
       end
     end
   end

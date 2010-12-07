@@ -11,7 +11,7 @@ module Tenacity
       define_method(association_id) do
         associate_id = self.send("#{association_id}_id")
         clazz = Kernel.const_get(association_id.to_s.camelcase.to_sym)
-        clazz.send(:_t_find, associate_id)
+        clazz._t_find(associate_id)
       end
 
       define_method("#{association_id}=") do |associate|
@@ -21,10 +21,16 @@ module Tenacity
 
     def t_has_many(association_id, args={})
       define_method(association_id) do
-        []
+        clazz = Kernel.const_get(association_id.to_s.singularize.camelcase.to_sym)
+        clazz._t_find_associates("#{ActiveSupport::Inflector.underscore(self.class.to_s)}_id", self.id)
       end
 
-      define_method("#{association_id}=") do
+      define_method("#{association_id}=") do |associates|
+        associates.each do |associate|
+          associate.send("#{ActiveSupport::Inflector.underscore(self.class.to_s)}_id=", self.id)
+          associate.save
+        end
+        _t_associate_many(association_id, associates)
       end
 
       define_method("#{ActiveSupport::Inflector.singularize(association_id.to_s)}_ids") do

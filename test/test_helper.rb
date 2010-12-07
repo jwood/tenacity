@@ -18,3 +18,8 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'tenacity'
 
 Dir[File.join(File.dirname(__FILE__), 'fixtures/*.rb')].each { |file| require file }
+
+def assert_set_equal(expecteds, actuals, message = nil)
+  assert_equal expecteds && Set.new(expecteds), actuals && Set.new(actuals), message
+end
+
