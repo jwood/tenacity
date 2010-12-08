@@ -4,7 +4,7 @@ class HasManyTest < Test::Unit::TestCase
 
   context "An ActiveRecord class with a has_many association to a MongoMapper class" do
     setup do
-      MongoMapperPerson.delete_all
+      setup_fixtures
       @account = ActiveRecordAccount.create
       @person_1 = MongoMapperPerson.create(:safe => true)
       @person_2 = MongoMapperPerson.create(:safe => true)
@@ -27,7 +27,7 @@ class HasManyTest < Test::Unit::TestCase
 
   context "A MongoMapper class with a has_many association to an ActiveRecord class" do
     setup do
-      MongoMapperPerson.delete_all
+      setup_fixtures
       @person = MongoMapperPerson.create
       @transaction_1 = ActiveRecordTransaction.create
       @transaction_2 = ActiveRecordTransaction.create

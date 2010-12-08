@@ -4,7 +4,7 @@ class ActiveRecordTest < Test::Unit::TestCase
 
   context "The ActiveRecord extension" do
     setup do
-      ActiveRecordTransaction.delete_all
+      setup_fixtures
     end
 
     should "be able to find the object in the database" do

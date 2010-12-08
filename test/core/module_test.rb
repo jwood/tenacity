@@ -4,6 +4,7 @@ class ModuleTest < Test::Unit::TestCase
 
   context "A class with a belongs_to :account association" do
     setup do
+      setup_fixtures
       @person = MongoMapperPerson.new
     end
 
@@ -14,6 +15,7 @@ class ModuleTest < Test::Unit::TestCase
 
   context "A class with a has_many :transactions association" do
     setup do
+      setup_fixtures
       @person = MongoMapperPerson.new
     end
 
@@ -25,6 +27,7 @@ class ModuleTest < Test::Unit::TestCase
 
   context "The object returned by a has_many association" do
     setup do
+      setup_fixtures
       @person = MongoMapperPerson.new
       @transactions = @person.active_record_transactions
     end

@@ -4,7 +4,7 @@ class MongoMapperTest < Test::Unit::TestCase
 
   context "The MongoMapper extension" do
     setup do
-      MongoMapperPerson.delete_all
+      setup_fixtures
       @person = MongoMapperPerson.create
     end
 

@@ -19,6 +19,12 @@ require 'tenacity'
 
 Dir[File.join(File.dirname(__FILE__), 'fixtures/*.rb')].each { |file| require file }
 
+def setup_fixtures
+  ActiveRecordAccount.delete_all
+  ActiveRecordTransaction.delete_all
+  MongoMapperPerson.delete_all
+end
+
 def assert_set_equal(expecteds, actuals, message = nil)
   assert_equal expecteds && Set.new(expecteds), actuals && Set.new(actuals), message
 end
