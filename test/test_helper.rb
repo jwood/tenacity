@@ -10,8 +10,8 @@ end
 
 require 'test/unit'
 require 'shoulda'
-require 'active_record_test_helper'
-require 'mongo_mapper_test_helper'
+require 'helpers/active_record_test_helper'
+require 'helpers/mongo_mapper_test_helper'
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))

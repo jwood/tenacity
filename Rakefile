@@ -51,7 +51,7 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-require 'test/active_record_test_helper'
+require 'test/helpers/active_record_test_helper'
 namespace :db do
   desc "Create the test databases"
   task :create do
