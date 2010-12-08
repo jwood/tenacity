@@ -3,11 +3,13 @@ require 'test_helper'
 class MongoMapperTest < Test::Unit::TestCase
 
   context "The MongoMapper extension" do
-    MongoMapperPerson.delete_all
-    person = MongoMapperPerson.create
+    setup do
+      MongoMapperPerson.delete_all
+      @person = MongoMapperPerson.create
+    end
 
     should "be able to find the object in the database" do
-      assert_equal person, MongoMapperPerson._t_find(person.id)
+      assert_equal @person, MongoMapperPerson._t_find(@person.id)
     end
   end
 

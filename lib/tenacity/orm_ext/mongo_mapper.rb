@@ -10,11 +10,15 @@ module TenacityPlugin
   end
 
   module InstanceMethods
-    def _t_associate_many(association_id, associates)
-      associate_ids = associates.map { |a| a.id }
-      property_name = ActiveSupport::Inflector.singularize(association_id) + "_ids"
+    def _t_associate_many(association_id, associate_ids)
+      property_name = "_t_" + ActiveSupport::Inflector.singularize(association_id) + "_ids"
       self.send(property_name + '=', associate_ids)
       self.save
+    end
+
+    def _t_get_associate_ids(association_id)
+      property_name = "_t_" + ActiveSupport::Inflector.singularize(association_id) + "_ids"
+      self.send(property_name)
     end
   end
 end

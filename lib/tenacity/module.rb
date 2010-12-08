@@ -26,17 +26,21 @@ module Tenacity
       end
 
       define_method("#{association_id}=") do |associates|
-        associates.each do |associate|
-          associate.send("#{ActiveSupport::Inflector.underscore(self.class.to_s)}_id=", self.id)
-          associate.save
-        end
-        _t_associate_many(association_id, associates)
+        send("#{ActiveSupport::Inflector.singularize(association_id.to_s)}_ids=", associates.map { |a| a.id })
       end
 
       define_method("#{ActiveSupport::Inflector.singularize(association_id.to_s)}_ids") do
+        _t_get_associate_ids(association_id)
       end
 
-      define_method("#{ActiveSupport::Inflector.singularize(association_id.to_s)}_ids=") do
+      define_method("#{ActiveSupport::Inflector.singularize(association_id.to_s)}_ids=") do |associate_ids|
+        clazz = Kernel.const_get(association_id.to_s.singularize.camelcase.to_sym)
+        associate_ids.each do |associate_id|
+          associate = clazz._t_find(associate_id)
+          associate.send("#{ActiveSupport::Inflector.underscore(self.class.to_s)}_id=", self.id)
+          associate.save
+        end
+        _t_associate_many(association_id, associate_ids)
       end
     end
   end
