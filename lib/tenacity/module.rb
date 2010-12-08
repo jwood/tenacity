@@ -22,7 +22,7 @@ module Tenacity
     def t_has_many(association_id, args={})
       define_method(association_id) do
         clazz = Kernel.const_get(association_id.to_s.singularize.camelcase.to_sym)
-        clazz._t_find_associates("#{ActiveSupport::Inflector.underscore(self.class.to_s)}_id", self.id)
+        clazz._t_find_all_by_associate("#{ActiveSupport::Inflector.underscore(self.class.to_s)}_id", self.id)
       end
 
       define_method("#{association_id}=") do |associates|

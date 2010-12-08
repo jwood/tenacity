@@ -6,7 +6,7 @@ module ActiveRecord
       self.find_by_id(id)
     end
 
-    def self._t_find_associates(property, id)
+    def self._t_find_all_by_associate(property, id)
       find(:all, :conditions => ["#{property} = ?", id])
     end
 

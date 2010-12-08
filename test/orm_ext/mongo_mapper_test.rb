@@ -16,7 +16,7 @@ class MongoMapperTest < Test::Unit::TestCase
       person_1 = MongoMapperPerson.create(:active_record_account_id => 101)
       person_2 = MongoMapperPerson.create(:active_record_account_id => 101)
       person_3 = MongoMapperPerson.create(:active_record_account_id => 102)
-      assert_set_equal [person_1, person_2], MongoMapperPerson._t_find_associates(:active_record_account_id, 101)
+      assert_set_equal [person_1, person_2], MongoMapperPerson._t_find_all_by_associate(:active_record_account_id, 101)
     end
 
     should "be able to associate many objects with the given object" do

@@ -16,7 +16,7 @@ class ActiveRecordTest < Test::Unit::TestCase
       transaction_1 = ActiveRecordTransaction.create(:mongo_mapper_person_id => 'abc123')
       transaction_2 = ActiveRecordTransaction.create(:mongo_mapper_person_id => 'abc123')
       transaction_3 = ActiveRecordTransaction.create(:mongo_mapper_person_id => 'xyz456')
-      assert_set_equal [transaction_1, transaction_2], ActiveRecordTransaction._t_find_associates(:mongo_mapper_person_id, 'abc123')
+      assert_set_equal [transaction_1, transaction_2], ActiveRecordTransaction._t_find_all_by_associate(:mongo_mapper_person_id, 'abc123')
     end
 
     should "be able to associate many objects with the given object" do

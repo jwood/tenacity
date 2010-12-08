@@ -4,7 +4,7 @@ module TenacityPlugin
       self.find(id)
     end
 
-    def _t_find_associates(property, id)
+    def _t_find_all_by_associate(property, id)
       self.all(property => id)
     end
   end
