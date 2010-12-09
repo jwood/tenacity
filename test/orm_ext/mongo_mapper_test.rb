@@ -5,11 +5,11 @@ class MongoMapperTest < Test::Unit::TestCase
   context "The MongoMapper extension" do
     setup do
       setup_fixtures
-      @person = MongoMapperPerson.create
     end
 
     should "be able to find the object in the database" do
-      assert_equal @person, MongoMapperPerson._t_find(@person.id)
+      person = MongoMapperPerson.create
+      assert_equal person, MongoMapperPerson._t_find(person.id)
     end
 
     should "be able to find the associates of an object" do
@@ -20,9 +20,21 @@ class MongoMapperTest < Test::Unit::TestCase
     end
 
     should "be able to associate many objects with the given object" do
+      transaction_1 = ActiveRecordTransaction.create
+      transaction_2 = ActiveRecordTransaction.create
+      transaction_3 = ActiveRecordTransaction.create
+      person = MongoMapperPerson.create
+      person._t_associate_many(:active_record_transactions, [transaction_1.id, transaction_2.id, transaction_3.id])
+      assert_set_equal [transaction_1.id, transaction_2.id, transaction_3.id], person._t_active_record_transaction_ids
     end
 
     should "be able to get the ids of the objects associated with the given object" do
+      transaction_1 = ActiveRecordTransaction.create
+      transaction_2 = ActiveRecordTransaction.create
+      transaction_3 = ActiveRecordTransaction.create
+      person = MongoMapperPerson.create
+      person._t_associate_many(:active_record_transactions, [transaction_1.id, transaction_2.id, transaction_3.id])
+      assert_set_equal [transaction_1.id, transaction_2.id, transaction_3.id], person._t_get_associate_ids(:active_record_transactions)
     end
   end
 
