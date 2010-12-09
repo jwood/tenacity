@@ -23,6 +23,9 @@ def setup_fixtures
   ActiveRecordAccount.delete_all
   ActiveRecordTransaction.delete_all
   MongoMapperPerson.delete_all
+
+  ActiveRecordAccount.connection.execute("delete from active_record_accounts_mongo_mapper_people")
+  ActiveRecordAccount.connection.execute("delete from active_record_transactions_mongo_mapper_people")
 end
 
 def assert_set_equal(expecteds, actuals, message = nil)

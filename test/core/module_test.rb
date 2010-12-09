@@ -2,7 +2,7 @@ require 'test_helper'
 
 class ModuleTest < Test::Unit::TestCase
 
-  context "A class with a belongs_to :account association" do
+  context "A class with a belongs_to :active_record_account association" do
     setup do
       setup_fixtures
       @person = MongoMapperPerson.new
@@ -13,7 +13,7 @@ class ModuleTest < Test::Unit::TestCase
     should("respond to active_record_account_id") { assert @person.respond_to?(:active_record_account_id) }
   end
 
-  context "A class with a has_many :transactions association" do
+  context "A class with a has_many :active_record_transactions association" do
     setup do
       setup_fixtures
       @person = MongoMapperPerson.new
