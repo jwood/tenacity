@@ -20,6 +20,8 @@ module Tenacity
     end
 
     def t_has_many(association_id, args={})
+      _t_define_has_many_properties(association_id) if self.respond_to?(:_t_define_has_many_properties)
+
       define_method(association_id) do
         clazz = Kernel.const_get(association_id.to_s.singularize.camelcase.to_sym)
         clazz._t_find_all_by_associate("#{ActiveSupport::Inflector.underscore(self.class.to_s)}_id", self.id)

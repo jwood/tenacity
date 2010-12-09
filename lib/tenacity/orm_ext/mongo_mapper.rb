@@ -7,6 +7,10 @@ module TenacityPlugin
     def _t_find_all_by_associate(property, id)
       self.all(property => id)
     end
+
+    def _t_define_has_many_properties(association_id)
+      key "_t_" + ActiveSupport::Inflector.singularize(association_id) + "_ids", Array
+    end
   end
 
   module InstanceMethods
