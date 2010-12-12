@@ -10,6 +10,10 @@ module ActiveRecord
       find(:all, :conditions => ["#{property} = ?", id])
     end
 
+    def self._t_define_has_many_properties(association_id)
+      after_save { |record| save_associates(record, association_id) }
+    end
+
     def _t_associate_many(association_id, associate_ids)
       join_table_name = _t_join_table_name(association_id)
       values = associate_ids.map { |associate_id| "(#{self.id}, '#{associate_id}')" }.join(',')

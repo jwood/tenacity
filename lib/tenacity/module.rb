@@ -22,15 +22,23 @@ module Tenacity
     end
 
     def t_has_many(association_id, args={})
+      collection_name = "_t_" + association_id.to_s
+      attr_accessor collection_name
+
       _t_define_has_many_properties(association_id) if self.respond_to?(:_t_define_has_many_properties)
 
       define_method(association_id) do
         clazz = Kernel.const_get(association_id.to_s.singularize.camelcase.to_sym)
-        clazz._t_find_all_by_associate("#{ActiveSupport::Inflector.underscore(self.class.to_s)}_id", self.id)
+        value = instance_variable_get "@#{collection_name}"
+        if value.blank?
+          value = clazz._t_find_all_by_associate("#{ActiveSupport::Inflector.underscore(self.class.to_s)}_id", self.id)
+          instance_variable_set "@#{collection_name}", value
+        end
+        value
       end
 
       define_method("#{association_id}=") do |associates|
-        send("#{ActiveSupport::Inflector.singularize(association_id.to_s)}_ids=", associates.map { |a| a.id })
+        instance_variable_set "@#{collection_name}", associates
       end
 
       define_method("#{ActiveSupport::Inflector.singularize(association_id.to_s)}_ids") do
@@ -44,7 +52,12 @@ module Tenacity
           associate.send("#{ActiveSupport::Inflector.underscore(self.class.to_s)}_id=", self.id)
           associate.save
         end
-        _t_associate_many(association_id, associate_ids)
+        _t_associate_many(association_id, associate_ids) unless associate_ids.blank?
+      end
+
+      def save_associates(record, association_id)
+        associates = (record.instance_variable_get "@_t_#{association_id.to_s}") || []
+        record.send("#{ActiveSupport::Inflector.singularize(association_id.to_s)}_ids=", associates.map { |a| a.id })
       end
     end
   end
