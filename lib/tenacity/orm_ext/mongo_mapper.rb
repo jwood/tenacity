@@ -16,7 +16,7 @@ module TenacityPlugin
 
     def _t_define_has_many_properties(association_id)
       key "_t_" + ActiveSupport::Inflector.singularize(association_id) + "_ids", Array
-      after_save { |record| save_associates(record, association_id) }
+      after_save { |record| _t_save_associates(record, association_id) }
     end
 
     def _t_define_belongs_to_properties(association_id)
@@ -26,15 +26,18 @@ module TenacityPlugin
 
   module InstanceMethods
     def _t_associate_many(association_id, associate_ids)
-      old_associate_ids = _t_get_associate_ids(association_id)
       property_name = "_t_" + ActiveSupport::Inflector.singularize(association_id) + "_ids"
       self.send(property_name + '=', associate_ids)
-      save unless associate_ids == old_associate_ids
     end
 
     def _t_get_associate_ids(association_id)
       property_name = "_t_" + ActiveSupport::Inflector.singularize(association_id) + "_ids"
       self.send(property_name)
+    end
+
+    def _t_clear_associates(association_id)
+      property_name = "_t_" + ActiveSupport::Inflector.singularize(association_id) + "_ids"
+      self.send(property_name + '=', [])
     end
   end
 end

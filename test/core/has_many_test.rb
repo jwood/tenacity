@@ -34,6 +34,18 @@ class HasManyTest < Test::Unit::TestCase
         @account.save
         assert_set_equal [@person_1, @person_2, @person_3, person_4], ActiveRecordAccount.find(@account.id).mongo_mapper_people
       end
+
+      should "be able to remove an associated object using the delete method" do
+        @account.mongo_mapper_people.delete(@person_3)
+        @account.save
+        assert_set_equal [@person_1, @person_2], ActiveRecordAccount.find(@account.id).mongo_mapper_people
+      end
+
+      should "be able to clear all associated objects using the clear method" do
+        @account.mongo_mapper_people.clear
+        @account.save
+        assert_equal [], ActiveRecordAccount.find(@account.id).mongo_mapper_people
+      end
     end
   end
 

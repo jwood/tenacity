@@ -24,6 +24,7 @@ module Tenacity
     def t_has_many(association_id, args={})
       collection_name = "_t_" + association_id.to_s
       attr_accessor collection_name
+      attr_accessor :perform_save_associates_callback
 
       _t_define_has_many_properties(association_id) if self.respond_to?(:_t_define_has_many_properties)
 
@@ -50,7 +51,11 @@ module Tenacity
         instance_variable_set "@#{collection_name}", clazz._t_find_bulk(associate_ids)
       end
 
-      def save_associates(record, association_id)
+      def _t_save_associates(record, association_id)
+        return if record.perform_save_associates_callback == false
+
+        _t_clear_old_associations(record, association_id)
+
         associates = (record.instance_variable_get "@_t_#{association_id.to_s}") || []
         associates.each do |associate|
           associate.send("#{ActiveSupport::Inflector.underscore(record.class.to_s)}_id=", record.id)
@@ -60,7 +65,27 @@ module Tenacity
         unless associates.blank?
           associate_ids = associates.map { |associate| associate.id }
           record._t_associate_many(association_id, associate_ids)
+          record._t_save_without_callback
         end
+      end
+
+      def _t_clear_old_associations(record, association_id)
+        clazz = Kernel.const_get(association_id.to_s.singularize.camelcase.to_sym)
+        property_name = "#{ActiveSupport::Inflector.underscore(record.class.to_s)}_id"
+        old_associates = clazz._t_find_all_by_associate(property_name, record.id)
+        old_associates.each do |old_associate|
+          old_associate.send("#{property_name}=", nil)
+          old_associate._t_save_without_callback
+        end
+
+        record._t_clear_associates(association_id)
+        record._t_save_without_callback
+      end
+
+      define_method(:_t_save_without_callback) do
+        @perform_save_associates_callback = false
+        save
+        @perform_save_associates_callback = true
       end
     end
   end
