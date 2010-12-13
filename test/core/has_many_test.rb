@@ -6,15 +6,9 @@ class HasManyTest < Test::Unit::TestCase
     setup do
       setup_fixtures
       @account = ActiveRecordAccount.create
-      @person_1 = MongoMapperPerson.create(:safe => true)
-      @person_2 = MongoMapperPerson.create(:safe => true)
-      @person_3 = MongoMapperPerson.create(:safe => true)
-    end
-
-    should "be able to set the associated objects" do
-      @account.mongo_mapper_people = [@person_1, @person_2, @person_3]
-      @account.save
-      assert_set_equal [@person_1, @person_2, @person_3], ActiveRecordAccount.find(@account.id).mongo_mapper_people
+      @person_1 = MongoMapperPerson.create
+      @person_2 = MongoMapperPerson.create
+      @person_3 = MongoMapperPerson.create
     end
 
     should "be able to set the associated objects by their ids" do
@@ -22,6 +16,24 @@ class HasManyTest < Test::Unit::TestCase
       @account.save
       assert_set_equal [@person_1, @person_2, @person_3], ActiveRecordAccount.find(@account.id).mongo_mapper_people
       assert_set_equal [@person_1.id.to_s, @person_2.id.to_s, @person_3.id.to_s], ActiveRecordAccount.find(@account.id).mongo_mapper_person_ids
+    end
+
+    context "that works with associated objects" do
+      setup do
+        @account.mongo_mapper_people = [@person_1, @person_2, @person_3]
+        @account.save
+      end
+
+      should "be able to set the associated objects" do
+        assert_set_equal [@person_1, @person_2, @person_3], ActiveRecordAccount.find(@account.id).mongo_mapper_people
+      end
+
+      should "be able to add an associated object using the << operator" do
+        person_4 = MongoMapperPerson.create
+        @account.mongo_mapper_people << person_4
+        @account.save
+        assert_set_equal [@person_1, @person_2, @person_3, person_4], ActiveRecordAccount.find(@account.id).mongo_mapper_people
+      end
     end
   end
 

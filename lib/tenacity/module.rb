@@ -30,7 +30,7 @@ module Tenacity
       define_method(association_id) do
         clazz = Kernel.const_get(association_id.to_s.singularize.camelcase.to_sym)
         value = instance_variable_get "@#{collection_name}"
-        if value.blank?
+        if value.nil?
           value = clazz._t_find_all_by_associate("#{ActiveSupport::Inflector.underscore(self.class.to_s)}_id", self.id)
           instance_variable_set "@#{collection_name}", value
         end
@@ -47,19 +47,21 @@ module Tenacity
 
       define_method("#{ActiveSupport::Inflector.singularize(association_id.to_s)}_ids=") do |associate_ids|
         clazz = Kernel.const_get(association_id.to_s.singularize.camelcase.to_sym)
-        associate_ids.each do |associate_id|
-          associate = clazz._t_find(associate_id)
-          associate.send("#{ActiveSupport::Inflector.underscore(self.class.to_s)}_id=", self.id)
-          associate.save
-        end
-        _t_associate_many(association_id, associate_ids) unless associate_ids.blank?
+        instance_variable_set "@#{collection_name}", clazz._t_find_bulk(associate_ids)
       end
 
       def save_associates(record, association_id)
         associates = (record.instance_variable_get "@_t_#{association_id.to_s}") || []
-        record.send("#{ActiveSupport::Inflector.singularize(association_id.to_s)}_ids=", associates.map { |a| a.id })
+        associates.each do |associate|
+          associate.send("#{ActiveSupport::Inflector.underscore(record.class.to_s)}_id=", record.id)
+          associate.save
+        end
+
+        unless associates.blank?
+          associate_ids = associates.map { |associate| associate.id }
+          record._t_associate_many(association_id, associate_ids)
+        end
       end
     end
   end
-
 end
