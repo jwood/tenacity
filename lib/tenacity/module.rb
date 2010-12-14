@@ -1,8 +1,12 @@
 require 'active_support/inflector'
 
 module Tenacity
+  autoload :BelongsTo, 'tenacity/belongs_to'
+
   def self.included(model)
     raise "Tenacity does not support the ORM used by #{model}" unless model.respond_to?(:_t_find)
+
+    include BelongsTo
     model.extend(ClassMethods)
   end 
 
@@ -11,13 +15,11 @@ module Tenacity
       _t_define_belongs_to_properties(association_id) if self.respond_to?(:_t_define_belongs_to_properties)
 
       define_method(association_id) do
-        associate_id = self.send("#{association_id}_id")
-        clazz = Kernel.const_get(association_id.to_s.camelcase.to_sym)
-        clazz._t_find(associate_id)
+        belongs_to_associate(association_id)
       end
 
       define_method("#{association_id}=") do |associate|
-        self.send "#{association_id}_id=".to_sym, associate.id
+        set_belongs_to_associate(association_id, associate)
       end
     end
 
