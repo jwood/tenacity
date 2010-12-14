@@ -58,17 +58,41 @@ class HasManyTest < Test::Unit::TestCase
       @transaction_3 = ActiveRecordTransaction.create
     end
 
-    should "be able to set the associated objects" do
-      @person.active_record_transactions = [@transaction_1, @transaction_2, @transaction_3]
-      @person.save
-      assert_set_equal [@transaction_1, @transaction_2, @transaction_3], MongoMapperPerson.find(@person.id).active_record_transactions
-    end
-
     should "be able to set the associated objects by their ids" do
       @person.active_record_transaction_ids = [@transaction_1.id, @transaction_2.id, @transaction_3.id]
       @person.save
       assert_set_equal [@transaction_1, @transaction_2, @transaction_3], MongoMapperPerson.find(@person.id).active_record_transactions
       assert_set_equal [@transaction_1.id, @transaction_2.id, @transaction_3.id], MongoMapperPerson.find(@person.id).active_record_transaction_ids
+    end
+
+    context "that works with associated objects" do
+      setup do
+        @person.active_record_transactions = [@transaction_1, @transaction_2, @transaction_3]
+        @person.save
+      end
+
+      should "be able to set the associated objects" do
+        assert_set_equal [@transaction_1, @transaction_2, @transaction_3], MongoMapperPerson.find(@person.id).active_record_transactions
+      end
+
+      should "be able to add an associated object using the << operator" do
+        transaction_4 = ActiveRecordTransaction.create
+        @person.active_record_transactions << transaction_4
+        @person.save
+        assert_set_equal [@transaction_1, @transaction_2, @transaction_3, transaction_4], MongoMapperPerson.find(@person.id).active_record_transactions
+      end
+
+      should "be able to remove an associated object using the delete method" do
+        @person.active_record_transactions.delete(@transaction_3)
+        @person.save
+        assert_set_equal [@transaction_1, @transaction_2], MongoMapperPerson.find(@person.id).active_record_transactions
+      end
+
+      should "be able to clear all associated objects using the clear method" do
+        @person.active_record_transactions.clear
+        @person.save
+        assert_set_equal [], MongoMapperPerson.find(@person.id).active_record_transactions
+      end
     end
   end
 
