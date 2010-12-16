@@ -1,12 +1,4 @@
 module Tenacity
-  include HasMany
-  include BelongsTo
-
-  def self.included(model)
-    raise "Tenacity does not support the ORM used by #{model}" unless model.respond_to?(:_t_find)
-    model.extend(ClassMethods)
-  end 
-
   module ClassMethods
     def t_belongs_to(association_id, args={})
       extend(BelongsTo::ClassMethods)

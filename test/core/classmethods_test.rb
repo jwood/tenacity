@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ModuleTest < Test::Unit::TestCase
+class ClassmethodsTest < Test::Unit::TestCase
 
   context "A class with a belongs_to :active_record_account association" do
     setup do
