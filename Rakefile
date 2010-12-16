@@ -51,6 +51,9 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
+desc 'Delete rcov, rdoc, and other generated files'
+task :clobber => [:clobber_rcov, :clobber_rdoc]
+
 require 'test/helpers/active_record_test_helper'
 namespace :db do
   desc "Create the test databases"
