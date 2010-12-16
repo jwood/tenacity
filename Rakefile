@@ -83,6 +83,7 @@ namespace :db do
 
         create_table :active_record_transactions, :force => true do |t|
           t.string :mongo_mapper_person_id
+          t.string :mongo_mapper_ledger_id
         end
 
         create_table :active_record_transactions_mongo_mapper_people, :force => true do |t|

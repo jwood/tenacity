@@ -13,6 +13,8 @@ module Tenacity
 
   module ClassMethods
     def t_belongs_to(association_id, args={})
+      extend(BelongsTo::ClassMethods)
+
       _t_define_belongs_to_properties(association_id) if self.respond_to?(:_t_define_belongs_to_properties)
 
       define_method(association_id) do
@@ -56,3 +58,4 @@ module Tenacity
     end
   end
 end
+

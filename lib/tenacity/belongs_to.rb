@@ -10,7 +10,13 @@ module Tenacity
     end
 
     def set_belongs_to_associate(association_id, associate)
-      self.send "#{association_id}_id=".to_sym, associate.id
+      self.send "#{association_id}_id=".to_sym, associate.id.to_s
+    end
+
+    module ClassMethods
+      def _t_stringify_belongs_to_value(record, association_id)
+        record.send "#{association_id}_id=".to_sym, record.send("#{association_id}_id").to_s
+      end
     end
 
   end

@@ -59,6 +59,7 @@ module Tenacity
       def _t_clear_old_associations(record, association_id)
         clazz = Kernel.const_get(association_id.to_s.singularize.camelcase.to_sym)
         property_name = "#{ActiveSupport::Inflector.underscore(record.class.to_s)}_id"
+
         old_associates = clazz._t_find_all_by_associate(property_name, record.id)
         old_associates.each do |old_associate|
           old_associate.send("#{property_name}=", nil)

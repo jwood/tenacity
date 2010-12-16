@@ -21,6 +21,7 @@ module TenacityPlugin
 
     def _t_define_belongs_to_properties(association_id)
       key "#{association_id}_id", Integer
+      before_save { |record| _t_stringify_belongs_to_value(record, association_id) }
     end
   end
 
