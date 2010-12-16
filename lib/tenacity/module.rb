@@ -1,6 +1,6 @@
 require 'active_support/inflector'
-require 'tenacity/has_many'
-require 'tenacity/belongs_to'
+require 'tenacity/relationships/has_many'
+require 'tenacity/relationships/belongs_to'
 
 module Tenacity
   include HasMany
