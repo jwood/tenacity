@@ -1,7 +1,3 @@
-require 'active_support/inflector'
-require 'tenacity/relationships/has_many'
-require 'tenacity/relationships/belongs_to'
-
 module Tenacity
   include HasMany
   include BelongsTo

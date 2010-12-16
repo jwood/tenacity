@@ -1,5 +1,3 @@
-require 'active_support/inflector'
-
 module TenacityPlugin
   module ClassMethods
     def _t_find(id)
