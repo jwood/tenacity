@@ -41,12 +41,14 @@ module Tenacity
 
       _t_define_has_many_properties(association_id) if self.respond_to?(:_t_define_has_many_properties)
 
-      define_method(association_id) do
-        has_many_associates(association_id)
+      define_method(association_id) do |*params|
+        get_associate(association_id, params) do
+          has_many_associates(association_id)
+        end
       end
 
       define_method("#{association_id}=") do |associates|
-        set_has_many_associates(association_id, associates)
+        set_associate(association_id, associates)
       end
 
       define_method("#{ActiveSupport::Inflector.singularize(association_id.to_s)}_ids") do

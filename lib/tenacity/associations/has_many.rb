@@ -4,18 +4,9 @@ module Tenacity
     private
 
     def has_many_associates(association_id)
+      ids = _t_get_associate_ids(association_id)
       clazz = Kernel.const_get(association_id.to_s.singularize.camelcase.to_sym)
-      value = instance_variable_get collection_name(association_id)
-      if value.nil?
-        ids = _t_get_associate_ids(association_id)
-        value = clazz._t_find_bulk(ids)
-        instance_variable_set collection_name(association_id), value
-      end
-      value
-    end
-
-    def set_has_many_associates(association_id, associates)
-      instance_variable_set collection_name(association_id), associates
+      clazz._t_find_bulk(ids)
     end
 
     def has_many_associate_ids(association_id)
@@ -24,17 +15,13 @@ module Tenacity
 
     def set_has_many_associate_ids(association_id, associate_ids)
       clazz = Kernel.const_get(association_id.to_s.singularize.camelcase.to_sym)
-      instance_variable_set collection_name(association_id), clazz._t_find_bulk(associate_ids)
+      instance_variable_set ivar_name(association_id), clazz._t_find_bulk(associate_ids)
     end
 
     def save_without_callback
       @perform_save_associates_callback = false
       save
       @perform_save_associates_callback = true
-    end
-
-    def collection_name(association_id)
-      "@_t_" + association_id.to_s
     end
 
     module ClassMethods

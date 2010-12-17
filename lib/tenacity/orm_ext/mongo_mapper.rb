@@ -30,6 +30,8 @@ module TenacityPlugin
   module InstanceMethods
     def _t_reload
       reload
+    rescue
+      nil
     end
 
     def _t_associate_many(association_id, associate_ids)

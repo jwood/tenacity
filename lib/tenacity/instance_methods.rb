@@ -15,7 +15,7 @@ module Tenacity
     end
 
     def set_associate(association_id, associate)
-      yield
+      yield if block_given?
       instance_variable_set ivar_name(association_id), associate
     end
 

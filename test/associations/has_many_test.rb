@@ -2,6 +2,29 @@ require 'test_helper'
 
 class HasManyTest < Test::Unit::TestCase
 
+  context "A class with a belongs_to association to another class" do
+    setup do
+      setup_fixtures
+      @car = ActiveRecordCar.create
+      @wheels = [MongoMapperWheel.create, MongoMapperWheel.create, MongoMapperWheel.create]
+
+      @car.mongo_mapper_wheels = @wheels
+      @car.save
+    end
+
+    should "memoize the association" do
+      assert_equal @wheels, @car.mongo_mapper_wheels
+
+      other_wheels = [MongoMapperWheel.create, MongoMapperWheel.create, MongoMapperWheel.create]
+      assert_equal @wheels, ActiveRecordCar.find(@car.id).mongo_mapper_wheels
+      ActiveRecordCar.find(@car.id).update_attribute(:mongo_mapper_wheels, other_wheels)
+      assert_equal other_wheels, ActiveRecordCar.find(@car.id).mongo_mapper_wheels
+
+      assert_equal @wheels, @car.mongo_mapper_wheels
+      assert_equal other_wheels, @car.mongo_mapper_wheels(true)
+    end
+  end
+
   context "An ActiveRecord class with a has_many association to a MongoMapper class" do
     setup do
       setup_fixtures
