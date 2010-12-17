@@ -1,6 +1,6 @@
 require File.join('active_support', 'inflector')
 
-require File.join(File.dirname(__FILE__), 'tenacity', 'classmethods')
+require File.join(File.dirname(__FILE__), 'tenacity', 'class_methods')
 require File.join(File.dirname(__FILE__), 'tenacity', 'instance_methods')
 require File.join(File.dirname(__FILE__), 'tenacity', 'associations', 'belongs_to')
 require File.join(File.dirname(__FILE__), 'tenacity', 'associations', 'has_many')
