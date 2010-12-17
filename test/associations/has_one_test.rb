@@ -4,25 +4,25 @@ class HasOneTest < Test::Unit::TestCase
 
   context "A MongoMapper class with a has_one association to an ActiveRecord class" do
     setup do
-      @auditor = ActiveRecordAuditor.create
-      @ledger = MongoMapperLedger.create
+      @climate_control_unit = ActiveRecordClimateControlUnit.create
+      @dashboard = MongoMapperDashboard.create
     end
 
     should "be able to set and get the associated object" do
-      @ledger.active_record_auditor = @auditor
-      assert_equal @auditor, MongoMapperLedger.find(@ledger.id).active_record_auditor
+      @dashboard.active_record_climate_control_unit = @climate_control_unit
+      assert_equal @climate_control_unit, MongoMapperDashboard.find(@dashboard.id).active_record_climate_control_unit
     end
   end
 
   context "An ActiveRecord class with a has_one association to a MongoMapper class" do
     setup do
-      @ledger = MongoMapperLedger.create
-      @account = ActiveRecordAccount.create
+      @dashboard = MongoMapperDashboard.create
+      @car = ActiveRecordCar.create
     end
 
     should "be able to set and get the associated object" do
-      @account.mongo_mapper_ledger = @ledger
-      assert_equal @ledger, ActiveRecordAccount.find(@account.id).mongo_mapper_ledger
+      @car.mongo_mapper_dashboard = @dashboard
+      assert_equal @dashboard, ActiveRecordCar.find(@car.id).mongo_mapper_dashboard
     end
   end
 

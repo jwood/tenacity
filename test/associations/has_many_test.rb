@@ -5,46 +5,46 @@ class HasManyTest < Test::Unit::TestCase
   context "An ActiveRecord class with a has_many association to a MongoMapper class" do
     setup do
       setup_fixtures
-      @account = ActiveRecordAccount.create
-      @person_1 = MongoMapperPerson.create
-      @person_2 = MongoMapperPerson.create
-      @person_3 = MongoMapperPerson.create
+      @car = ActiveRecordCar.create
+      @wheel_1 = MongoMapperWheel.create
+      @wheel_2 = MongoMapperWheel.create
+      @wheel_3 = MongoMapperWheel.create
     end
 
     should "be able to set the associated objects by their ids" do
-      @account.mongo_mapper_person_ids = [@person_1.id, @person_2.id, @person_3.id]
-      @account.save
-      assert_set_equal [@person_1, @person_2, @person_3], ActiveRecordAccount.find(@account.id).mongo_mapper_people
-      assert_set_equal [@person_1.id.to_s, @person_2.id.to_s, @person_3.id.to_s], ActiveRecordAccount.find(@account.id).mongo_mapper_person_ids
+      @car.mongo_mapper_wheel_ids = [@wheel_1.id, @wheel_2.id, @wheel_3.id]
+      @car.save
+      assert_set_equal [@wheel_1, @wheel_2, @wheel_3], ActiveRecordCar.find(@car.id).mongo_mapper_wheels
+      assert_set_equal [@wheel_1.id.to_s, @wheel_2.id.to_s, @wheel_3.id.to_s], ActiveRecordCar.find(@car.id).mongo_mapper_wheel_ids
     end
 
     context "that works with associated objects" do
       setup do
-        @account.mongo_mapper_people = [@person_1, @person_2, @person_3]
-        @account.save
+        @car.mongo_mapper_wheels = [@wheel_1, @wheel_2, @wheel_3]
+        @car.save
       end
 
       should "be able to set the associated objects" do
-        assert_set_equal [@person_1, @person_2, @person_3], ActiveRecordAccount.find(@account.id).mongo_mapper_people
+        assert_set_equal [@wheel_1, @wheel_2, @wheel_3], ActiveRecordCar.find(@car.id).mongo_mapper_wheels
       end
 
       should "be able to add an associated object using the << operator" do
-        person_4 = MongoMapperPerson.create
-        @account.mongo_mapper_people << person_4
-        @account.save
-        assert_set_equal [@person_1, @person_2, @person_3, person_4], ActiveRecordAccount.find(@account.id).mongo_mapper_people
+        person_4 = MongoMapperWheel.create
+        @car.mongo_mapper_wheels << person_4
+        @car.save
+        assert_set_equal [@wheel_1, @wheel_2, @wheel_3, person_4], ActiveRecordCar.find(@car.id).mongo_mapper_wheels
       end
 
       should "be able to remove an associated object using the delete method" do
-        @account.mongo_mapper_people.delete(@person_3)
-        @account.save
-        assert_set_equal [@person_1, @person_2], ActiveRecordAccount.find(@account.id).mongo_mapper_people
+        @car.mongo_mapper_wheels.delete(@wheel_3)
+        @car.save
+        assert_set_equal [@wheel_1, @wheel_2], ActiveRecordCar.find(@car.id).mongo_mapper_wheels
       end
 
       should "be able to clear all associated objects using the clear method" do
-        @account.mongo_mapper_people.clear
-        @account.save
-        assert_equal [], ActiveRecordAccount.find(@account.id).mongo_mapper_people
+        @car.mongo_mapper_wheels.clear
+        @car.save
+        assert_equal [], ActiveRecordCar.find(@car.id).mongo_mapper_wheels
       end
     end
   end
@@ -52,46 +52,46 @@ class HasManyTest < Test::Unit::TestCase
   context "A MongoMapper class with a has_many association to an ActiveRecord class" do
     setup do
       setup_fixtures
-      @person = MongoMapperPerson.create
-      @transaction_1 = ActiveRecordTransaction.create
-      @transaction_2 = ActiveRecordTransaction.create
-      @transaction_3 = ActiveRecordTransaction.create
+      @wheel = MongoMapperWheel.create
+      @nut_1 = ActiveRecordNut.create
+      @nut_2 = ActiveRecordNut.create
+      @nut_3 = ActiveRecordNut.create
     end
 
     should "be able to set the associated objects by their ids" do
-      @person.active_record_transaction_ids = [@transaction_1.id, @transaction_2.id, @transaction_3.id]
-      @person.save
-      assert_set_equal [@transaction_1, @transaction_2, @transaction_3], MongoMapperPerson.find(@person.id).active_record_transactions
-      assert_set_equal [@transaction_1.id, @transaction_2.id, @transaction_3.id], MongoMapperPerson.find(@person.id).active_record_transaction_ids
+      @wheel.active_record_nut_ids = [@nut_1.id, @nut_2.id, @nut_3.id]
+      @wheel.save
+      assert_set_equal [@nut_1, @nut_2, @nut_3], MongoMapperWheel.find(@wheel.id).active_record_nuts
+      assert_set_equal [@nut_1.id, @nut_2.id, @nut_3.id], MongoMapperWheel.find(@wheel.id).active_record_nut_ids
     end
 
     context "that works with associated objects" do
       setup do
-        @person.active_record_transactions = [@transaction_1, @transaction_2, @transaction_3]
-        @person.save
+        @wheel.active_record_nuts = [@nut_1, @nut_2, @nut_3]
+        @wheel.save
       end
 
       should "be able to set the associated objects" do
-        assert_set_equal [@transaction_1, @transaction_2, @transaction_3], MongoMapperPerson.find(@person.id).active_record_transactions
+        assert_set_equal [@nut_1, @nut_2, @nut_3], MongoMapperWheel.find(@wheel.id).active_record_nuts
       end
 
       should "be able to add an associated object using the << operator" do
-        transaction_4 = ActiveRecordTransaction.create
-        @person.active_record_transactions << transaction_4
-        @person.save
-        assert_set_equal [@transaction_1, @transaction_2, @transaction_3, transaction_4], MongoMapperPerson.find(@person.id).active_record_transactions
+        nut_4 = ActiveRecordNut.create
+        @wheel.active_record_nuts << nut_4
+        @wheel.save
+        assert_set_equal [@nut_1, @nut_2, @nut_3, nut_4], MongoMapperWheel.find(@wheel.id).active_record_nuts
       end
 
       should "be able to remove an associated object using the delete method" do
-        @person.active_record_transactions.delete(@transaction_3)
-        @person.save
-        assert_set_equal [@transaction_1, @transaction_2], MongoMapperPerson.find(@person.id).active_record_transactions
+        @wheel.active_record_nuts.delete(@nut_3)
+        @wheel.save
+        assert_set_equal [@nut_1, @nut_2], MongoMapperWheel.find(@wheel.id).active_record_nuts
       end
 
       should "be able to clear all associated objects using the clear method" do
-        @person.active_record_transactions.clear
-        @person.save
-        assert_set_equal [], MongoMapperPerson.find(@person.id).active_record_transactions
+        @wheel.active_record_nuts.clear
+        @wheel.save
+        assert_set_equal [], MongoMapperWheel.find(@wheel.id).active_record_nuts
       end
     end
   end

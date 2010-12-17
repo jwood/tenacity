@@ -76,26 +76,25 @@ namespace :db do
     task :prepare do
       ActiveRecord::Schema.define :version => 0 do
 
-        create_table :active_record_accounts, :force => true do |t|
+        create_table :active_record_cars, :force => true do |t|
         end
 
-        create_table :active_record_auditors, :force => true do |t|
-          t.string :mongo_mapper_ledger_id
+        create_table :active_record_climate_control_units, :force => true do |t|
+          t.string :mongo_mapper_dashboard_id
         end
 
-        create_table :active_record_accounts_mongo_mapper_people, :force => true do |t|
-          t.integer :active_record_account_id
-          t.string :mongo_mapper_person_id
+        create_table :active_record_cars_mongo_mapper_wheels, :force => true do |t|
+          t.integer :active_record_car_id
+          t.string :mongo_mapper_wheel_id
         end
 
-        create_table :active_record_transactions, :force => true do |t|
-          t.string :mongo_mapper_person_id
-          t.string :mongo_mapper_ledger_id
+        create_table :active_record_nuts, :force => true do |t|
+          t.string :mongo_mapper_wheel_id
         end
 
-        create_table :active_record_transactions_mongo_mapper_people, :force => true do |t|
-          t.integer :active_record_transaction_id
-          t.string :mongo_mapper_person_id
+        create_table :active_record_nuts_mongo_mapper_wheels, :force => true do |t|
+          t.integer :active_record_nut_id
+          t.string :mongo_mapper_wheel_id
         end
 
       end
