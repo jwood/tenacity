@@ -3,7 +3,7 @@ module Tenacity
 
     private
 
-    def get_association(association_id, params)
+    def get_associate(association_id, params)
       _t_reload
       force_reload = params.first unless params.empty?
       value = instance_variable_get ivar_name(association_id)
@@ -14,7 +14,7 @@ module Tenacity
       value
     end
 
-    def set_association(association_id, associate)
+    def set_associate(association_id, associate)
       yield
       instance_variable_set ivar_name(association_id), associate
     end

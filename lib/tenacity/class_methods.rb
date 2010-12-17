@@ -3,13 +3,13 @@ module Tenacity
 
     def t_has_one(association_id, args={})
       define_method(association_id) do |*params|
-        get_association(association_id, params) do
+        get_associate(association_id, params) do
           has_one_associate(association_id)
         end
       end
 
       define_method("#{association_id}=") do |associate|
-        set_association(association_id, associate) do
+        set_associate(association_id, associate) do
           set_has_one_associate(association_id, associate)
         end
       end
@@ -21,13 +21,13 @@ module Tenacity
       _t_define_belongs_to_properties(association_id) if self.respond_to?(:_t_define_belongs_to_properties)
 
       define_method(association_id) do |*params|
-        get_association(association_id, params) do
+        get_associate(association_id, params) do
           belongs_to_associate(association_id)
         end
       end
 
       define_method("#{association_id}=") do |associate|
-        set_association(association_id, associate) do
+        set_associate(association_id, associate) do
           set_belongs_to_associate(association_id, associate)
         end
       end
