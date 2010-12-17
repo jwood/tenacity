@@ -79,6 +79,10 @@ namespace :db do
         create_table :active_record_accounts, :force => true do |t|
         end
 
+        create_table :active_record_auditors, :force => true do |t|
+          t.string :mongo_mapper_ledger_id
+        end
+
         create_table :active_record_accounts_mongo_mapper_people, :force => true do |t|
           t.integer :active_record_account_id
           t.string :mongo_mapper_person_id

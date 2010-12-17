@@ -1,5 +1,15 @@
 module Tenacity
   module ClassMethods
+    def t_has_one(association_id, args={})
+      define_method(association_id) do
+        has_one_associate(association_id)
+      end
+
+      define_method("#{association_id}=") do |associate|
+        set_has_one_associate(association_id, associate)
+      end
+    end
+
     def t_belongs_to(association_id, args={})
       extend(BelongsTo::ClassMethods)
 

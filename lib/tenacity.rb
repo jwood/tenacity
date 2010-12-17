@@ -10,8 +10,9 @@ require File.join(File.dirname(__FILE__), 'tenacity', 'relationships', 'has_one'
 module Tenacity
   include ClassMethods
 
-  include HasMany
   include BelongsTo
+  include HasMany
+  include HasOne
 
   def self.included(model)
     raise "Tenacity does not support the ORM used by #{model}" unless model.respond_to?(:_t_find)

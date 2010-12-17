@@ -9,6 +9,10 @@ module ActiveRecord
       self.find(ids)
     end
 
+    def self._t_find_first_by_associate(property, id)
+      find(:first, :conditions => ["#{property} = ?", id])
+    end
+
     def self._t_find_all_by_associate(property, id)
       find(:all, :conditions => ["#{property} = ?", id])
     end

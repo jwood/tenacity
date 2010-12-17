@@ -8,6 +8,10 @@ module TenacityPlugin
       self.find(ids)
     end
 
+    def _t_find_first_by_associate(property, id)
+      self.first(property => id)
+    end
+
     def _t_find_all_by_associate(property, id)
       self.all(property => id)
     end
