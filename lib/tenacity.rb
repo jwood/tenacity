@@ -8,8 +8,6 @@ require File.join(File.dirname(__FILE__), 'tenacity', 'orm_ext', 'activerecord')
 require File.join(File.dirname(__FILE__), 'tenacity', 'orm_ext', 'mongo_mapper')
 
 module Tenacity
-  include ClassMethods
-
   include BelongsTo
   include HasMany
   include HasOne
