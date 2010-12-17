@@ -25,6 +25,10 @@ module ActiveRecord
       before_save { |record| _t_stringify_belongs_to_value(record, association_id) }
     end
 
+    def _t_reload
+      reload
+    end
+
     def _t_clear_associates(association_id)
       join_table_name = self.class._t_join_table_name(association_id)
       self.connection.execute("delete from #{join_table_name} where #{self.class._t_my_id_column} = #{self.id}")

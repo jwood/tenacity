@@ -1,12 +1,17 @@
 module Tenacity
   module ClassMethods
+
     def t_has_one(association_id, args={})
-      define_method(association_id) do
-        has_one_associate(association_id)
+      define_method(association_id) do |*params|
+        get_association(association_id, params) do
+          has_one_associate(association_id)
+        end
       end
 
       define_method("#{association_id}=") do |associate|
-        set_has_one_associate(association_id, associate)
+        set_association(association_id, associate) do
+          set_has_one_associate(association_id, associate)
+        end
       end
     end
 
@@ -15,12 +20,16 @@ module Tenacity
 
       _t_define_belongs_to_properties(association_id) if self.respond_to?(:_t_define_belongs_to_properties)
 
-      define_method(association_id) do
-        belongs_to_associate(association_id)
+      define_method(association_id) do |*params|
+        get_association(association_id, params) do
+          belongs_to_associate(association_id)
+        end
       end
 
       define_method("#{association_id}=") do |associate|
-        set_belongs_to_associate(association_id, associate)
+        set_association(association_id, associate) do
+          set_belongs_to_associate(association_id, associate)
+        end
       end
     end
 
@@ -54,6 +63,7 @@ module Tenacity
         save_without_callback
       end
     end
+
   end
 end
 

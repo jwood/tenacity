@@ -2,8 +2,29 @@ require 'test_helper'
 
 class BelongsToTest < Test::Unit::TestCase
 
+  context "A class with a belongs_to association to another class" do
+    setup do
+      setup_fixtures
+      @car = ActiveRecordCar.create
+      @wheel = MongoMapperWheel.create(:active_record_car => @car)
+    end
+
+    should "memoize the association" do
+      assert_equal @car, @wheel.active_record_car
+
+      other_car = ActiveRecordCar.create
+      assert_equal @car, MongoMapperWheel.find(@wheel.id).active_record_car
+      MongoMapperWheel.update(@wheel.id, :active_record_car => other_car)
+      assert_equal other_car, MongoMapperWheel.find(@wheel.id).active_record_car
+
+      assert_equal @car, @wheel.active_record_car
+      assert_equal other_car, @wheel.active_record_car(true)
+    end
+  end
+
   context "A MongoMapper class with belongs_to association to an ActiveRecord class" do
     setup do
+      setup_fixtures
       @car = ActiveRecordCar.create
       @wheel = MongoMapperWheel.new
     end
@@ -30,6 +51,7 @@ class BelongsToTest < Test::Unit::TestCase
 
   context "An ActiveRecord class with belongs_to association to a MongoMapper class" do
     setup do
+      setup_fixtures
       @wheel = MongoMapperWheel.create
       @transaction = ActiveRecordNut.new
     end
