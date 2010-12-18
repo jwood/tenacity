@@ -13,6 +13,16 @@ class ClassmethodsTest < Test::Unit::TestCase
     should("respond to active_record_car_id") { assert @wheel.respond_to?(:active_record_car_id) }
   end
 
+  context "A class with a has_one :active_record_climate_control_unit association" do
+    setup do
+      setup_fixtures
+      @dashboard = MongoMapperDashboard.new
+    end
+
+    should("respond to active_record_climate_control_unit") { assert @dashboard.respond_to?(:active_record_climate_control_unit) }
+    should("respond to active_record_climate_control_unit=") { assert @dashboard.respond_to?(:active_record_climate_control_unit=) }
+  end
+
   context "A class with a has_many :active_record_nuts association" do
     setup do
       setup_fixtures
