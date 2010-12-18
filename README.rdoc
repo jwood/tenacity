@@ -1,6 +1,7 @@
 = Tenacity
 
-A ORM independent way of specifying simple relationships between models backed by different databases.
+An ORM independent way of specifying simple relationships between models
+backed by different databases.
 
 It is sometimes necessary, or advantageous, to use more than one database in a
 given application.  However, most ORMs do not support inter-database
@@ -10,10 +11,8 @@ add quite a bit of boilerplate code to your project.
 Tenacity aims to address this by providing an ORM independent way of specifying
 simple relationships between models backed by different databases.
 
-
-== WARNING
-
-This gem is pre-alpha, and is nowhere near ready for use.
+Tenacity is heavily based on ActiveRecord's assocations, and aims to behave in
+much the same way, supporting many of the same options.
 
 
 == Example
@@ -47,13 +46,10 @@ This gem is pre-alpha, and is nowhere near ready for use.
   user.save
 
 
-== Details
+== Supported ORMs
 
-Defining a relationship will create a property on the object to  store the id(s)
-of the related objects.
-
-* For one-to-one relationships, the property will store the id of the related object (user_id).
-* For one-to-many relationships, the property will store an array of ids of the related objects (entry_ids).
+* ActiveRecord
+* MongoMapper
 
 
 == Contributing to Tenacity
@@ -92,3 +88,4 @@ of the related objects.
 == Copyright
 
 Copyright (c) 2010 John Wood. See LICENSE.txt for further details.
+
