@@ -18,8 +18,55 @@ module Tenacity
   # manipulation of its relationships:
   # * <tt>Project#portfolio, Project#portfolio=(portfolio), Project#portfolio.nil?</tt>
   # * <tt>Project#project_manager, Project#project_manager=(project_manager), Project#project_manager.nil?,</tt>
-  # * <tt>Project#milestones.empty?, Project#milestones.size, Project#milestones, Project#milestones<<(milestone),</tt>
-  #   <tt>Project#milestones.delete(milestone)
+  # * <tt>Project#milestones.empty?, Project#milestones.size, Project#milestones, Project#milestones<<(milestone), Project#milestones.delete(milestone)</tt>
+  #
+  # == Cardinality and associations
+  #
+  # Tenacity associations can be used to describe one-to-one and one-to-many
+  # relationships between models. Each model uses an association to describe its role in
+  # the relation. The +t_belongs_to+ association is always used in the model that has
+  # the foreign key.
+  #
+  # === One-to-one
+  #
+  # Use +t_has_one+ in the base, and +t_belongs_to+ in the associated model.
+  #
+  #   class Employee < ActiveRecord::Base
+  #     include Tenacity
+  #     t_has_one :office
+  #   end
+  #   class Office
+  #     include MongoMapper::Document
+  #     include Tenacity
+  #     t_belongs_to :employee     # foreign key - employee_id
+  #   end
+  #
+  # === One-to-many
+  #
+  # Use +t_has_many+ in the base, and +t_belongs_to+ in the associated model.
+  #
+  #   class Manager < ActiveRecord::Base
+  #     include Tenacity
+  #     t_has_many :employees
+  #   end
+  #   class Employee
+  #     include MongoMapper::Document
+  #     include Tenacity
+  #     t_belongs_to :manager     # foreign key - manager_id
+  #   end
+  #
+  # == Caching
+  #
+  # All of the methods are built on a simple caching principle that will keep the result
+  # of the last query around unless specifically instructed not to. The cache is even
+  # shared across methods to make it even cheaper to use the macro-added methods without
+  # worrying too much about performance at the first go.
+  #
+  #   project.milestones             # fetches milestones from the database
+  #   project.milestones.size        # uses the milestone cache
+  #   project.milestones.empty?      # uses the milestone cache
+  #   project.milestones(true).size  # fetches milestones from the database
+  #   project.milestones             # uses the milestone cache
   #
   module ClassMethods
 
@@ -78,7 +125,6 @@ module Tenacity
     # A Post class declares <tt>t_belongs_to :author</tt>, which will add:
     # * <tt>Post#author</tt> (similar to <tt>Author.find(author_id)</tt>)
     # * <tt>Post#author=(author)</tt> (similar to <tt>post.author_id = author.id</tt>)
-    # The declaration can also include an options hash to specialize the behavior of the association.
     #
     def t_belongs_to(association_id, args={})
       extend(BelongsTo::ClassMethods)
@@ -106,20 +152,17 @@ module Tenacity
     #   An empty array is returned if none are found.
     # [collection<<(object, ...)]
     #   Adds one or more objects to the collection by setting their foreign keys to the collection's primary key.
-    #   Note that this operation instantly fires update sql without waiting for the save or update call on the
-    #   parent object.
+    #   Note that this operation does not update the association until the parent object is saved.
     # [collection.delete(object, ...)]
-    #   Removes one or more objects from the collection by setting their foreign keys to +NULL+.
+    #   Removes one or more objects from the collection.
     # [collection=objects]
-    #   Replaces the collections content by deleting and adding objects as appropriate.
+    #   Replaces the collections content by setting it to the list of specified objects.
     # [collection_singular_ids]
     #   Returns an array of the associated objects' ids
     # [collection_singular_ids=ids]
-    #   Replace the collection with the objects identified by the primary keys in +ids+. This
-    #   method loads the models and calls <tt>collection=</tt>. See above.
+    #   Replace the collection with the objects identified by the primary keys in +ids+.
     # [collection.clear]
-    #   Removes every object from the collection. This sets the foreign keys of the associated objects
-    #   to +NULL+.
+    #   Removes every object from the collection.
     # [collection.empty?]
     #   Returns +true+ if there are no associated objects.
     # [collection.size]
@@ -140,7 +183,6 @@ module Tenacity
     # * <tt>Firm#clients.clear</tt>
     # * <tt>Firm#clients.empty?</tt> (similar to <tt>firm.clients.size == 0</tt>)
     # * <tt>Firm#clients.size</tt> (similar to <tt>Client.count "firm_id = #{id}"</tt>)
-    # The declaration can also include an options hash to specialize the behavior of the association.
     #
     def t_has_many(association_id, args={})
       extend(HasMany::ClassMethods)

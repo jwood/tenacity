@@ -34,6 +34,10 @@ class HasOneTest < Test::Unit::TestCase
       @dashboard.active_record_climate_control_unit = @climate_control_unit
       assert_equal @climate_control_unit, MongoMapperDashboard.find(@dashboard.id).active_record_climate_control_unit
     end
+
+    should "return nil if no association is set" do
+      assert_nil MongoMapperDashboard.find(@dashboard.id).active_record_climate_control_unit
+    end
   end
 
   context "An ActiveRecord class with a has_one association to a MongoMapper class" do
@@ -46,6 +50,10 @@ class HasOneTest < Test::Unit::TestCase
     should "be able to set and get the associated object" do
       @car.mongo_mapper_dashboard = @dashboard
       assert_equal @dashboard, ActiveRecordCar.find(@car.id).mongo_mapper_dashboard
+    end
+
+    should "return nil if no association is set" do
+      assert_nil ActiveRecordCar.find(@car.id).mongo_mapper_dashboard
     end
   end
 

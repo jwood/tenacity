@@ -69,6 +69,11 @@ class HasManyTest < Test::Unit::TestCase
         @car.save
         assert_equal [], ActiveRecordCar.find(@car.id).mongo_mapper_wheels
       end
+
+      should "return an empty array if the association is not set" do
+        car = ActiveRecordCar.create
+        assert_set_equal [], ActiveRecordCar.find(car.id).mongo_mapper_wheels
+      end
     end
   end
 
@@ -115,6 +120,11 @@ class HasManyTest < Test::Unit::TestCase
         @wheel.active_record_nuts.clear
         @wheel.save
         assert_set_equal [], MongoMapperWheel.find(@wheel.id).active_record_nuts
+      end
+
+      should "return an empty array if the association is not set" do
+        wheel = MongoMapperWheel.create
+        assert_set_equal [], MongoMapperWheel.find(wheel.id).active_record_nuts
       end
     end
   end

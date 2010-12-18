@@ -26,7 +26,7 @@ class BelongsToTest < Test::Unit::TestCase
     setup do
       setup_fixtures
       @car = ActiveRecordCar.create
-      @wheel = MongoMapperWheel.new
+      @wheel = MongoMapperWheel.create
     end
 
     should "be able to fetch the id of the associated object" do
@@ -47,13 +47,17 @@ class BelongsToTest < Test::Unit::TestCase
       @wheel.save
       assert_equal @car, MongoMapperWheel.find(@wheel.id).active_record_car
     end
+
+    should "return nil if no association is set" do
+      assert_nil MongoMapperWheel.find(@wheel.id).active_record_car
+    end
   end
 
   context "An ActiveRecord class with belongs_to association to a MongoMapper class" do
     setup do
       setup_fixtures
       @wheel = MongoMapperWheel.create
-      @transaction = ActiveRecordNut.new
+      @transaction = ActiveRecordNut.create
     end
 
     should "be able to fetch the id of the associated object" do
@@ -74,6 +78,10 @@ class BelongsToTest < Test::Unit::TestCase
       @transaction.save
       assert_equal @wheel, ActiveRecordNut.find(@transaction.id).mongo_mapper_wheel
     end
-  end
+
+    should "return nil if no association is set" do
+      assert_nil ActiveRecordNut.find(@transaction.id).mongo_mapper_wheel
+    end
+ end
 
 end
