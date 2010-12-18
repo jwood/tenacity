@@ -13,7 +13,7 @@
 #
 # == t_belongs_to
 #
-# The t_belongs_to association requires that a property exist in the table
+# The +t_belongs_to+ association requires that a property exist in the table
 # to hold the id of the assoicated object.
 #
 #   create_table :cars do |t|
@@ -23,13 +23,13 @@
 #
 # == t_has_one
 #
-# The t_has_one association requires no special column in the table, since
+# The +t_has_one+ association requires no special column in the table, since
 # the associated object holds the foreign key.
 #
 #
 # == t_has_many
 #
-# The t_has_many association requires that a join table exist to store the
+# The +t_has_many+ association requires that a join table exist to store the
 # associations.  The name of the join table follows ActiveRecord conventions.
 # The name of the join table in this example would be cars_wheels, since cars
 # comes before wheels when shorted alphabetically.

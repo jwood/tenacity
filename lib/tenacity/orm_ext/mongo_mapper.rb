@@ -1,4 +1,37 @@
-module TenacityPlugin #:nodoc:
+# Tenacity relationships on MongoMapper objects require no special keys
+# defined on the object.  Tenacity will define the keys that it needs
+# to support the relationships.  Take the following class for example:
+#
+#   class Car < ActiveRecord::Base
+#     include MongoMapper::Document
+#     include Tenacity
+#
+#     t_has_many    :wheels
+#     t_has_one     :dashboard
+#     t_belongs_to  :driver
+#   end
+#
+# == t_belongs_to
+#
+# The +t_belongs_to+ association will define a key named after the association.
+# The example above will create a key named <tt>:driver_id</tt>
+#
+#
+# == t_has_one
+#
+# The +t_has_one+ association will not define any new keys on the object, since
+# the associated object holds the foreign key.  The the MongoMapper class
+# is the target of a t_has_one association from another class, then a property
+# named after the association will be created on the MongoMapper object to
+# hold the foreign key to the other object.
+#
+#
+# == t_has_many
+#
+# The +t_has_many+ association will define a key named after the association.
+# The example above will create a key named <tt>:wheels_ids</tt>
+#
+module TenacityMongoMapperPlugin
   module ClassMethods #:nodoc:
     def _t_find(id)
       self.find(id)
@@ -60,7 +93,7 @@ end
 
 module TenacityPluginAddition #:nodoc:
   def self.included(model)
-    model.plugin TenacityPlugin
+    model.plugin TenacityMongoMapperPlugin
   end
 end
 MongoMapper::Document.append_inclusions(TenacityPluginAddition)
