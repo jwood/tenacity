@@ -25,6 +25,13 @@ module TenacityPlugin #:nodoc:
       key "#{association_id}_id", Integer
       before_save { |record| _t_stringify_belongs_to_value(record, association_id) }
     end
+
+    def _t_define_has_one_properties(association_id)
+      unless self.respond_to?("#{association_id}_id")
+        key "#{association_id}_id", String
+        before_save { |record| _t_stringify_has_one_value(record, association_id) }
+      end
+    end
   end
 
   module InstanceMethods #:nodoc:

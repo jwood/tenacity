@@ -92,6 +92,10 @@ module Tenacity
     # * <tt>Account#beneficiary=(beneficiary)</tt> (similar to <tt>beneficiary.account_id = account.id; beneficiary.save</tt>)
     #
     def t_has_one(association_id, args={})
+      extend(HasOne::ClassMethods)
+
+      define_has_one_properties(association_id)
+
       define_method(association_id) do |*params|
         get_associate(association_id, params) do
           has_one_associate(association_id)
