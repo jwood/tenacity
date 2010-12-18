@@ -1,5 +1,5 @@
 module Tenacity
-  module BelongsTo
+  module BelongsTo #:nodoc:
 
     private
 
@@ -13,7 +13,7 @@ module Tenacity
       self.send "#{association_id}_id=".to_sym, associate.id.to_s
     end
 
-    module ClassMethods
+    module ClassMethods #:nodoc:
       def _t_stringify_belongs_to_value(record, association_id)
         record.send "#{association_id}_id=".to_sym, record.send("#{association_id}_id").to_s
       end

@@ -1,5 +1,5 @@
-module TenacityPlugin
-  module ClassMethods
+module TenacityPlugin #:nodoc:
+  module ClassMethods #:nodoc:
     def _t_find(id)
       self.find(id)
     end
@@ -27,7 +27,7 @@ module TenacityPlugin
     end
   end
 
-  module InstanceMethods
+  module InstanceMethods #:nodoc:
     def _t_reload
       reload
     rescue
@@ -51,7 +51,7 @@ module TenacityPlugin
   end
 end
 
-module TenacityPluginAddition
+module TenacityPluginAddition #:nodoc:
   def self.included(model)
     model.plugin TenacityPlugin
   end

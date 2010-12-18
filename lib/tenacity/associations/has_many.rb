@@ -1,5 +1,5 @@
 module Tenacity
-  module HasMany
+  module HasMany #:nodoc:
 
     private
 
@@ -24,7 +24,7 @@ module Tenacity
       @perform_save_associates_callback = true
     end
 
-    module ClassMethods
+    module ClassMethods #:nodoc:
       def _t_save_associates(record, association_id)
         return if record.perform_save_associates_callback == false
 

@@ -1,5 +1,5 @@
 module Tenacity
-  module InstanceMethods
+  module InstanceMethods #:nodoc:
 
     private
 

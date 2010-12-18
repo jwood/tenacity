@@ -1,5 +1,5 @@
-module ActiveRecord
-  class Base
+module ActiveRecord #:nodoc:
+  class Base #:nodoc:
 
     def self._t_find(id)
       self.find_by_id(id)

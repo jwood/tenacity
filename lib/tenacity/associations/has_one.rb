@@ -1,5 +1,5 @@
 module Tenacity
-  module HasOne
+  module HasOne #:nodoc:
 
     private
 
