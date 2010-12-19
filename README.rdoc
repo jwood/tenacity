@@ -46,10 +46,18 @@ much the same way, supporting many of the same options.
   user.save
 
 
+== Additional Usage Details
+
+* The directories that contain your model classes must be in your load path in
+order for Tenacity to find them.
+
+
 == Supported ORMs
 
 * ActiveRecord
 * MongoMapper
+
+See EXTEND.rdoc for information on extendeding Tenacity to work with other ORMs.
 
 
 == Contributing to Tenacity

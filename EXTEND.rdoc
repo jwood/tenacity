@@ -1,0 +1,69 @@
+For Tenacity to interact with an ORM, the ORM needs to be extended to support
+the methods listed below.  Beyond that, no additional configuration or code is
+necessary.  Tenacity communicates with the ORM using these methods only, so
+as long as they have been implemented and are available on the model object,
+Tenacity will be able to manage the object's relationships.
+
+
+== Class Methods
+
+  _t_find(id)
+
+Find an object by its id.  If the object cannot be found, return nil.
+
+  _t_find_bulk(ids=[])
+
+Find many objects by the specified ids.  If no objects could be found, return
+an empty array.
+
+  _t_find_first_by_associate(property, id)
+
+Find the first object by the specified property name, with the specified id.
+If no object could be found, return nil.
+
+  _t_find_all_by_associate(property, id)
+
+Find all objects by the specified property name, with the specified id.  If
+no objects could be found, return an empty array.
+
+  _t_initialize_has_many_association(association_id)
+
+Perform any ORM specific initialization necessary to support a has many
+association.  This could include defining properties, or callback methods,
+on the object.  This method is optional, and does not need to be defined.
+
+  _t_initialize_belongs_to_association(association_id)
+
+Perform any ORM specific initialization necessary to support a belongs to
+association.  This could include defining properties, or callback methods,
+on the object.  This method is optional, and does not need to be defined.
+
+  _t_initialize_has_one_association(association_id)
+
+Perform any ORM specific initialization necessary to support a has one
+association.  This could include defining properties, or callback methods,
+on the object.  This method is optional, and does not need to be defined.
+
+
+== Instance Methods
+
+  _t_reload
+
+Reload the object from the database.
+
+  _t_associate_many(association_id, associate_ids)
+
+Create has_many associations between this object and the objects with ids
+specified in associate_ids.  This method could involve writing the 
+associate_ids into a join table, or into an object's hash.
+
+  _t_get_associate_ids(association_id)
+
+Get the ids of the objects associated with this object through the specified
+association.
+
+  _t_clear_associates(association_id)
+
+Destroy the association between this object and its current associates through
+the specified association.
+
