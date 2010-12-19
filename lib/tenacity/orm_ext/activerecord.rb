@@ -52,11 +52,11 @@ module ActiveRecord
     end
 
     def self._t_find_first_by_associate(property, id)
-      find(:first, :conditions => ["#{property} = ?", id])
+      find(:first, :conditions => ["#{property} = ?", id.to_s])
     end
 
     def self._t_find_all_by_associate(property, id)
-      find(:all, :conditions => ["#{property} = ?", id])
+      find(:all, :conditions => ["#{property} = ?", id.to_s])
     end
 
     def self._t_initialize_has_many_association(association_id)
