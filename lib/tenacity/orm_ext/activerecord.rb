@@ -40,7 +40,6 @@
 #   end
 #
 module ActiveRecord
-  # @private
   class Base #:nodoc:
 
     def self._t_find(id)

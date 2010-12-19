@@ -35,6 +35,7 @@ module Tenacity
   #     include Tenacity
   #     t_has_one :office
   #   end
+  #
   #   class Office
   #     include MongoMapper::Document
   #     include Tenacity
@@ -49,6 +50,7 @@ module Tenacity
   #     include Tenacity
   #     t_has_many :employees
   #   end
+  #
   #   class Employee
   #     include MongoMapper::Document
   #     include Tenacity
