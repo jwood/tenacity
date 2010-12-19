@@ -13,6 +13,7 @@ require 'shoulda'
 
 require File.join(File.dirname(__FILE__), 'helpers', 'active_record_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'mongo_mapper_test_helper')
+require File.join(File.dirname(__FILE__), 'helpers', 'couch_rest_test_helper')
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
@@ -29,6 +30,8 @@ def setup_fixtures
 
   ActiveRecordCar.connection.execute("delete from active_record_cars_mongo_mapper_wheels")
   ActiveRecordCar.connection.execute("delete from active_record_nuts_mongo_mapper_wheels")
+
+  COUCH_DB.recreate! rescue nil
 end
 
 def assert_set_equal(expecteds, actuals, message = nil)
