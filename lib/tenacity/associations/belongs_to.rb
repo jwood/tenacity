@@ -15,7 +15,7 @@ module Tenacity
 
     module ClassMethods #:nodoc:
       def define_belongs_to_properties(association_id)
-        _t_define_belongs_to_properties(association_id) if self.respond_to?(:_t_define_belongs_to_properties)
+        _t_initialize_belongs_to_association(association_id) if self.respond_to?(:_t_initialize_belongs_to_association)
       end
 
       def _t_stringify_belongs_to_value(record, association_id)

@@ -49,17 +49,17 @@ module TenacityMongoMapperPlugin
       self.all(property => id)
     end
 
-    def _t_define_has_many_properties(association_id)
+    def _t_initialize_has_many_association(association_id)
       key "_t_" + ActiveSupport::Inflector.singularize(association_id) + "_ids", Array
       after_save { |record| _t_save_associates(record, association_id) }
     end
 
-    def _t_define_belongs_to_properties(association_id)
+    def _t_initialize_belongs_to_association(association_id)
       key "#{association_id}_id", Integer
       before_save { |record| _t_stringify_belongs_to_value(record, association_id) }
     end
 
-    def _t_define_has_one_properties(association_id)
+    def _t_initialize_has_one_association(association_id)
       unless self.respond_to?("#{association_id}_id")
         key "#{association_id}_id", String
         before_save { |record| _t_stringify_has_one_value(record, association_id) }

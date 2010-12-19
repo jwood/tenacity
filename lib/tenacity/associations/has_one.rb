@@ -17,7 +17,7 @@ module Tenacity
       def define_has_one_properties(association_id)
         require association_id.to_s
         clazz = Kernel.const_get(association_id.to_s.camelcase.to_sym)
-        clazz._t_define_has_one_properties(ActiveSupport::Inflector.underscore(self.to_s)) if clazz.respond_to?(:_t_define_has_one_properties)
+        clazz._t_initialize_has_one_association(ActiveSupport::Inflector.underscore(self.to_s)) if clazz.respond_to?(:_t_initialize_has_one_association)
       end
 
       def _t_stringify_has_one_value(record, association_id)

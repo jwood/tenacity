@@ -58,11 +58,11 @@ module ActiveRecord
       find(:all, :conditions => ["#{property} = ?", id])
     end
 
-    def self._t_define_has_many_properties(association_id)
+    def self._t_initialize_has_many_association(association_id)
       after_save { |record| _t_save_associates(record, association_id) }
     end
 
-    def self._t_define_belongs_to_properties(association_id)
+    def self._t_initialize_belongs_to_association(association_id)
       before_save { |record| _t_stringify_belongs_to_value(record, association_id) }
     end
 

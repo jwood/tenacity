@@ -26,7 +26,7 @@ module Tenacity
 
     module ClassMethods #:nodoc:
       def define_has_many_properties(association_id)
-        _t_define_has_many_properties(association_id) if self.respond_to?(:_t_define_has_many_properties)
+        _t_initialize_has_many_association(association_id) if self.respond_to?(:_t_initialize_has_many_association)
       end
 
       def _t_save_associates(record, association_id)
