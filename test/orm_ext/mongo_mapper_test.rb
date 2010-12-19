@@ -28,8 +28,8 @@ class MongoMapperTest < Test::Unit::TestCase
 
     should "be able to find the first associate of an object" do
       car = ActiveRecordCar.create
-      wheel = MongoMapperWheel.create(:active_record_car_id => car.id)
-      assert_equal wheel, MongoMapperWheel._t_find_first_by_associate(:active_record_car_id, car.id)
+      wheel = MongoMapperWheel.create(:active_record_car_id => car.id.to_s)
+      assert_equal wheel, MongoMapperWheel._t_find_first_by_associate(:active_record_car_id, car.id.to_s)
     end
 
     should "return nil if the first associate of an object could not be found" do
@@ -37,10 +37,10 @@ class MongoMapperTest < Test::Unit::TestCase
     end
 
     should "be able to find the associates of an object" do
-      wheel_1 = MongoMapperWheel.create(:active_record_car_id => 101)
-      wheel_2 = MongoMapperWheel.create(:active_record_car_id => 101)
-      wheel_3 = MongoMapperWheel.create(:active_record_car_id => 102)
-      assert_set_equal [wheel_1, wheel_2], MongoMapperWheel._t_find_all_by_associate(:active_record_car_id, 101)
+      wheel_1 = MongoMapperWheel.create(:active_record_car_id => '101')
+      wheel_2 = MongoMapperWheel.create(:active_record_car_id => '101')
+      wheel_3 = MongoMapperWheel.create(:active_record_car_id => '102')
+      assert_set_equal [wheel_1, wheel_2], MongoMapperWheel._t_find_all_by_associate(:active_record_car_id, '101')
     end
 
     should "return an empty array if the object has no associates" do
@@ -50,9 +50,9 @@ class MongoMapperTest < Test::Unit::TestCase
     should "be able to reload an object from the database" do
       wheel = MongoMapperWheel.create
       wheel.active_record_car_id = 101
-      assert_equal 101, wheel.active_record_car_id
+      assert_equal 101, wheel.active_record_car_id.to_i
       wheel.reload
-      assert_nil wheel.active_record_car_id
+      assert_equal '', wheel.active_record_car_id
     end
 
     should "be able to associate many objects with the given object" do

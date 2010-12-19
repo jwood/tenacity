@@ -50,20 +50,24 @@ module TenacityMongoMapperPlugin
     end
 
     def _t_initialize_has_many_association(association_id)
-      key has_many_property_name(association_id), Array
+      unless self.respond_to?(has_many_property_name(association_id))
+        key has_many_property_name(association_id), Array
+      end
       after_save { |record| _t_save_associates(record, association_id) }
     end
 
     def _t_initialize_belongs_to_association(association_id)
-      key "#{association_id}_id", Integer
+      unless self.respond_to?("#{association_id}_id")
+        key "#{association_id}_id", String
+      end
       before_save { |record| _t_stringify_belongs_to_value(record, association_id) }
     end
 
     def _t_initialize_has_one_association(association_id)
       unless self.respond_to?("#{association_id}_id")
         key "#{association_id}_id", String
-        before_save { |record| _t_stringify_has_one_value(record, association_id) }
       end
+      before_save { |record| _t_stringify_has_one_value(record, association_id) }
     end
   end
 

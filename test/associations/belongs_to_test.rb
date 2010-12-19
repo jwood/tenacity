@@ -32,13 +32,13 @@ class BelongsToTest < Test::Unit::TestCase
     should "be able to fetch the id of the associated object" do
       @wheel.active_record_car_id = @car.id
       @wheel.save
-      assert_equal @car.id, MongoMapperWheel.find(@wheel.id).active_record_car_id
+      assert_equal @car.id, MongoMapperWheel.find(@wheel.id).active_record_car_id.to_i
     end
 
     should "be able to load the associated object" do
       @wheel.active_record_car = @car
       @wheel.save
-      assert_equal @car.id, MongoMapperWheel.find(@wheel.id).active_record_car_id
+      assert_equal @car.id, MongoMapperWheel.find(@wheel.id).active_record_car_id.to_i
       assert_equal @car, MongoMapperWheel.find(@wheel.id).active_record_car
     end
 
