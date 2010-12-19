@@ -96,5 +96,10 @@ module TenacityPluginAddition #:nodoc:
     model.plugin TenacityMongoMapperPlugin
   end
 end
-MongoMapper::Document.append_inclusions(TenacityPluginAddition)
+
+begin
+  MongoMapper::Document.append_inclusions(TenacityPluginAddition)
+rescue
+  # MongoMapper not loaded
+end
 

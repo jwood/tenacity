@@ -193,7 +193,6 @@ module Tenacity
       attr_accessor "_t_" + association_id.to_s
       attr_accessor :perform_save_associates_callback
 
-
       define_method(association_id) do |*params|
         get_associate(association_id, params) do
           has_many_associates(association_id)

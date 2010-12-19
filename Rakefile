@@ -20,7 +20,7 @@ Jeweler::Tasks.new do |gem|
   gem.email = "john@johnpwood.com"
   gem.authors = ["John Wood"]
 
-  gem.add_runtime_dependency 'activesupport', '> 2.3'
+  gem.add_runtime_dependency 'activesupport', '>= 2.3'
 end
 Jeweler::RubygemsDotOrgTasks.new
 
