@@ -23,5 +23,9 @@ module Tenacity
       "@_t_" + association_id.to_s
     end
 
+    def associate_class(association_id)
+      self.class.associate_class(association_id)
+    end
+
   end
 end

@@ -34,23 +34,23 @@
 module TenacityMongoMapperPlugin
   module ClassMethods #:nodoc:
     def _t_find(id)
-      self.find(id)
+      find(id)
     end
 
     def _t_find_bulk(ids=[])
-      self.find(ids)
+      find(ids)
     end
 
     def _t_find_first_by_associate(property, id)
-      self.first(property => id)
+      first(property => id)
     end
 
     def _t_find_all_by_associate(property, id)
-      self.all(property => id)
+      all(property => id)
     end
 
     def _t_initialize_has_many_association(association_id)
-      key "_t_" + ActiveSupport::Inflector.singularize(association_id) + "_ids", Array
+      key has_many_property_name(association_id), Array
       after_save { |record| _t_save_associates(record, association_id) }
     end
 
@@ -75,18 +75,15 @@ module TenacityMongoMapperPlugin
     end
 
     def _t_associate_many(association_id, associate_ids)
-      property_name = "_t_" + ActiveSupport::Inflector.singularize(association_id) + "_ids"
-      self.send(property_name + '=', associate_ids)
+      self.send(has_many_property_name(association_id) + '=', associate_ids)
     end
 
     def _t_get_associate_ids(association_id)
-      property_name = "_t_" + ActiveSupport::Inflector.singularize(association_id) + "_ids"
-      self.send(property_name)
+      self.send(has_many_property_name(association_id))
     end
 
     def _t_clear_associates(association_id)
-      property_name = "_t_" + ActiveSupport::Inflector.singularize(association_id) + "_ids"
-      self.send(property_name + '=', [])
+      self.send(has_many_property_name(association_id) + '=', [])
     end
   end
 end

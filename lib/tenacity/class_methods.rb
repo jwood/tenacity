@@ -93,7 +93,7 @@ module Tenacity
     #
     def t_has_one(association_id, args={})
       extend(HasOne::ClassMethods)
-      define_has_one_properties(association_id)
+      initialize_has_one_association(association_id)
 
       define_method(association_id) do |*params|
         get_associate(association_id, params) do
@@ -131,7 +131,7 @@ module Tenacity
     #
     def t_belongs_to(association_id, args={})
       extend(BelongsTo::ClassMethods)
-      define_belongs_to_properties(association_id)
+      initialize_belongs_to_association(association_id)
 
       define_method(association_id) do |*params|
         get_associate(association_id, params) do
@@ -188,10 +188,7 @@ module Tenacity
     #
     def t_has_many(association_id, args={})
       extend(HasMany::ClassMethods)
-      define_has_many_properties(association_id)
-
-      attr_accessor "_t_" + association_id.to_s
-      attr_accessor :perform_save_associates_callback
+      initialize_has_many_association(association_id)
 
       define_method(association_id) do |*params|
         get_associate(association_id, params) do
@@ -216,6 +213,10 @@ module Tenacity
       define_method(:_t_save_without_callback) do
         save_without_callback
       end
+    end
+
+    def associate_class(association_id)
+      Kernel.const_get(association_id.to_s.singularize.camelcase.to_sym)
     end
 
   end
