@@ -21,8 +21,8 @@ module Tenacity
       def initialize_has_one_association(association_id)
         begin
           require association_id.to_s
-        rescue e
-          puts "#{association_id.to_s} does not appear to be in the load path"
+        rescue Exception => e
+          puts "ERROR: #{association_id.to_s} does not appear to be in the load path. Please make sure all model files are in the load path."
           raise
         end
 
