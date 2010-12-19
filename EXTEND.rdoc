@@ -9,22 +9,23 @@ Tenacity will be able to manage the object's relationships.
 
   _t_find(id)
 
-Find an object by its id.  If the object cannot be found, return nil.
+Find an object by its id, and return it.  If the object cannot be found,
+return nil.
 
   _t_find_bulk(ids=[])
 
-Find many objects by the specified ids.  If no objects could be found, return
-an empty array.
+Find many objects by the specified ids, and return them in an array.
+If no objects could be found, return an empty array.
 
   _t_find_first_by_associate(property, id)
 
-Find the first object by the specified property name, with the specified id.
-If no object could be found, return nil.
+Find the first object by the specified property name, with the specified id,
+and return it.  If no object could be found, return nil.
 
   _t_find_all_by_associate(property, id)
 
-Find all objects by the specified property name, with the specified id.  If
-no objects could be found, return an empty array.
+Find all objects by the specified property name, with the specified id, and
+return them in an array.  If no objects could be found, return an empty array.
 
   _t_initialize_has_many_association(association_id)
 
@@ -49,21 +50,22 @@ on the object.  This method is optional, and does not need to be defined.
 
   _t_reload
 
-Reload the object from the database.
+Reload the object from the database, overwriting the objects properties with
+the data fetched from the database.  Return nothing.
 
   _t_associate_many(association_id, associate_ids)
 
 Create has_many associations between this object and the objects with ids
-specified in associate_ids.  This method could involve writing the 
-associate_ids into a join table, or into an object's hash.
+specified in the array of associate_ids.  This method could involve writing
+the associate_ids into a join table, or into an object's hash.
 
   _t_get_associate_ids(association_id)
 
 Get the ids of the objects associated with this object through the specified
-association.
+association, and return them in an array.
 
   _t_clear_associates(association_id)
 
 Destroy the association between this object and its current associates through
-the specified association.
+the specified association.  Return nothing.
 
