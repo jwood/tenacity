@@ -33,7 +33,7 @@ end
 
 require 'rcov/rcovtask'
 Rcov::RcovTask.new do |test|
-  test.libs << 'test'
+  test.libs << 'test' << 'test/fixtures'
   test.pattern = 'test/**/*_test.rb'
   test.verbose = true
   test.rcov_opts << '--exclude "gems/*"'
