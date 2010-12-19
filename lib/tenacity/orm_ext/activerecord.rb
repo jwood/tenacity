@@ -39,7 +39,7 @@
 #     t.string :wheel_id
 #   end
 #
-module ActiveRecord
+module ActiveRecord #:nodoc: @private
   class Base #:nodoc:
 
     def self._t_find(id)
