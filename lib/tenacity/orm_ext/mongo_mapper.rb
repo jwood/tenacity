@@ -70,7 +70,7 @@ module TenacityMongoMapperPlugin
   module InstanceMethods #:nodoc:
     def _t_reload
       reload
-    rescue
+    rescue MongoMapper::DocumentNotFound
       nil
     end
 
