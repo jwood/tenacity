@@ -1,4 +1,4 @@
-class MongoMapperButtons
+class MongoMapperButton
   include MongoMapper::Document
   include Tenacity
 

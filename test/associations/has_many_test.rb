@@ -90,7 +90,7 @@ class HasManyTest < Test::Unit::TestCase
       @wheel.active_record_nut_ids = [@nut_1.id, @nut_2.id, @nut_3.id]
       @wheel.save
       assert_set_equal [@nut_1, @nut_2, @nut_3], MongoMapperWheel.find(@wheel.id).active_record_nuts
-      assert_set_equal [@nut_1.id, @nut_2.id, @nut_3.id], MongoMapperWheel.find(@wheel.id).active_record_nut_ids
+      assert_set_equal [@nut_1.id.to_s, @nut_2.id.to_s, @nut_3.id.to_s], MongoMapperWheel.find(@wheel.id).active_record_nut_ids
     end
 
     context "that works with associated objects" do

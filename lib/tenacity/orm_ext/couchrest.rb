@@ -5,50 +5,68 @@ module CouchRest
     end
 
     def self._t_find_bulk(ids)
-      #return [] if ids.nil? || ids.empty?
-      #find(:all, :conditions => ["id in (?)", ids])
+      return [] if ids.nil? || ids.empty?
+
+      docs = []
+      result = database.get_bulk ids
+      result['rows'].each do |row|
+        docs << (row['doc'].nil? ? nil : create_from_database(row['doc']))
+      end
+      docs.reject { |doc| doc.nil? }
     end
 
     def self._t_find_first_by_associate(property, id)
-      #find(:first, :conditions => ["#{property} = ?", id.to_s])
+      self.send("by_#{property}", :key => id.to_s).first
     end
 
     def self._t_find_all_by_associate(property, id)
-      #find(:all, :conditions => ["#{property} = ?", id.to_s])
+      self.send("by_#{property}", :key => id.to_s)
     end
 
     def self._t_initialize_has_many_association(association_id)
-      #after_save { |record| _t_save_associates(record, association_id) }
+      unless self.respond_to?(has_many_property_name(association_id))
+        property has_many_property_name(association_id), :type => 'Array'
+        view_by has_many_property_name(association_id)
+        after_save { |record| _t_save_associates(record, association_id) if self.respond_to?(:_t_save_associates) }
+      end
     end
 
     def self._t_initialize_belongs_to_association(association_id)
-      #before_save { |record| _t_stringify_belongs_to_value(record, association_id) }
+      property_name = "#{association_id}_id"
+      unless self.respond_to?(property_name)
+        property property_name, :type => 'String'
+        view_by property_name
+        before_save { |record| _t_stringify_belongs_to_value(record, association_id) if self.respond_to?(:_t_stringify_belongs_to_value) }
+      end
+    end
+
+    def self._t_initialize_has_one_association(association_id)
+      property_name = "#{association_id}_id"
+      unless self.respond_to?(property_name)
+        property property_name, :type => 'String'
+        view_by property_name
+        before_save { |record| _t_stringify_has_one_value(record, association_id) if self.respond_to?(:_t_stringify_has_one_value) }
+      end
     end
 
     def _t_reload
-      #reload
-    end
-
-    def _t_clear_associates(association_id)
-      #join_table_name = self.class.join_table_name(association_id)
-      #self.connection.execute("delete from #{join_table_name} where #{self.class.my_id_column} = #{self.id}")
+      new_doc = database.get(self.id)
+      self.clear
+      new_doc.each { |k,v| self[k] = new_doc[k] }
     end
 
     def _t_associate_many(association_id, associate_ids)
-      #join_table_name = self.class.join_table_name(association_id)
-      #values = associate_ids.map { |associate_id| "(#{self.id}, '#{associate_id}')" }.join(',')
-
-      #self.transaction do
-      #  _t_clear_associates(association_id)
-      #  self.connection.execute("insert into #{join_table_name} (#{self.class.my_id_column}, #{self.class.associate_id_column(association_id)}) values #{values}")
-      #end
+      self.send(has_many_property_name(association_id) + '=', associate_ids)
     end
 
     def _t_get_associate_ids(association_id)
-      #join_table_name = self.class.join_table_name(association_id)
-      #rows = self.connection.execute("select #{self.class.associate_id_column(association_id)} from #{join_table_name} where #{self.class.my_id_column} = #{self.id}")
-      #ids = []; rows.each { |r| ids << r[0] }; ids
+      self.send(has_many_property_name(association_id)) || []
     end
+
+    def _t_clear_associates(association_id)
+      self.send(has_many_property_name(association_id) + '=', [])
+    end
+
   end
 end
 

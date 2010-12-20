@@ -29,7 +29,7 @@ class MongoMapperTest < Test::Unit::TestCase
     should "be able to find the first associate of an object" do
       car = ActiveRecordCar.create
       wheel = MongoMapperWheel.create(:active_record_car_id => car.id.to_s)
-      assert_equal wheel, MongoMapperWheel._t_find_first_by_associate(:active_record_car_id, car.id.to_s)
+      assert_equal wheel, MongoMapperWheel._t_find_first_by_associate(:active_record_car_id, car.id)
     end
 
     should "return nil if the first associate of an object could not be found" do
@@ -61,7 +61,7 @@ class MongoMapperTest < Test::Unit::TestCase
       nut_3 = ActiveRecordNut.create
       wheel = MongoMapperWheel.create
       wheel._t_associate_many(:active_record_nuts, [nut_1.id, nut_2.id, nut_3.id])
-      assert_set_equal [nut_1.id, nut_2.id, nut_3.id], wheel._t_active_record_nut_ids
+      assert_set_equal [nut_1.id, nut_2.id, nut_3.id], wheel.t_active_record_nut_ids
     end
 
     should "be able to get the ids of the objects associated with the given object" do

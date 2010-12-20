@@ -30,8 +30,15 @@ def setup_fixtures
 
   ActiveRecordCar.connection.execute("delete from active_record_cars_mongo_mapper_wheels")
   ActiveRecordCar.connection.execute("delete from active_record_nuts_mongo_mapper_wheels")
+end
 
+def setup_couchdb_fixtures
   COUCH_DB.recreate! rescue nil
+end
+
+def setup_all_fixtures
+  setup_fixtures
+  setup_couchdb_fixtures
 end
 
 def assert_set_equal(expecteds, actuals, message = nil)

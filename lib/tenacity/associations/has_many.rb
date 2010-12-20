@@ -33,7 +33,7 @@ module Tenacity
       def initialize_has_many_association(association_id)
         _t_initialize_has_many_association(association_id) if self.respond_to?(:_t_initialize_has_many_association)
 
-        attr_accessor "_t_" + association_id.to_s
+        attr_accessor has_many_property_name(association_id)
         attr_accessor :perform_save_associates_callback
       end
 
@@ -44,12 +44,12 @@ module Tenacity
 
         associates = (record.instance_variable_get "@_t_#{association_id.to_s}") || []
         associates.each do |associate|
-          associate.send("#{property_name_for_record(record)}=", record.id)
+          associate.send("#{property_name_for_record(record)}=", record.id.to_s)
           save_associate(associate)
         end
 
         unless associates.blank?
-          associate_ids = associates.map { |associate| associate.id }
+          associate_ids = associates.map { |associate| associate.id.to_s }
           record._t_associate_many(association_id, associate_ids)
           save_associate(record)
         end
@@ -59,7 +59,7 @@ module Tenacity
         clazz = associate_class(association_id)
         property_name = property_name_for_record(record)
 
-        old_associates = clazz._t_find_all_by_associate(property_name, record.id)
+        old_associates = clazz._t_find_all_by_associate(property_name, record.id.to_s)
         old_associates.each do |old_associate|
           old_associate.send("#{property_name}=", nil)
           save_associate(old_associate)
@@ -74,7 +74,7 @@ module Tenacity
       end
 
       def has_many_property_name(association_id)
-        "_t_" + ActiveSupport::Inflector.singularize(association_id) + "_ids"
+        "t_" + ActiveSupport::Inflector.singularize(association_id) + "_ids"
       end
 
       def save_associate(associate)

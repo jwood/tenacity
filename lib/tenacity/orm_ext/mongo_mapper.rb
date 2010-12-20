@@ -42,11 +42,11 @@ module TenacityMongoMapperPlugin
     end
 
     def _t_find_first_by_associate(property, id)
-      first(property => id)
+      first(property => id.to_s)
     end
 
     def _t_find_all_by_associate(property, id)
-      all(property => id)
+      all(property => id.to_s)
     end
 
     def _t_initialize_has_many_association(association_id)
