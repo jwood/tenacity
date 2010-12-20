@@ -79,7 +79,7 @@ module TenacityMongoMapperPlugin
     end
 
     def _t_associate_many(association_id, associate_ids)
-      self.send(has_many_property_name(association_id) + '=', associate_ids)
+      self.send(has_many_property_name(association_id) + '=', associate_ids.map { |associate_id| associate_id.to_s })
     end
 
     def _t_get_associate_ids(association_id)

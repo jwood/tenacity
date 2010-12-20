@@ -63,7 +63,7 @@ class CouchRestTest < Test::Unit::TestCase
       button_3 = MongoMapperButton.create
       radio = CouchRestRadio.create({})
       radio._t_associate_many(:mongo_mapper_buttons, [button_1.id, button_2.id, button_3.id])
-      assert_set_equal [button_1.id, button_2.id, button_3.id], radio.t_mongo_mapper_button_ids
+      assert_set_equal [button_1.id.to_s, button_2.id.to_s, button_3.id.to_s], radio.t_mongo_mapper_button_ids
     end
 
     should "be able to get the ids of the objects associated with the given object" do
@@ -72,7 +72,7 @@ class CouchRestTest < Test::Unit::TestCase
       button_3 = MongoMapperButton.create
       radio = CouchRestRadio.create({})
       radio._t_associate_many(:mongo_mapper_buttons, [button_1.id, button_2.id, button_3.id])
-      assert_set_equal [button_1.id, button_2.id, button_3.id], radio._t_get_associate_ids(:mongo_mapper_buttons)
+      assert_set_equal [button_1.id.to_s, button_2.id.to_s, button_3.id.to_s], radio._t_get_associate_ids(:mongo_mapper_buttons)
     end
 
     should "return an empty array when trying to fetch associate ids for an object with no associates" do
@@ -86,7 +86,7 @@ class CouchRestTest < Test::Unit::TestCase
       button_3 = MongoMapperButton.create
       radio = CouchRestRadio.create({})
       radio._t_associate_many(:mongo_mapper_buttons, [button_1.id, button_2.id, button_3.id])
-      assert_set_equal [button_1.id, button_2.id, button_3.id], radio._t_get_associate_ids(:mongo_mapper_buttons)
+      assert_set_equal [button_1.id.to_s, button_2.id.to_s, button_3.id.to_s], radio._t_get_associate_ids(:mongo_mapper_buttons)
       radio._t_clear_associates(:mongo_mapper_buttons)
       assert_equal [], radio._t_get_associate_ids(:mongo_mapper_buttons)
     end

@@ -5,6 +5,14 @@ as long as they have been implemented and are available on the model object,
 Tenacity will be able to manage the object's relationships.
 
 
+== A note about IDs
+
+An ID can be an integer, a string, or an object, depending on the database
+and ORM you are using.  To be as compatible as possible, Tenacity treats
+all IDs as strings.  So, all ORM extensions should accept strings for IDs
+as input parameters, and return strings for IDs.
+
+
 == Class Methods
 
   _t_find(id)
