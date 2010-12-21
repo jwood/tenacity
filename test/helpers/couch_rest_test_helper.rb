@@ -1,4 +1,4 @@
-require 'couchrest_extended_document'
+require 'couchrest_model'
 
 COUCHHOST   = "http://127.0.0.1:5984"
 TESTDB      = 'tenacity-test'

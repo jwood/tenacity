@@ -25,7 +25,7 @@ module CouchRest
 
     def self._t_initialize_has_many_association(association_id)
       unless self.respond_to?(has_many_property_name(association_id))
-        property has_many_property_name(association_id), :type => 'Array'
+        property has_many_property_name(association_id), :type => Array
         view_by has_many_property_name(association_id)
         after_save { |record| _t_save_associates(record, association_id) if self.respond_to?(:_t_save_associates) }
       end
@@ -34,7 +34,7 @@ module CouchRest
     def self._t_initialize_belongs_to_association(association_id)
       property_name = "#{association_id}_id"
       unless self.respond_to?(property_name)
-        property property_name, :type => 'String'
+        property property_name, :type => String
         view_by property_name
         before_save { |record| _t_stringify_belongs_to_value(record, association_id) if self.respond_to?(:_t_stringify_belongs_to_value) }
       end
@@ -43,7 +43,7 @@ module CouchRest
     def self._t_initialize_has_one_association(association_id)
       property_name = "#{association_id}_id"
       unless self.respond_to?(property_name)
-        property property_name, :type => 'String'
+        property property_name, :type => String
         view_by property_name
         before_save { |record| _t_stringify_has_one_value(record, association_id) if self.respond_to?(:_t_stringify_has_one_value) }
       end
