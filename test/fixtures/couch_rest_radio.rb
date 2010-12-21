@@ -1,6 +1,6 @@
-require 'couchrest_model'
+require 'couchrest_extended_document'
 
-class CouchRestRadio < CouchRest::Model::Base
+class CouchRestRadio < CouchRest::ExtendedDocument
   include Tenacity
   use_database COUCH_DB
 
