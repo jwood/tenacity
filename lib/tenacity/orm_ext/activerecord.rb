@@ -60,11 +60,11 @@ module ActiveRecord
     end
 
     def self._t_initialize_has_many_association(association_id)
-      after_save { |record| _t_save_associates(record, association_id) }
+      after_save { |record| record.class._t_save_associates(record, association_id) }
     end
 
     def self._t_initialize_belongs_to_association(association_id)
-      before_save { |record| _t_stringify_belongs_to_value(record, association_id) }
+      before_save { |record| record.class._t_stringify_belongs_to_value(record, association_id) }
     end
 
     def _t_reload
