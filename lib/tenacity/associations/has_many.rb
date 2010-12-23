@@ -33,7 +33,6 @@ module Tenacity
       def initialize_has_many_association(association_id)
         _t_initialize_has_many_association(association_id) if self.respond_to?(:_t_initialize_has_many_association)
 
-        attr_accessor has_many_property_name(association_id)
         attr_accessor :perform_save_associates_callback
       end
 

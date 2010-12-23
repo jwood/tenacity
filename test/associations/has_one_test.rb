@@ -57,4 +57,21 @@ class HasOneTest < Test::Unit::TestCase
     end
   end
 
+  context "A CouchRest class with a has_one association to a MongoMapper class" do
+    setup do
+      setup_all_fixtures
+      @dashboard = MongoMapperDashboard.create
+      @radio = CouchRestRadio.create({})
+    end
+
+    should "be able to set and get the associated object" do
+      @dashboard.couch_rest_radio = @radio
+      assert_equal @radio, MongoMapperDashboard.find(@dashboard.id).couch_rest_radio
+    end
+
+    should "return nil if no association is set" do
+      assert_nil MongoMapperDashboard.find(@dashboard.id).couch_rest_radio
+    end
+  end
+
 end
