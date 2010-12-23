@@ -27,9 +27,9 @@ begin
 
         def self._t_initialize_has_many_association(association_id)
           unless self.respond_to?(has_many_property_name(association_id))
-            property has_many_property_name(association_id), :type => Array
+            property has_many_property_name(association_id), :type => [String]
             view_by has_many_property_name(association_id)
-            after_save { |record| _t_save_associates(record, association_id) if self.respond_to?(:_t_save_associates) }
+            after_save { |record| record.class._t_save_associates(record, association_id) if record.class.respond_to?(:_t_save_associates) }
           end
         end
 

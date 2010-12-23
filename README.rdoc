@@ -55,6 +55,7 @@ much the same way, supporting many of the same options.
 
 * ActiveRecord
 * MongoMapper
+* CouchRest (CouchModel and ExtendedDocument)
 
 See EXTEND.rdoc for information on extendeding Tenacity to work with other ORMs.
 

@@ -57,31 +57,63 @@ class BelongsToTest < Test::Unit::TestCase
     setup do
       setup_fixtures
       @wheel = MongoMapperWheel.create
-      @transaction = ActiveRecordNut.create
+      @nut = ActiveRecordNut.create
     end
 
     should "be able to fetch the id of the associated object" do
-      @transaction.mongo_mapper_wheel_id = @wheel.id
-      @transaction.save
-      assert_equal @wheel.id.to_s, ActiveRecordNut.find(@transaction.id).mongo_mapper_wheel_id
+      @nut.mongo_mapper_wheel_id = @wheel.id
+      @nut.save
+      assert_equal @wheel.id.to_s, ActiveRecordNut.find(@nut.id).mongo_mapper_wheel_id
     end
 
     should "be able to load the associated object" do
-      @transaction.mongo_mapper_wheel = @wheel
-      @transaction.save
-      assert_equal @wheel.id.to_s, ActiveRecordNut.find(@transaction.id).mongo_mapper_wheel_id
-      assert_equal @wheel, ActiveRecordNut.find(@transaction.id).mongo_mapper_wheel
+      @nut.mongo_mapper_wheel = @wheel
+      @nut.save
+      assert_equal @wheel.id.to_s, ActiveRecordNut.find(@nut.id).mongo_mapper_wheel_id
+      assert_equal @wheel, ActiveRecordNut.find(@nut.id).mongo_mapper_wheel
     end
 
     should "be be able to load the associated object if all we have is the id" do
-      @transaction.mongo_mapper_wheel_id = @wheel.id
-      @transaction.save
-      assert_equal @wheel, ActiveRecordNut.find(@transaction.id).mongo_mapper_wheel
+      @nut.mongo_mapper_wheel_id = @wheel.id
+      @nut.save
+      assert_equal @wheel, ActiveRecordNut.find(@nut.id).mongo_mapper_wheel
     end
 
     should "return nil if no association is set" do
-      assert_nil ActiveRecordNut.find(@transaction.id).mongo_mapper_wheel
+      assert_nil ActiveRecordNut.find(@nut.id).mongo_mapper_wheel
     end
- end
+  end
+
+  context "A CouchRest class with belongs_to association to a MongoMapper class" do
+    setup do
+      setup_all_fixtures
+      @dashboard = MongoMapperDashboard.create
+      @radio = CouchRestRadio.create({})
+    end
+
+    should "be able to fetch the id of the associated object" do
+      @radio.mongo_mapper_dashboard_id = @dashboard.id
+      @radio.save
+      assert_equal @dashboard.id.to_s, CouchRestRadio.find(@radio.id).mongo_mapper_dashboard_id
+    end
+
+    should "be able to load the associated object" do
+      @radio.mongo_mapper_dashboard = @dashboard
+      @radio.save
+      assert_equal @dashboard.id.to_s, CouchRestRadio.find(@radio.id).mongo_mapper_dashboard_id
+      assert_equal @dashboard, CouchRestRadio.find(@radio.id).mongo_mapper_dashboard
+    end
+
+    should "be be able to load the associated object if all we have is the id" do
+      @radio.mongo_mapper_dashboard_id = @dashboard.id
+      @radio.save
+      assert_equal @dashboard, CouchRestRadio.find(@radio.id).mongo_mapper_dashboard
+    end
+
+    should "return nil if no association is set" do
+      assert_nil CouchRestRadio.find(@radio.id).mongo_mapper_dashboard
+    end
+
+  end
 
 end

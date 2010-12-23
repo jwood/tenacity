@@ -52,10 +52,10 @@ class HasManyTest < Test::Unit::TestCase
       end
 
       should "be able to add an associated object using the << operator" do
-        person_4 = MongoMapperWheel.create
-        @car.mongo_mapper_wheels << person_4
+        wheel_4 = MongoMapperWheel.create
+        @car.mongo_mapper_wheels << wheel_4
         @car.save
-        assert_set_equal [@wheel_1, @wheel_2, @wheel_3, person_4], ActiveRecordCar.find(@car.id).mongo_mapper_wheels
+        assert_set_equal [@wheel_1, @wheel_2, @wheel_3, wheel_4], ActiveRecordCar.find(@car.id).mongo_mapper_wheels
       end
 
       should "be able to remove an associated object using the delete method" do
@@ -125,6 +125,58 @@ class HasManyTest < Test::Unit::TestCase
       should "return an empty array if the association is not set" do
         wheel = MongoMapperWheel.create
         assert_set_equal [], MongoMapperWheel.find(wheel.id).active_record_nuts
+      end
+    end
+  end
+
+  context "A CouchRest class with a has_many association to a MongoMapper class" do
+    setup do
+      setup_all_fixtures
+      @radio = CouchRestRadio.create({})
+      @button_1 = MongoMapperButton.create
+      @button_2 = MongoMapperButton.create
+      @button_3 = MongoMapperButton.create
+    end
+
+    should "be able to set the associated objects by their ids" do
+      @radio.mongo_mapper_button_ids = [@button_1.id, @button_2.id, @button_3.id]
+      @radio.save
+      assert_set_equal [@button_1, @button_2, @button_3], CouchRestRadio.get(@radio.id).mongo_mapper_buttons
+      assert_set_equal [@button_1.id.to_s, @button_2.id.to_s, @button_3.id.to_s], CouchRestRadio.get(@radio.id).mongo_mapper_button_ids
+    end
+
+    context "that works with associated objects" do
+      setup do
+        @radio.mongo_mapper_buttons = [@button_1, @button_2, @button_3]
+        @radio.save
+      end
+
+      should "be able to set the associated objects" do
+        assert_set_equal [@button_1, @button_2, @button_3], CouchRestRadio.get(@radio.id).mongo_mapper_buttons
+      end
+
+      should "be able to add an associated object using the << operator" do
+        button_4 = MongoMapperButton.create
+        @radio.mongo_mapper_buttons << button_4
+        @radio.save
+        assert_set_equal [@button_1, @button_2, @button_3, button_4], CouchRestRadio.get(@radio.id).mongo_mapper_buttons
+      end
+
+      should "be able to remove an associated object using the delete method" do
+        @radio.mongo_mapper_buttons.delete(@button_3)
+        @radio.save
+        assert_set_equal [@button_1, @button_2], CouchRestRadio.get(@radio.id).mongo_mapper_buttons
+      end
+
+      should "be able to clear all associated objects using the clear method" do
+        @radio.mongo_mapper_buttons.clear
+        @radio.save
+        assert_equal [], CouchRestRadio.get(@radio.id).mongo_mapper_buttons
+      end
+
+      should "return an empty array if the association is not set" do
+        radio = CouchRestRadio.create({})
+        assert_set_equal [], CouchRestRadio.get(radio.id).mongo_mapper_buttons
       end
     end
   end
