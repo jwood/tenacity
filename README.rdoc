@@ -11,7 +11,7 @@ add quite a bit of boilerplate code to your project.
 Tenacity aims to address this by providing an ORM independent way of specifying
 simple relationships between models backed by different databases.
 
-Tenacity is heavily based on ActiveRecord's assocations, and aims to behave in
+Tenacity is heavily based on ActiveRecord's associations, and aims to behave in
 much the same way, supporting many of the same options.
 
 
