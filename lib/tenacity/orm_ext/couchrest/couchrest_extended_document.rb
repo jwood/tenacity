@@ -30,10 +30,16 @@
 # The +t_has_many+ association will define a property named after the association.
 # The example above will create a property named <tt>:wheels_ids</tt>
 #
-module CouchRest
-  class ExtendedDocument #:nodoc:
-    include CouchRest::TenacityInstanceMethods
-    extend CouchRest::TenacityClassMethods
-  end
-end
 
+begin
+  require 'couchrest'
+
+  module CouchRest
+    class ExtendedDocument #:nodoc:
+      include CouchRest::TenacityInstanceMethods
+      extend CouchRest::TenacityClassMethods
+    end
+  end
+rescue LoadError
+  # CouchRest::ExtendedDocument not available
+end

@@ -101,6 +101,6 @@ end
 begin
   MongoMapper::Document.append_inclusions(TenacityPluginAddition)
 rescue
-  # MongoMapper not loaded
+  # MongoMapper not available
 end
 

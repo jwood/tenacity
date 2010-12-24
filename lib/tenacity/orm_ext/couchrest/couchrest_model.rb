@@ -31,6 +31,8 @@
 # The example above will create a property named <tt>:wheels_ids</tt>
 #
 begin
+  require 'couchrest'
+
   module CouchRest
     module Model
       class Base
