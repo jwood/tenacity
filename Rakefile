@@ -103,6 +103,6 @@ begin
       end
     end
   end
-rescue LoadError => e
+rescue LoadError
   # No ActiveRecord
 end
