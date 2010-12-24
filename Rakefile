@@ -1,5 +1,8 @@
 require 'rubygems'
 require 'bundler'
+
+Bundler::GemHelper.install_tasks
+
 begin
   Bundler.setup(:default, :development)
 rescue Bundler::BundlerError => e
@@ -8,21 +11,6 @@ rescue Bundler::BundlerError => e
   exit e.status_code
 end
 require 'rake'
-
-require 'jeweler'
-Jeweler::Tasks.new do |gem|
-  # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "tenacity"
-  gem.homepage = "http://github.com/jwood/tenacity"
-  gem.license = "MIT"
-  gem.summary = %Q{A ORM independent way of specifying simple relationships between models backed by different databases.}
-  gem.description = %Q{Tenacity provides an ORM independent way of specifying simple relationships between models backed by different databases.}
-  gem.email = "john@johnpwood.com"
-  gem.authors = ["John Wood"]
-
-  gem.add_runtime_dependency 'activesupport', '>= 2.3'
-end
-Jeweler::RubygemsDotOrgTasks.new
 
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|
