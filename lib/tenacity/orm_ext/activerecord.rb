@@ -72,37 +72,37 @@ module ActiveRecord
     end
 
     def _t_clear_associates(association_id)
-      join_table_name = self.class.join_table_name(association_id)
-      self.connection.execute("delete from #{join_table_name} where #{self.class.my_id_column} = #{self.id}")
+      join_table_name = self.class._t_join_table_name(association_id)
+      self.connection.execute("delete from #{join_table_name} where #{self.class._t_my_id_column} = #{self.id}")
     end
 
     def _t_associate_many(association_id, associate_ids)
-      join_table_name = self.class.join_table_name(association_id)
+      join_table_name = self.class._t_join_table_name(association_id)
       values = associate_ids.map { |associate_id| "(#{self.id}, '#{associate_id}')" }.join(',')
 
       self.transaction do
         _t_clear_associates(association_id)
-        self.connection.execute("insert into #{join_table_name} (#{self.class.my_id_column}, #{self.class.associate_id_column(association_id)}) values #{values}")
+        self.connection.execute("insert into #{join_table_name} (#{self.class._t_my_id_column}, #{self.class._t_associate_id_column(association_id)}) values #{values}")
       end
     end
 
     def _t_get_associate_ids(association_id)
-      join_table_name = self.class.join_table_name(association_id)
-      rows = self.connection.execute("select #{self.class.associate_id_column(association_id)} from #{join_table_name} where #{self.class.my_id_column} = #{self.id}")
+      join_table_name = self.class._t_join_table_name(association_id)
+      rows = self.connection.execute("select #{self.class._t_associate_id_column(association_id)} from #{join_table_name} where #{self.class._t_my_id_column} = #{self.id}")
       ids = []; rows.each { |r| ids << r[0] }; ids
     end
 
     private
 
-    def self.my_id_column
+    def self._t_my_id_column
       table_name.singularize + '_id'
     end
 
-    def self.associate_id_column(association_id)
+    def self._t_associate_id_column(association_id)
       association_id.to_s.singularize + '_id'
     end
 
-    def self.join_table_name(association_id)
+    def self._t_join_table_name(association_id)
       association_id.to_s < table_name ? "#{association_id}_#{table_name}" : "#{table_name}_#{association_id}"
     end
 
