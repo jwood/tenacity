@@ -1,0 +1,14 @@
+== Next Version
+
+* Major enhancements
+
+* Minor enhancements
+
+== 0.1.0
+
+* Major enhancements
+
+  * Initial release
+  * Support for has_one, belongs_to, and has_many associations
+  * Support for ActiveRecord, CouchRest, and MongoMapper
+
