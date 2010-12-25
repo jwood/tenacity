@@ -12,6 +12,8 @@ Gem::Specification.new do |s|
   s.summary     = %Q{A ORM independent way of specifying simple relationships between models backed by different databases.}
   s.description = %Q{Tenacity provides an ORM independent way of specifying simple relationships between models backed by different databases.}
 
+  s.rubyforge_project = "tenacity"
+
   s.required_rubygems_version = ">= 1.3.6"
 
   s.add_runtime_dependency "activesupport", ">= 2.3"
