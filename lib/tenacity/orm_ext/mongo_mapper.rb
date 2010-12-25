@@ -99,6 +99,7 @@ module TenacityPluginAddition #:nodoc:
 end
 
 begin
+  require 'mongo_mapper'
   MongoMapper::Document.append_inclusions(TenacityPluginAddition)
 rescue
   # MongoMapper not available
