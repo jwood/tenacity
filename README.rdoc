@@ -4,9 +4,9 @@ An ORM independent way of specifying simple relationships between models
 backed by different databases.
 
 It is sometimes necessary, or advantageous, to use more than one database in a
-given application.  However, most ORMs do not support inter-database
-relationships.  While supporting such relationships isn't difficult, it can
-add quite a bit of boilerplate code to your project.
+given application (polyglot persistence).  However, most ORMs do not support
+inter-database relationships.  While supporting such relationships isn't difficult,
+it can add quite a bit of boilerplate code to your project.
 
 Tenacity aims to address this by providing an ORM independent way of specifying
 simple relationships between models backed by different databases.
