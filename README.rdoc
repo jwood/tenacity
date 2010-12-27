@@ -110,13 +110,9 @@ See EXTEND.rdoc for information on extendeding Tenacity to work with other ORMs.
 
   bundler install
 
-* Create the test databases
-
-  rake db:create
-
 * Setup the test databases
 
-  rake db:test:prepare
+  rake test:prepare
 
 * Run the tests
 
