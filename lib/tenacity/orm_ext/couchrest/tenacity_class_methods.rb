@@ -1,5 +1,5 @@
 module CouchRest
-  module TenacityClassMethods
+  module TenacityClassMethods #:nodoc:
     def _t_find(id)
       get(id)
     end
