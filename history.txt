@@ -1,8 +1,4 @@
-== Next Version
-
-* Major enhancements
-
-* Minor enhancements
+== 0.1.1
 
 * Bug fixes
 

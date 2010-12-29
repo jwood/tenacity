@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    tenacity (0.2.0)
+    tenacity (0.1.1)
       activesupport (>= 2.3)
 
 GEM
