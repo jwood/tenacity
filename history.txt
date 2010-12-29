@@ -4,6 +4,10 @@
 
 * Minor enhancements
 
+* Bug fixes
+
+  * Fixed issue that was causing a load error if mongo mapper was not installed
+
 == 0.1.0
 
 * Major enhancements
