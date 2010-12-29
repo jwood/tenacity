@@ -4,9 +4,9 @@ An ORM independent way of specifying simple relationships between models
 backed by different databases.
 
 It is sometimes necessary, or advantageous, to use more than one database in a
-given application.  However, most ORMs do not support inter-database
-relationships.  While supporting such relationships isn't difficult, it can
-add quite a bit of boilerplate code to your project.
+given application (polyglot persistence).  However, most ORMs do not support
+inter-database relationships.  While supporting such relationships isn't difficult,
+it can add quite a bit of boilerplate code to your project.
 
 Tenacity aims to address this by providing an ORM independent way of specifying
 simple relationships between models backed by different databases.
@@ -17,33 +17,61 @@ much the same way, supporting many of the same options.
 
 == Example
 
-  class User
+  class Car
     include MongoMapper::Document
     include Tenacity
 
-    t_has_many :entries
+    t_has_many :wheels
+    t_has_one  :dashboard
   end
 
-  class Entry < ActiveRecord::Base
+  class Wheel < ActiveRecord::Base
     include Tenacity
 
-    t_belongs_to :user
+    t_belongs_to :car
   end
 
+  class Dashboard < CouchRest::ExtendedDocument
+    include Tenacity
+    use_database MY_COUCHDB_DATABASE
 
-  # Fetch related object from the respective database
-  entry.user
+    t_belongs_to :car
+  end
+
+  car = Car.create
 
   # Set the related object
-  entry.user = some_user
-  entry.save
+  dashboard = Dashboard.create({})
+  car.dashboard = dashboard
+  car.save
 
-  # Fetch related objects from the respective database
-  user.entries
+  # Fetch related object from the respective database
+  car.dashboard
+
+  # Fetch related object id
+  car.dashboard.car_id
+
+  # Set related objects
+  wheel_1 = Wheel.create
+  wheel_2 = Wheel.create
+  wheel_3 = Wheel.create
+  wheels = [wheel_1, wheel_2, wheel_3]
+  car.wheels = wheels
+  car.save
+
+  wheel_1.car_id    # car.id
+
+  # Fetch array of related objects from the respective database
+  car.wheels        # [wheel_1, wheel_2, wheel_3]
+
+  # Fetch ids of related objects from the database
+  car.wheel_ids     # [wheel_1.id, wheel_2.id, wheel_3.id]
 
   # Add a related object to the collection
-  user.entries << some_entry
-  user.save
+  new_wheel = Wheel.create
+  car.wheels << new_wheel
+  car.save
+  car.wheels        # [wheel_1, wheel_2, wheel_3, wheel_4]
 
 
 == Additional Usage Details
@@ -82,13 +110,9 @@ See EXTEND.rdoc for information on extendeding Tenacity to work with other ORMs.
 
   bundler install
 
-* Create the test databases
-
-  rake db:create
-
 * Setup the test databases
 
-  rake db:test:prepare
+  rake test:prepare
 
 * Run the tests
 

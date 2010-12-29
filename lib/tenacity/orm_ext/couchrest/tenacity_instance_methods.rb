@@ -1,5 +1,5 @@
 module CouchRest
-  module TenacityInstanceMethods
+  module TenacityInstanceMethods #:nodoc:
     def _t_reload
       new_doc = database.get(self.id)
       self.clear

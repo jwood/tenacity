@@ -101,7 +101,7 @@ end
 begin
   require 'mongo_mapper'
   MongoMapper::Document.append_inclusions(TenacityPluginAddition)
-rescue
+rescue LoadError
   # MongoMapper not available
 end
 

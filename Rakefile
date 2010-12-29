@@ -45,49 +45,35 @@ task :clobber => [:clobber_rcov, :clobber_rdoc]
 
 begin
   require 'test/helpers/active_record_test_helper'
-  namespace :db do
-    desc "Create the test databases"
-    task :create do
-      system "mysqladmin -u root create tenacity_test"
-    end
-
-    desc "Drop the test databases"
-    task :drop do
+  namespace :test do
+    desc "Setup the test databases"
+    task :prepare do
       system "mysqladmin -u root drop -f tenacity_test"
-    end
+      system "mysqladmin -u root create tenacity_test"
 
-    desc "Reset the test databases"
-    task :reset => [:drop, :create] do
-      Rake::Task['db:test:prepare'].invoke
-    end
+      ActiveRecord::Schema.define :version => 0 do
 
-    namespace :test do
-      desc "Setup the test databases"
-      task :prepare do
-        ActiveRecord::Schema.define :version => 0 do
-
-          create_table :active_record_cars, :force => true do |t|
-          end
-
-          create_table :active_record_climate_control_units, :force => true do |t|
-            t.string :mongo_mapper_dashboard_id
-          end
-
-          create_table :active_record_cars_mongo_mapper_wheels, :force => true do |t|
-            t.integer :active_record_car_id
-            t.string :mongo_mapper_wheel_id
-          end
-
-          create_table :active_record_nuts, :force => true do |t|
-            t.string :mongo_mapper_wheel_id
-          end
-
-          create_table :active_record_nuts_mongo_mapper_wheels, :force => true do |t|
-            t.integer :active_record_nut_id
-            t.string :mongo_mapper_wheel_id
-          end
-
+        create_table :active_record_cars, :force => true do |t|
         end
+
+        create_table :active_record_climate_control_units, :force => true do |t|
+          t.string :mongo_mapper_dashboard_id
+        end
+
+        create_table :active_record_cars_mongo_mapper_wheels, :force => true do |t|
+          t.integer :active_record_car_id
+          t.string :mongo_mapper_wheel_id
+        end
+
+        create_table :active_record_nuts, :force => true do |t|
+          t.string :mongo_mapper_wheel_id
+        end
+
+        create_table :active_record_nuts_mongo_mapper_wheels, :force => true do |t|
+          t.integer :active_record_nut_id
+          t.string :mongo_mapper_wheel_id
+        end
+
       end
     end
   end

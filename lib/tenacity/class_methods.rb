@@ -217,7 +217,7 @@ module Tenacity
       end
     end
 
-    def associate_class(association_id)
+    def associate_class(association_id) #:nodoc:
       Kernel.const_get(association_id.to_s.singularize.camelcase.to_sym)
     end
 
