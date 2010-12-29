@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = ">= 1.3.6"
 
-  s.add_runtime_dependency "activesupport", ">= 2.3"
+  s.add_runtime_dependency "activesupport", "~> 2.3"
 
   s.add_development_dependency "bundler", "~> 1.0.0"
   s.add_development_dependency "rake", "~> 0.8.7"
@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "shoulda", "~> 2.11.3"
   s.add_development_dependency "mongo_mapper", "~> 0.8.6"
   s.add_development_dependency "bson_ext", "~> 1.1.3"
-  s.add_development_dependency "activerecord", "~> 3.0.0"
+  s.add_development_dependency "activerecord", "~> 2.3"
   s.add_development_dependency "mysql", "~> 2.8.1"
   s.add_development_dependency "couchrest", "~> 1.0.0"
   s.add_development_dependency "couchrest_extended_document", "~> 1.0.0"
