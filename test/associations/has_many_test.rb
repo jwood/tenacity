@@ -23,6 +23,16 @@ class HasManyTest < Test::Unit::TestCase
       assert_equal @wheels, @car.mongo_mapper_wheels
       assert_equal other_wheels, @car.mongo_mapper_wheels(true)
     end
+
+    should "be able to specify the class name of the associated class" do
+      vent_1 = MongoMapperVent.create
+      vent_2 = MongoMapperVent.create
+      vent_3 = MongoMapperVent.create
+      dashboard = MongoMapperDashboard.create
+      dashboard.vents = [vent_1, vent_2, vent_3]
+      dashboard.save
+      assert_set_equal [vent_1, vent_2, vent_3], MongoMapperDashboard.find(dashboard.id).vents
+    end
   end
 
   context "An ActiveRecord class with a has_many association to a MongoMapper class" do

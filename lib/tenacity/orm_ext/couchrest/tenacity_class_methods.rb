@@ -23,29 +23,29 @@ module CouchRest
       self.send("by_#{property}", :key => id.to_s)
     end
 
-    def _t_initialize_has_many_association(association_id)
-      unless self.respond_to?(has_many_property_name(association_id))
-        property has_many_property_name(association_id), :type => [String]
-        view_by has_many_property_name(association_id)
-        after_save { |record| record.class._t_save_associates(record, association_id) if record.class.respond_to?(:_t_save_associates) }
+    def _t_initialize_has_many_association(association)
+      unless self.respond_to?(has_many_property_name(association))
+        property has_many_property_name(association), :type => [String]
+        view_by has_many_property_name(association)
+        after_save { |record| record.class._t_save_associates(record, association) if record.class.respond_to?(:_t_save_associates) }
       end
     end
 
-    def _t_initialize_belongs_to_association(association_id)
-      property_name = "#{association_id}_id"
+    def _t_initialize_belongs_to_association(association)
+      property_name = association.foreign_key
       unless self.respond_to?(property_name)
         property property_name, :type => String
         view_by property_name
-        before_save { |record| _t_stringify_belongs_to_value(record, association_id) if self.respond_to?(:_t_stringify_belongs_to_value) }
+        before_save { |record| _t_stringify_belongs_to_value(record, association) if self.respond_to?(:_t_stringify_belongs_to_value) }
       end
     end
 
-    def _t_initialize_has_one_association(association_id)
-      property_name = "#{association_id}_id"
+    def _t_initialize_has_one_association(association)
+      property_name = association.foreign_key
       unless self.respond_to?(property_name)
         property property_name, :type => String
         view_by property_name
-        before_save { |record| _t_stringify_has_one_value(record, association_id) if self.respond_to?(:_t_stringify_has_one_value) }
+        before_save { |record| _t_stringify_has_one_value(record, association) if self.respond_to?(:_t_stringify_has_one_value) }
       end
     end
   end

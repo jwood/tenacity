@@ -21,6 +21,12 @@ class HasOneTest < Test::Unit::TestCase
       assert_equal @climate_control_unit, @dashboard.active_record_climate_control_unit
       assert_equal other_climate_control_unit, @dashboard.active_record_climate_control_unit(true)
     end
+
+    should "be able to specify the class name of the associated class" do
+      ash_tray = MongoMapperAshTray.create
+      dashboard = MongoMapperDashboard.create(:ash_tray => ash_tray)
+      assert_equal ash_tray, dashboard.ash_tray
+    end
   end
 
   context "A MongoMapper class with a has_one association to an ActiveRecord class" do

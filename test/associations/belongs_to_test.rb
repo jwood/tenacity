@@ -20,6 +20,12 @@ class BelongsToTest < Test::Unit::TestCase
       assert_equal @car, @wheel.active_record_car
       assert_equal other_car, @wheel.active_record_car(true)
     end
+
+    should "be able to specify the class name of the associated class" do
+      dashboard = MongoMapperDashboard.create
+      ash_tray = MongoMapperAshTray.create(:dashboard => dashboard)
+      assert_equal dashboard, ash_tray.dashboard
+    end
   end
 
   context "A MongoMapper class with belongs_to association to an ActiveRecord class" do
@@ -113,7 +119,6 @@ class BelongsToTest < Test::Unit::TestCase
     should "return nil if no association is set" do
       assert_nil CouchRestRadio.find(@radio.id).mongo_mapper_dashboard
     end
-
   end
 
 end

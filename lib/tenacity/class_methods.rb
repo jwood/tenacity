@@ -93,19 +93,29 @@ module Tenacity
     # * <tt>Account#beneficiary</tt> (similar to <tt>Beneficiary.find(:first, :conditions => "account_id = #{id}")</tt>)
     # * <tt>Account#beneficiary=(beneficiary)</tt> (similar to <tt>beneficiary.account_id = account.id; beneficiary.save</tt>)
     #
-    def t_has_one(association_id, args={})
+    # === Supported options
+    # [:class_name]
+    #   Specify the class name of the association. Use it only if that name can't be inferred
+    #   from the association name. So <tt>t_has_one :manager</tt> will by default be linked to the Manager class, but
+    #   if the real class name is Person, you'll have to specify it with this option.
+    #
+    # Option examples:
+    #   t_has_one :project_manager, :class_name => "Person"
+    #
+    def t_has_one(association_id, options={})
       extend(HasOne::ClassMethods)
-      initialize_has_one_association(association_id)
+      association = Association.new(association_id, options)
+      initialize_has_one_association(association)
 
-      define_method(association_id) do |*params|
-        get_associate(association_id, params) do
-          has_one_associate(association_id)
+      define_method(association.association_id) do |*params|
+        get_associate(association, params) do
+          has_one_associate(association)
         end
       end
 
-      define_method("#{association_id}=") do |associate|
-        set_associate(association_id, associate) do
-          set_has_one_associate(association_id, associate)
+      define_method("#{association.association_id}=") do |associate|
+        set_associate(association, associate) do
+          set_has_one_associate(association, associate)
         end
       end
     end
@@ -131,19 +141,29 @@ module Tenacity
     # * <tt>Post#author</tt> (similar to <tt>Author.find(author_id)</tt>)
     # * <tt>Post#author=(author)</tt> (similar to <tt>post.author_id = author.id</tt>)
     #
-    def t_belongs_to(association_id, args={})
+    # === Supported options
+    # [:class_name]
+    #   Specify the class name of the association. Use it only if that name can't be inferred
+    #   from the association name. So <tt>t_belongs_to :manager</tt> will by default be linked to the Manager class, but
+    #   if the real class name is Person, you'll have to specify it with this option.
+    #
+    # Option examples:
+    #   t_belongs_to :project_manager, :class_name => "Person"
+    #
+    def t_belongs_to(association_id, options={})
       extend(BelongsTo::ClassMethods)
-      initialize_belongs_to_association(association_id)
+      association = Association.new(association_id, options)
+      initialize_belongs_to_association(association)
 
-      define_method(association_id) do |*params|
-        get_associate(association_id, params) do
-          belongs_to_associate(association_id)
+      define_method(association.association_id) do |*params|
+        get_associate(association, params) do
+          belongs_to_associate(association)
         end
       end
 
-      define_method("#{association_id}=") do |associate|
-        set_associate(association_id, associate) do
-          set_belongs_to_associate(association_id, associate)
+      define_method("#{association.association_id}=") do |associate|
+        set_associate(association, associate) do
+          set_belongs_to_associate(association, associate)
         end
       end
     end
@@ -188,26 +208,37 @@ module Tenacity
     # * <tt>Firm#clients.empty?</tt> (similar to <tt>firm.clients.size == 0</tt>)
     # * <tt>Firm#clients.size</tt> (similar to <tt>Client.count "firm_id = #{id}"</tt>)
     #
-    def t_has_many(association_id, args={})
+    # === Supported options
+    # [:class_name]
+    #   Specify the class name of the association. Use it only if that name can't be inferred
+    #   from the association name. So <tt>t_has_many :products</tt> will by default be linked
+    #   to the Product class, but if the real class name is SpecialProduct, you'll have to
+    #   specify it with this option.
+    #
+    # Option examples:
+    #   t_has_many :products, :class_name => "SpecialProduct"
+    #
+    def t_has_many(association_id, options={})
       extend(HasMany::ClassMethods)
-      initialize_has_many_association(association_id)
+      association = Association.new(association_id, options)
+      initialize_has_many_association(association)
 
-      define_method(association_id) do |*params|
-        get_associate(association_id, params) do
-          has_many_associates(association_id)
+      define_method(association.association_id) do |*params|
+        get_associate(association, params) do
+          has_many_associates(association)
         end
       end
 
-      define_method("#{association_id}=") do |associates|
-        set_associate(association_id, associates)
+      define_method("#{association.association_id}=") do |associates|
+        set_associate(association, associates)
       end
 
-      define_method("#{ActiveSupport::Inflector.singularize(association_id.to_s)}_ids") do
-        has_many_associate_ids(association_id)
+      define_method("#{ActiveSupport::Inflector.singularize(association.association_id)}_ids") do
+        has_many_associate_ids(association)
       end
 
-      define_method("#{ActiveSupport::Inflector.singularize(association_id.to_s)}_ids=") do |associate_ids|
-        set_has_many_associate_ids(association_id, associate_ids)
+      define_method("#{ActiveSupport::Inflector.singularize(association.association_id)}_ids=") do |associate_ids|
+        set_has_many_associate_ids(association, associate_ids)
       end
 
       private
@@ -215,10 +246,6 @@ module Tenacity
       define_method(:_t_save_without_callback) do
         save_without_callback
       end
-    end
-
-    def associate_class(association_id) #:nodoc:
-      Kernel.const_get(association_id.to_s.singularize.camelcase.to_sym)
     end
 
   end

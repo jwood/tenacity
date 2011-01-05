@@ -13,6 +13,13 @@ all IDs as strings.  So, all ORM extensions should accept strings for IDs
 as input parameters, and return strings for IDs.
 
 
+== The Association Class
+
+A few of the methods take an association as a parameter.  This association
+is an instance of the Tenacity::Association class, which can be found at
+lib/tenacity/association.rb.
+
+
 == Class Methods
 
   _t_find(id)
@@ -35,19 +42,19 @@ and return it.  If no object could be found, return nil.
 Find all objects by the specified property name, with the specified id, and
 return them in an array.  If no objects could be found, return an empty array.
 
-  _t_initialize_has_many_association(association_id)
+  _t_initialize_has_many_association(association)
 
 Perform any ORM specific initialization necessary to support a has many
 association.  This could include defining properties, or callback methods,
 on the object.  This method is optional, and does not need to be defined.
 
-  _t_initialize_belongs_to_association(association_id)
+  _t_initialize_belongs_to_association(association)
 
 Perform any ORM specific initialization necessary to support a belongs to
 association.  This could include defining properties, or callback methods,
 on the object.  This method is optional, and does not need to be defined.
 
-  _t_initialize_has_one_association(association_id)
+  _t_initialize_has_one_association(association)
 
 Perform any ORM specific initialization necessary to support a has one
 association.  This could include defining properties, or callback methods,
@@ -61,18 +68,18 @@ on the object.  This method is optional, and does not need to be defined.
 Reload the object from the database, overwriting the objects properties with
 the data fetched from the database.  Return nothing.
 
-  _t_associate_many(association_id, associate_ids)
+  _t_associate_many(association, associate_ids)
 
 Create has_many associations between this object and the objects with ids
 specified in the array of associate_ids.  This method could involve writing
 the associate_ids into a join table, or into an object's hash.
 
-  _t_get_associate_ids(association_id)
+  _t_get_associate_ids(association)
 
 Get the ids of the objects associated with this object through the specified
 association, and return them in an array.
 
-  _t_clear_associates(association_id)
+  _t_clear_associates(association)
 
 Destroy the association between this object and its current associates through
 the specified association.  Return nothing.

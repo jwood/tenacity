@@ -3,19 +3,19 @@ module Tenacity
 
     private
 
-    def has_many_associates(association_id)
-      ids = _t_get_associate_ids(association_id)
-      clazz = associate_class(association_id)
+    def has_many_associates(association)
+      ids = _t_get_associate_ids(association)
+      clazz = association.associate_class
       clazz._t_find_bulk(ids)
     end
 
-    def has_many_associate_ids(association_id)
-      _t_get_associate_ids(association_id)
+    def has_many_associate_ids(association)
+      _t_get_associate_ids(association)
     end
 
-    def set_has_many_associate_ids(association_id, associate_ids)
-      clazz = associate_class(association_id)
-      instance_variable_set ivar_name(association_id), clazz._t_find_bulk(associate_ids)
+    def set_has_many_associate_ids(association, associate_ids)
+      clazz = association.associate_class
+      instance_variable_set ivar_name(association), clazz._t_find_bulk(associate_ids)
     end
 
     def save_without_callback
@@ -25,23 +25,23 @@ module Tenacity
       @perform_save_associates_callback = true
     end
 
-    def has_many_property_name(association_id)
-      self.class.has_many_property_name(association_id)
+    def has_many_property_name(association)
+      self.class.has_many_property_name(association)
     end
 
     module ClassMethods #:nodoc:
-      def initialize_has_many_association(association_id)
-        _t_initialize_has_many_association(association_id) if self.respond_to?(:_t_initialize_has_many_association)
+      def initialize_has_many_association(association)
+        _t_initialize_has_many_association(association) if self.respond_to?(:_t_initialize_has_many_association)
 
         attr_accessor :perform_save_associates_callback
       end
 
-      def _t_save_associates(record, association_id)
+      def _t_save_associates(record, association)
         return if record.perform_save_associates_callback == false
 
-        _t_clear_old_associations(record, association_id)
+        _t_clear_old_associations(record, association)
 
-        associates = (record.instance_variable_get "@_t_#{association_id.to_s}") || []
+        associates = (record.instance_variable_get "@_t_#{association.association_id}") || []
         associates.each do |associate|
           associate.send("#{property_name_for_record(record)}=", record.id.to_s)
           save_associate(associate)
@@ -49,13 +49,13 @@ module Tenacity
 
         unless associates.blank?
           associate_ids = associates.map { |associate| associate.id.to_s }
-          record._t_associate_many(association_id, associate_ids)
+          record._t_associate_many(association, associate_ids)
           save_associate(record)
         end
       end
 
-      def _t_clear_old_associations(record, association_id)
-        clazz = associate_class(association_id)
+      def _t_clear_old_associations(record, association)
+        clazz = association.associate_class
         property_name = property_name_for_record(record)
 
         old_associates = clazz._t_find_all_by_associate(property_name, record.id.to_s)
@@ -64,7 +64,7 @@ module Tenacity
           save_associate(old_associate)
         end
 
-        record._t_clear_associates(association_id)
+        record._t_clear_associates(association)
         save_associate(record)
       end
 
@@ -72,8 +72,8 @@ module Tenacity
         "#{ActiveSupport::Inflector.underscore(record.class.to_s)}_id"
       end
 
-      def has_many_property_name(association_id)
-        "t_" + ActiveSupport::Inflector.singularize(association_id) + "_ids"
+      def has_many_property_name(association)
+        "t_" + ActiveSupport::Inflector.singularize(association.association_id) + "_ids"
       end
 
       def save_associate(associate)

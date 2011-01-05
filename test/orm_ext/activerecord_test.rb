@@ -56,15 +56,16 @@ class ActiveRecordTest < Test::Unit::TestCase
 
     should "be able to clear the associates of a given object" do
       nut = ActiveRecordNut.create
-      nut._t_associate_many(:mongo_mapper_wheels, ['abc123', 'def456', 'ghi789'])
+      association = Tenacity::Association.new(:mongo_mapper_wheels)
+      nut._t_associate_many(association, ['abc123', 'def456', 'ghi789'])
       nut.save
-      nut._t_clear_associates(:mongo_mapper_wheels)
-      assert_set_equal [], nut._t_get_associate_ids(:mongo_mapper_wheels)
+      nut._t_clear_associates(association)
+      assert_set_equal [], nut._t_get_associate_ids(association)
     end
 
     should "be able to associate many objects with the given object" do
       nut = ActiveRecordNut.create
-      nut._t_associate_many(:mongo_mapper_wheels, ['abc123', 'def456', 'ghi789'])
+      nut._t_associate_many(Tenacity::Association.new(:mongo_mapper_wheels), ['abc123', 'def456', 'ghi789'])
       rows = ActiveRecordNut.connection.execute("select mongo_mapper_wheel_id from active_record_nuts_mongo_mapper_wheels where active_record_nut_id = #{nut.id}")
       ids = []; rows.each { |r| ids << r[0] }; ids
       assert_set_equal ['abc123', 'def456', 'ghi789'], ids
@@ -72,13 +73,14 @@ class ActiveRecordTest < Test::Unit::TestCase
 
     should "be able to get the ids of the objects associated with the given object" do
       nut = ActiveRecordNut.create
-      nut._t_associate_many(:mongo_mapper_wheels, ['abc123', 'def456', 'ghi789'])
-      assert_set_equal ['abc123', 'def456', 'ghi789'], nut._t_get_associate_ids(:mongo_mapper_wheels)
+      association = Tenacity::Association.new(:mongo_mapper_wheels)
+      nut._t_associate_many(association, ['abc123', 'def456', 'ghi789'])
+      assert_set_equal ['abc123', 'def456', 'ghi789'], nut._t_get_associate_ids(association)
     end
 
     should "return an empty array if there are no objects associated with the given object ids" do
       nut = ActiveRecordNut.create
-      assert_set_equal [], nut._t_get_associate_ids(:mongo_mapper_wheels)
+      assert_set_equal [], nut._t_get_associate_ids(Tenacity::Association.new(:mongo_mapper_wheels))
     end
   end
 
