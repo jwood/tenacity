@@ -1,15 +1,16 @@
 = Tenacity
 
-An ORM independent way of specifying simple relationships between models
+An ORM independent way of managing relationships between models
 backed by different databases.
 
 It is sometimes necessary, or advantageous, to use more than one database in a
 given application (polyglot persistence).  However, most ORMs do not support
-inter-database relationships.  While supporting such relationships isn't difficult,
-it can add quite a bit of boilerplate code to your project.
+inter-database relationships.  So, writing code that manages relationships
+between objects backed by different databases hasn’t been nearly as easy as
+writing code to manage relationships between objects in the same database.
 
-Tenacity aims to address this by providing an ORM independent way of specifying
-simple relationships between models backed by different databases.
+Tenacity aims to address this by providing an ORM independent way of managing
+relationships between models backed by different databases.
 
 Tenacity is heavily based on ActiveRecord's associations, and aims to behave in
 much the same way, supporting many of the same options.
