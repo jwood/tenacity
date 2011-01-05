@@ -23,7 +23,11 @@ module Tenacity
       elsif @type == :t_has_one
         "#{ActiveSupport::Inflector.underscore(clazz)}_id"
       elsif @type == :t_has_many
-        "t_" + ActiveSupport::Inflector.singularize(name) + "_ids"
+        if clazz
+          "#{ActiveSupport::Inflector.underscore(clazz.to_s)}_id"
+        else
+          "t_" + ActiveSupport::Inflector.singularize(name) + "_ids"
+        end
       end
     end
   end

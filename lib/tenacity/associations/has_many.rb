@@ -39,7 +39,7 @@ module Tenacity
 
         associates = (record.instance_variable_get "@_t_#{association.name}") || []
         associates.each do |associate|
-          associate.send("#{property_name_for_record(record)}=", record.id.to_s)
+          associate.send("#{association.foreign_key(record.class)}=", record.id.to_s)
           save_associate(associate)
         end
 
@@ -52,7 +52,7 @@ module Tenacity
 
       def _t_clear_old_associations(record, association)
         clazz = association.associate_class
-        property_name = property_name_for_record(record)
+        property_name = association.foreign_key(record.class)
 
         old_associates = clazz._t_find_all_by_associate(property_name, record.id.to_s)
         old_associates.each do |old_associate|
@@ -62,10 +62,6 @@ module Tenacity
 
         record._t_clear_associates(association)
         save_associate(record)
-      end
-
-      def property_name_for_record(record)
-        "#{ActiveSupport::Inflector.underscore(record.class.to_s)}_id"
       end
 
       def save_associate(associate)
