@@ -52,22 +52,22 @@ module TenacityMongoMapperPlugin
     def _t_initialize_has_many_association(association)
       unless self.respond_to?(association.foreign_key)
         key association.foreign_key, Array
+        after_save { |record| _t_save_associates(record, association) }
       end
-      after_save { |record| _t_save_associates(record, association) }
     end
 
     def _t_initialize_belongs_to_association(association)
       unless self.respond_to?(association.foreign_key)
         key association.foreign_key, String
+        before_save { |record| _t_stringify_belongs_to_value(record, association) }
       end
-      before_save { |record| _t_stringify_belongs_to_value(record, association) }
     end
 
     def _t_initialize_has_one_association(association)
       unless self.respond_to?(association.foreign_key)
         key association.foreign_key, String
+        before_save { |record| _t_stringify_has_one_value(record, association) }
       end
-      before_save { |record| _t_stringify_has_one_value(record, association) }
     end
   end
 
