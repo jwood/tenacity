@@ -15,5 +15,9 @@ module Tenacity
     def associate_class
       @clazz ||= Kernel.const_get(@class_name)
     end
+
+    def foreign_key
+      @class_name.underscore + "_id"
+    end
   end
 end
