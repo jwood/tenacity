@@ -7,15 +7,15 @@ module CouchRest
     end
 
     def _t_associate_many(association, associate_ids)
-      self.send(has_many_property_name(association) + '=', associate_ids.map { |associate_id| associate_id.to_s })
+      self.send(association.foreign_key + '=', associate_ids.map { |associate_id| associate_id.to_s })
     end
 
     def _t_get_associate_ids(association)
-      self.send(has_many_property_name(association)) || []
+      self.send(association.foreign_key) || []
     end
 
     def _t_clear_associates(association)
-      self.send(has_many_property_name(association) + '=', [])
+      self.send(association.foreign_key + '=', [])
     end
   end
 end
