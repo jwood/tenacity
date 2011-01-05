@@ -104,7 +104,7 @@ module Tenacity
     #
     def t_has_one(name, options={})
       extend(HasOne::ClassMethods)
-      association = Association.new(name, options)
+      association = Association.new(:t_has_one, name, options)
       initialize_has_one_association(association)
 
       define_method(association.name) do |*params|
@@ -152,7 +152,7 @@ module Tenacity
     #
     def t_belongs_to(name, options={})
       extend(BelongsTo::ClassMethods)
-      association = Association.new(name, options)
+      association = Association.new(:t_belongs_to, name, options)
       initialize_belongs_to_association(association)
 
       define_method(association.name) do |*params|
@@ -220,7 +220,7 @@ module Tenacity
     #
     def t_has_many(name, options={})
       extend(HasMany::ClassMethods)
-      association = Association.new(name, options)
+      association = Association.new(:t_has_many, name, options)
       initialize_has_many_association(association)
 
       define_method(association.name) do |*params|
