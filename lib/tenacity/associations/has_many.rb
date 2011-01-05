@@ -25,10 +25,6 @@ module Tenacity
       @perform_save_associates_callback = true
     end
 
-    def has_many_property_name(association)
-      self.class.has_many_property_name(association)
-    end
-
     module ClassMethods #:nodoc:
       def initialize_has_many_association(association)
         _t_initialize_has_many_association(association) if self.respond_to?(:_t_initialize_has_many_association)
@@ -41,7 +37,7 @@ module Tenacity
 
         _t_clear_old_associations(record, association)
 
-        associates = (record.instance_variable_get "@_t_#{association.association_id}") || []
+        associates = (record.instance_variable_get "@_t_#{association.name}") || []
         associates.each do |associate|
           associate.send("#{property_name_for_record(record)}=", record.id.to_s)
           save_associate(associate)
@@ -70,10 +66,6 @@ module Tenacity
 
       def property_name_for_record(record)
         "#{ActiveSupport::Inflector.underscore(record.class.to_s)}_id"
-      end
-
-      def has_many_property_name(association)
-        "t_" + ActiveSupport::Inflector.singularize(association.association_id) + "_ids"
       end
 
       def save_associate(associate)

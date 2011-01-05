@@ -102,11 +102,11 @@ begin
       end
 
       def self._t_associate_id_column(association)
-        association.association_id.to_s.singularize + '_id'
+        association.name.to_s.singularize + '_id'
       end
 
       def self._t_join_table_name(association)
-        association.association_id.to_s < table_name ? "#{association.association_id}_#{table_name}" : "#{table_name}_#{association.association_id}"
+        association.name.to_s < table_name ? "#{association.name}_#{table_name}" : "#{table_name}_#{association.name}"
       end
 
     end

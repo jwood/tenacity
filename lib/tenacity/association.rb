@@ -1,14 +1,15 @@
 module Tenacity
   class Association
-    attr_reader :association_id, :class_name
+    attr_reader :type, :name, :class_name
 
-    def initialize(association_id, options={})
-      @association_id = association_id
+    def initialize(type, name, options={})
+      @type = type
+      @name = name
 
       if options[:class_name]
         @class_name = options[:class_name]
       else
-        @class_name = association_id.to_s.singularize.camelcase
+        @class_name = name.to_s.singularize.camelcase
       end
     end
 
@@ -16,8 +17,14 @@ module Tenacity
       @clazz ||= Kernel.const_get(@class_name)
     end
 
-    def foreign_key
-      @class_name.underscore + "_id"
+    def foreign_key(clazz=nil)
+      if @type == :t_belongs_to
+        @class_name.underscore + "_id"
+      elsif @type == :t_has_one
+        "#{ActiveSupport::Inflector.underscore(clazz)}_id"
+      elsif @type == :t_has_many
+        "t_" + ActiveSupport::Inflector.singularize(name) + "_ids"
+      end
     end
   end
 end

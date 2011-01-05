@@ -20,7 +20,7 @@ module Tenacity
     end
 
     def ivar_name(association)
-      "@_t_" + association.association_id.to_s
+      "@_t_" + association.name.to_s
     end
 
   end

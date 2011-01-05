@@ -123,5 +123,5 @@ See EXTEND.rdoc for information on extendeding Tenacity to work with other ORMs.
 
 == Copyright
 
-Copyright (c) 2010 John Wood. See LICENSE.txt for further details.
+Copyright (c) 2011 John Wood. See LICENSE.txt for further details.
 

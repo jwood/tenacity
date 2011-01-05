@@ -50,8 +50,8 @@ module TenacityMongoMapperPlugin
     end
 
     def _t_initialize_has_many_association(association)
-      unless self.respond_to?(has_many_property_name(association))
-        key has_many_property_name(association), Array
+      unless self.respond_to?(association.foreign_key)
+        key association.foreign_key, Array
       end
       after_save { |record| _t_save_associates(record, association) }
     end
@@ -79,15 +79,15 @@ module TenacityMongoMapperPlugin
     end
 
     def _t_associate_many(association, associate_ids)
-      self.send(has_many_property_name(association) + '=', associate_ids.map { |associate_id| associate_id.to_s })
+      self.send(association.foreign_key + '=', associate_ids.map { |associate_id| associate_id.to_s })
     end
 
     def _t_get_associate_ids(association)
-      self.send(has_many_property_name(association))
+      self.send(association.foreign_key)
     end
 
     def _t_clear_associates(association)
-      self.send(has_many_property_name(association) + '=', [])
+      self.send(association.foreign_key + '=', [])
     end
   end
 end
