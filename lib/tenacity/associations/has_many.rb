@@ -41,7 +41,7 @@ module Tenacity
 
         _t_clear_old_associations(record, association)
 
-        associates = (record.instance_variable_get "@_t_#{association.association_id}") || []
+        associates = (record.instance_variable_get "@_t_#{association.name}") || []
         associates.each do |associate|
           associate.send("#{property_name_for_record(record)}=", record.id.to_s)
           save_associate(associate)
@@ -73,7 +73,7 @@ module Tenacity
       end
 
       def has_many_property_name(association)
-        "t_" + ActiveSupport::Inflector.singularize(association.association_id) + "_ids"
+        "t_" + ActiveSupport::Inflector.singularize(association.name) + "_ids"
       end
 
       def save_associate(associate)

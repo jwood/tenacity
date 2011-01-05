@@ -1,14 +1,14 @@
 module Tenacity
   class Association
-    attr_reader :association_id, :class_name
+    attr_reader :name, :class_name
 
-    def initialize(association_id, options={})
-      @association_id = association_id
+    def initialize(name, options={})
+      @name = name
 
       if options[:class_name]
         @class_name = options[:class_name]
       else
-        @class_name = association_id.to_s.singularize.camelcase
+        @class_name = name.to_s.singularize.camelcase
       end
     end
 

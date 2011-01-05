@@ -102,18 +102,18 @@ module Tenacity
     # Option examples:
     #   t_has_one :project_manager, :class_name => "Person"
     #
-    def t_has_one(association_id, options={})
+    def t_has_one(name, options={})
       extend(HasOne::ClassMethods)
-      association = Association.new(association_id, options)
+      association = Association.new(name, options)
       initialize_has_one_association(association)
 
-      define_method(association.association_id) do |*params|
+      define_method(association.name) do |*params|
         get_associate(association, params) do
           has_one_associate(association)
         end
       end
 
-      define_method("#{association.association_id}=") do |associate|
+      define_method("#{association.name}=") do |associate|
         set_associate(association, associate) do
           set_has_one_associate(association, associate)
         end
@@ -150,18 +150,18 @@ module Tenacity
     # Option examples:
     #   t_belongs_to :project_manager, :class_name => "Person"
     #
-    def t_belongs_to(association_id, options={})
+    def t_belongs_to(name, options={})
       extend(BelongsTo::ClassMethods)
-      association = Association.new(association_id, options)
+      association = Association.new(name, options)
       initialize_belongs_to_association(association)
 
-      define_method(association.association_id) do |*params|
+      define_method(association.name) do |*params|
         get_associate(association, params) do
           belongs_to_associate(association)
         end
       end
 
-      define_method("#{association.association_id}=") do |associate|
+      define_method("#{association.name}=") do |associate|
         set_associate(association, associate) do
           set_belongs_to_associate(association, associate)
         end
@@ -218,26 +218,26 @@ module Tenacity
     # Option examples:
     #   t_has_many :products, :class_name => "SpecialProduct"
     #
-    def t_has_many(association_id, options={})
+    def t_has_many(name, options={})
       extend(HasMany::ClassMethods)
-      association = Association.new(association_id, options)
+      association = Association.new(name, options)
       initialize_has_many_association(association)
 
-      define_method(association.association_id) do |*params|
+      define_method(association.name) do |*params|
         get_associate(association, params) do
           has_many_associates(association)
         end
       end
 
-      define_method("#{association.association_id}=") do |associates|
+      define_method("#{association.name}=") do |associates|
         set_associate(association, associates)
       end
 
-      define_method("#{ActiveSupport::Inflector.singularize(association.association_id)}_ids") do
+      define_method("#{ActiveSupport::Inflector.singularize(association.name)}_ids") do
         has_many_associate_ids(association)
       end
 
-      define_method("#{ActiveSupport::Inflector.singularize(association.association_id)}_ids=") do |associate_ids|
+      define_method("#{ActiveSupport::Inflector.singularize(association.name)}_ids=") do |associate_ids|
         set_has_many_associate_ids(association, associate_ids)
       end
 
