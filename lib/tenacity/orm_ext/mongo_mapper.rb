@@ -49,25 +49,25 @@ module TenacityMongoMapperPlugin
       all(property => id.to_s)
     end
 
-    def _t_initialize_has_many_association(association_id)
-      unless self.respond_to?(has_many_property_name(association_id))
-        key has_many_property_name(association_id), Array
+    def _t_initialize_has_many_association(association)
+      unless self.respond_to?(has_many_property_name(association))
+        key has_many_property_name(association), Array
       end
-      after_save { |record| _t_save_associates(record, association_id) }
+      after_save { |record| _t_save_associates(record, association) }
     end
 
-    def _t_initialize_belongs_to_association(association_id)
-      unless self.respond_to?("#{association_id}_id")
-        key "#{association_id}_id", String
+    def _t_initialize_belongs_to_association(association)
+      unless self.respond_to?(association.foreign_key)
+        key association.foreign_key, String
       end
-      before_save { |record| _t_stringify_belongs_to_value(record, association_id) }
+      before_save { |record| _t_stringify_belongs_to_value(record, association) }
     end
 
-    def _t_initialize_has_one_association(association_id)
-      unless self.respond_to?("#{association_id}_id")
-        key "#{association_id}_id", String
+    def _t_initialize_has_one_association(association)
+      unless self.respond_to?(association.foreign_key)
+        key association.foreign_key, String
       end
-      before_save { |record| _t_stringify_has_one_value(record, association_id) }
+      before_save { |record| _t_stringify_has_one_value(record, association) }
     end
   end
 
@@ -78,16 +78,16 @@ module TenacityMongoMapperPlugin
       nil
     end
 
-    def _t_associate_many(association_id, associate_ids)
-      self.send(has_many_property_name(association_id) + '=', associate_ids.map { |associate_id| associate_id.to_s })
+    def _t_associate_many(association, associate_ids)
+      self.send(has_many_property_name(association) + '=', associate_ids.map { |associate_id| associate_id.to_s })
     end
 
-    def _t_get_associate_ids(association_id)
-      self.send(has_many_property_name(association_id))
+    def _t_get_associate_ids(association)
+      self.send(has_many_property_name(association))
     end
 
-    def _t_clear_associates(association_id)
-      self.send(has_many_property_name(association_id) + '=', [])
+    def _t_clear_associates(association)
+      self.send(has_many_property_name(association) + '=', [])
     end
   end
 end
