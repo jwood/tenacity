@@ -1,11 +1,18 @@
 module Tenacity
   class Association
-    attr_reader :type, :name, :class_name, :foreign_key
+    attr_reader :type, :name, :class_name, :foreign_key, :foreign_keys_property
 
     def initialize(type, name, options={})
       @type = type
       @name = name
       @foreign_key = options[:foreign_key]
+      @foreign_keys_property = options[:foreign_keys_property]
+
+      if @foreign_keys_property
+        if @foreign_keys_property.to_s == ActiveSupport::Inflector.singularize(name) + "_ids"
+          raise "#{ActiveSupport::Inflector.singularize(name) + "_ids"} is an invalid foreign keys property name"
+        end
+      end
 
       if options[:class_name]
         @class_name = options[:class_name]
@@ -24,12 +31,12 @@ module Tenacity
       elsif @type == :t_has_one
         @foreign_key || "#{ActiveSupport::Inflector.underscore(clazz)}_id"
       elsif @type == :t_has_many
-        if clazz
-          @foreign_key || "#{ActiveSupport::Inflector.underscore(clazz)}_id"
-        else
-          "t_" + ActiveSupport::Inflector.singularize(name) + "_ids"
-        end
+        @foreign_key || "#{ActiveSupport::Inflector.underscore(clazz)}_id"
       end
+    end
+
+    def foreign_keys_property
+      @foreign_keys_property || "t_" + ActiveSupport::Inflector.singularize(name) + "_ids"
     end
   end
 end

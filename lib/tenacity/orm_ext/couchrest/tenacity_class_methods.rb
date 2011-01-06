@@ -24,9 +24,9 @@ module CouchRest
     end
 
     def _t_initialize_has_many_association(association)
-      unless self.respond_to?(association.foreign_key)
-        property association.foreign_key, :type => [String]
-        view_by association.foreign_key
+      unless self.respond_to?(association.foreign_keys_property)
+        property association.foreign_keys_property, :type => [String]
+        view_by association.foreign_keys_property
         after_save { |record| record.class._t_save_associates(record, association) if record.class.respond_to?(:_t_save_associates) }
       end
     end
