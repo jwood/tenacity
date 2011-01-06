@@ -25,7 +25,7 @@ module Tenacity
         @foreign_key || "#{ActiveSupport::Inflector.underscore(clazz)}_id"
       elsif @type == :t_has_many
         if clazz
-          "#{ActiveSupport::Inflector.underscore(clazz.to_s)}_id"
+          @foreign_key || "#{ActiveSupport::Inflector.underscore(clazz)}_id"
         else
           "t_" + ActiveSupport::Inflector.singularize(name) + "_ids"
         end

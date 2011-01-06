@@ -33,6 +33,18 @@ class HasManyTest < Test::Unit::TestCase
       dashboard.save
       assert_set_equal [vent_1, vent_2, vent_3], MongoMapperDashboard.find(dashboard.id).vents
     end
+
+    should "be able to specify the foreign key to use for the class" do
+      car = ActiveRecordCar.create
+      door_1 = CouchRestDoor.create({})
+      door_2 = CouchRestDoor.create({})
+      door_3 = CouchRestDoor.create({})
+      car.couch_rest_doors = [door_1, door_2, door_3]
+      car.save
+
+      assert_set_equal [door_1, door_2, door_3], ActiveRecordCar.find(car.id).couch_rest_doors
+      assert_set_equal [door_1.id.to_s, door_2.id.to_s, door_3.id.to_s], ActiveRecordCar.find(car.id).couch_rest_door_ids
+    end
   end
 
   context "An ActiveRecord class with a has_many association to a MongoMapper class" do
