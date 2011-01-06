@@ -64,10 +64,7 @@ module TenacityMongoMapperPlugin
     end
 
     def _t_initialize_has_one_association(association)
-      unless self.respond_to?(association.foreign_key)
-        key association.foreign_key, String
-        before_save { |record| _t_stringify_has_one_value(record, association) }
-      end
+      before_save { |record| _t_stringify_has_one_value(record, association) }
     end
   end
 

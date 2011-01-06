@@ -1,10 +1,11 @@
 module Tenacity
   class Association
-    attr_reader :type, :name, :class_name
+    attr_reader :type, :name, :class_name, :foreign_key
 
     def initialize(type, name, options={})
       @type = type
       @name = name
+      @foreign_key = options[:foreign_key]
 
       if options[:class_name]
         @class_name = options[:class_name]
@@ -19,9 +20,9 @@ module Tenacity
 
     def foreign_key(clazz=nil)
       if @type == :t_belongs_to
-        @class_name.underscore + "_id"
+        @foreign_key || @class_name.underscore + "_id"
       elsif @type == :t_has_one
-        "#{ActiveSupport::Inflector.underscore(clazz)}_id"
+        @foreign_key || "#{ActiveSupport::Inflector.underscore(clazz)}_id"
       elsif @type == :t_has_many
         if clazz
           "#{ActiveSupport::Inflector.underscore(clazz.to_s)}_id"

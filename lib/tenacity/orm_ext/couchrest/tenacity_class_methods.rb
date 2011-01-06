@@ -41,12 +41,7 @@ module CouchRest
     end
 
     def _t_initialize_has_one_association(association)
-      property_name = association.foreign_key
-      unless self.respond_to?(property_name)
-        property property_name, :type => String
-        view_by property_name
-        before_save { |record| _t_stringify_has_one_value(record, association) if self.respond_to?(:_t_stringify_has_one_value) }
-      end
+      before_save { |record| _t_stringify_has_one_value(record, association) if self.respond_to?(:_t_stringify_has_one_value) }
     end
   end
 end

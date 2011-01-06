@@ -98,9 +98,14 @@ module Tenacity
     #   Specify the class name of the association. Use it only if that name can't be inferred
     #   from the association name. So <tt>t_has_one :manager</tt> will by default be linked to the Manager class, but
     #   if the real class name is Person, you'll have to specify it with this option.
+    # [:foreign_key]
+    #   Specify the foreign key used for the association. By default this is guessed to be the name
+    #   of this class in lower-case and "_id" suffixed. So a Person class that makes a +t_has_one+ association
+    #   will use "person_id" as the default <tt>:foreign_key</tt>.
     #
     # Option examples:
     #   t_has_one :project_manager, :class_name => "Person"
+    #   t_has_one :project_manager, :foreign_key => "manager_id"
     #
     def t_has_one(name, options={})
       extend(HasOne::ClassMethods)
@@ -146,9 +151,16 @@ module Tenacity
     #   Specify the class name of the association. Use it only if that name can't be inferred
     #   from the association name. So <tt>t_belongs_to :manager</tt> will by default be linked to the Manager class, but
     #   if the real class name is Person, you'll have to specify it with this option.
+    # [:foreign_key]
+    #   Specify the foreign key used for the association. By default this is guessed to be the name
+    #   of the association with an "_id" suffix. So a class that defines a <tt>t_belongs_to :person</tt>
+    #   association will use "person_id" as the default <tt>:foreign_key</tt>. Similarly,
+    #   <tt>t_belongs_to :favorite_person, :class_name => "Person"</tt> will use a foreign key
+    #   of "favorite_person_id".
     #
     # Option examples:
     #   t_belongs_to :project_manager, :class_name => "Person"
+    #   t_belongs_to :valid_coupon, :class_name => "Coupon", :foreign_key => "coupon_id"
     #
     def t_belongs_to(name, options={})
       extend(BelongsTo::ClassMethods)
