@@ -90,7 +90,8 @@ See EXTEND.rdoc for information on extendeding Tenacity to work with other ORMs.
 
 
 == Documentation
-* http://rdoc.info/github/jwood/tenacity/master/frames
+* http://rdoc.info/github/jwood/tenacity/master/Tenacity/ClassMethods - Documentation on the associations supported, and their respective options
+* http://rdoc.info/github/jwood/tenacity/master/frames - Full API documentation
 
 
 == Contributing to Tenacity
