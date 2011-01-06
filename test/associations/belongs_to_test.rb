@@ -26,6 +26,17 @@ class BelongsToTest < Test::Unit::TestCase
       ash_tray = MongoMapperAshTray.create(:dashboard => dashboard)
       assert_equal dashboard, ash_tray.dashboard
     end
+
+    should "be able to specify the foreign key to use for the associated class" do
+      car = ActiveRecordCar.create
+      windshield = CouchRestWindshield.create(:active_record_car => car)
+      assert_equal car.id.to_s, windshield.car_id
+      assert !windshield.respond_to?(:active_record_car_id)
+
+      engine = ActiveRecordEngine.create(:active_record_car => car)
+      assert_equal car.id, engine.car_id
+      assert !engine.respond_to?(:active_record_car_id)
+    end
   end
 
   context "A MongoMapper class with belongs_to association to an ActiveRecord class" do

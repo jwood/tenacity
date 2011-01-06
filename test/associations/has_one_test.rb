@@ -27,6 +27,15 @@ class HasOneTest < Test::Unit::TestCase
       dashboard = MongoMapperDashboard.create(:ash_tray => ash_tray)
       assert_equal ash_tray, dashboard.ash_tray
     end
+
+    should "be able to specify the foreign key to use for the class" do
+      car = ActiveRecordCar.create
+      windshield = CouchRestWindshield.create(:active_record_car => car)
+      assert_equal windshield, car.couch_rest_windshield
+
+      engine = ActiveRecordEngine.create(:active_record_car => car)
+      assert_equal engine, car.active_record_engine
+    end
   end
 
   context "A MongoMapper class with a has_one association to an ActiveRecord class" do

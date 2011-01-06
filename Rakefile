@@ -56,6 +56,10 @@ begin
         create_table :active_record_cars, :force => true do |t|
         end
 
+        create_table :active_record_engines, :force => true do |t|
+          t.integer :car_id
+        end
+
         create_table :active_record_climate_control_units, :force => true do |t|
           t.string :mongo_mapper_dashboard_id
         end
