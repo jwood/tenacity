@@ -1,6 +1,6 @@
-require 'couchrest_model'
+require 'couchrest_extended_document'
 
-class CouchRestWindshield < CouchRest::Model::Base
+class CouchRestWindshield < CouchRest::ExtendedDocument
   include Tenacity
   use_database COUCH_DB
 
