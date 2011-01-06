@@ -1,6 +1,6 @@
-require 'couchrest_model'
+require 'couchrest_extended_document'
 
-class CouchRestDoor < CouchRest::Model::Base
+class CouchRestDoor < CouchRest::ExtendedDocument
   include Tenacity
   use_database COUCH_DB
 
