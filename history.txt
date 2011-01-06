@@ -3,6 +3,7 @@
 * Major enhancements
 
   * Added support for the :class_name option to all associations
+  * Added support for the :foreign_key option to all associations
 
 * Bug fixes
 
