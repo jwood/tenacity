@@ -69,6 +69,11 @@ begin
           t.string :mongo_mapper_wheel_id
         end
 
+        create_table :active_record_cars_couch_rest_doors, :force => true do |t|
+          t.integer :active_record_car_id
+          t.string :couch_rest_door_id
+        end
+
         create_table :active_record_nuts, :force => true do |t|
           t.string :mongo_mapper_wheel_id
         end

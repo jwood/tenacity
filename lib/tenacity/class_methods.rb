@@ -105,7 +105,7 @@ module Tenacity
     #
     # Option examples:
     #   t_has_one :project_manager, :class_name => "Person"
-    #   t_has_one :project_manager, :foreign_key => "manager_id"
+    #   t_has_one :project_manager, :foreign_key => "project_id"  # within class named SecretProject
     #
     def t_has_one(name, options={})
       extend(HasOne::ClassMethods)
@@ -226,9 +226,14 @@ module Tenacity
     #   from the association name. So <tt>t_has_many :products</tt> will by default be linked
     #   to the Product class, but if the real class name is SpecialProduct, you'll have to
     #   specify it with this option.
+    # [:foreign_key]
+    #   Specify the foreign key used for the association. By default this is guessed to be the name
+    #   of this class in lower-case and "_id" suffixed. So a Person class that makes a +t_has_many+
+    #   association will use "person_id" as the default <tt>:foreign_key</tt>.
     #
     # Option examples:
     #   t_has_many :products, :class_name => "SpecialProduct"
+    #   t_has_many :engineers, :foreign_key => "project_id"  # within class named SecretProject
     #
     def t_has_many(name, options={})
       extend(HasMany::ClassMethods)
