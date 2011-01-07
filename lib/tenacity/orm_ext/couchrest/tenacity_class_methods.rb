@@ -39,9 +39,5 @@ module CouchRest
         before_save { |record| _t_stringify_belongs_to_value(record, association) if self.respond_to?(:_t_stringify_belongs_to_value) }
       end
     end
-
-    def _t_initialize_has_one_association(association)
-      before_save { |record| _t_stringify_has_one_value(record, association) if self.respond_to?(:_t_stringify_has_one_value) }
-    end
   end
 end

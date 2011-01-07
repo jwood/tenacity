@@ -70,6 +70,32 @@ module Tenacity
   #   project.milestones(true).size  # fetches milestones from the database
   #   project.milestones             # uses the milestone cache
   #
+  # == Join Tables
+  #
+  # One-to-many assocations that contain a relational database backed object as one of
+  # the assocaites are implemented using an intermediate join table. This differs from
+  # ActiveRecord::Associations, where only many-to-many relationships are implemented
+  # using an intermediate join table.
+  #
+  # Tenacity will not create the join table. It assume one exists, and is named properly.
+  # Unless the join table is explicitly specified as an option, it is guessed using the
+  # lexical order of the class names. So a join between Developer and Project will give
+  # the default join table name of "developers_projects" because "D" outranks "P". Note
+  # that this precedence is calculated using the < operator for String. This means that
+  # if the strings are of different lengths, and the strings are equal when compared up
+  # to the shortest length, then the longer string is considered of higher lexical
+  # precedence than the shorter one. For example, one would expect the tables "paper_boxes"
+  # and "papers" to generate a join table name of "papers_paper_boxes" because of the
+  # length of the name "paper_boxes", but it in fact generates a join table name of
+  # "paper_boxes_papers". Be aware of this caveat, and use the custom :join_table option
+  # if you need to.
+  #
+  # The column names used in the join table are guessed to be the names of the associated
+  # classes, suffixed with "_id".  For example, the "developers_projects" join table
+  # mentioned above is expected to have a column named "developer_id" and a column named
+  # "project_id". The <tt>:associate_key</tt> and <tt>:associate_foreign_key</tt> options
+  # can be used to override these defaults.
+  #
   module ClassMethods
 
     # Specifies a one-to-one association with another class. This method should only be used
@@ -180,8 +206,12 @@ module Tenacity
       end
     end
 
-    # Specifies a one-to-many association. The following methods for retrieval and query of
-    # collections of associated objects will be added:
+    # Specifies a one-to-many association. One-to-many associations that contain a
+    # relational database backed object as one of the associates are implemented
+    # using an intermediate join table. See the Join Tables section at the top
+    # for more information.
+    #
+    # The following methods for retrieval and query of collections of associated objects will be added:
     #
     # [collection(force_reload = false)]
     #   Returns an array of all the associated objects.

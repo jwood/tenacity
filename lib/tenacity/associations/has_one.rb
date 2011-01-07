@@ -17,10 +17,6 @@ module Tenacity
       def initialize_has_one_association(association)
         _t_initialize_has_one_association(association) if respond_to?(:_t_initialize_has_one_association)
       end
-
-      def _t_stringify_has_one_value(record, association)
-        record.send "#{association.foreign_key}=", record.send(association.foreign_key).to_s
-      end
     end
 
   end

@@ -62,10 +62,6 @@ module TenacityMongoMapperPlugin
         before_save { |record| _t_stringify_belongs_to_value(record, association) }
       end
     end
-
-    def _t_initialize_has_one_association(association)
-      before_save { |record| _t_stringify_has_one_value(record, association) }
-    end
   end
 
   module InstanceMethods #:nodoc:
