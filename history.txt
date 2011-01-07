@@ -6,6 +6,8 @@
   * Added support for the :foreign_key option to all associations
   * Added support for the :foreign_keys_property option to the t_has_many association
   * Added support for the :join_table option to the t_has_many association
+  * Added support for the :association_foreign_key option to the t_has_many association
+  * Added support for the :association_key option to the t_has_many association
 
 * Bug fixes
 
