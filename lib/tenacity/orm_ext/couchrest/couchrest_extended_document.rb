@@ -24,10 +24,7 @@ begin
     # == t_has_one
     #
     # The +t_has_one+ association will not define any new properties on the object, since
-    # the associated object holds the foreign key.  If the CouchRest::ExtendedDocument class
-    # is the target of a t_has_one association from another class, then a property
-    # named after the association will be created on the CouchRest::ExtendedDocument object to
-    # hold the foreign key to the other object.
+    # the associated object holds the foreign key.
     #
     #
     # == t_has_many
