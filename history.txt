@@ -2,6 +2,11 @@
 
 * Major enhancements
 
+  * Added options to override assumptions on names of classes, foreign keys,
+    tables, and columns.
+
+* Minor enhancements
+
   * Added support for the :class_name option to all associations
   * Added support for the :foreign_key option to all associations
   * Added support for the :foreign_keys_property option to the t_has_many association
