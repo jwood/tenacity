@@ -109,7 +109,7 @@ module Tenacity
     #
     def t_has_one(name, options={})
       extend(HasOne::ClassMethods)
-      association = Association.new(:t_has_one, name, options)
+      association = Association.new(:t_has_one, name, self, options)
       initialize_has_one_association(association)
 
       define_method(association.name) do |*params|
@@ -164,7 +164,7 @@ module Tenacity
     #
     def t_belongs_to(name, options={})
       extend(BelongsTo::ClassMethods)
-      association = Association.new(:t_belongs_to, name, options)
+      association = Association.new(:t_belongs_to, name, self, options)
       initialize_belongs_to_association(association)
 
       define_method(association.name) do |*params|
@@ -238,15 +238,20 @@ module Tenacity
     #   for objects that store associated ids in an array instaed of a join table (CouchRest,
     #   MongoMapper, etc). <b>WARNING:</b> The name of the association with an "_ids" suffix should
     #   not be used as the property name, since tenacity adds a method with this name to the object.
+    # [:join_table]
+    #   Specify the name of the join table if the default based on lexical order isn't what you want.
+    #   This option is only valid if one of the models in the association is backed by a relational
+    #   database.
     #
     # Option examples:
     #   t_has_many :products, :class_name => "SpecialProduct"
     #   t_has_many :engineers, :foreign_key => "project_id"  # within class named SecretProject
     #   t_has_many :engineers, :foreign_keys_property => "worker_ids"
+    #   t_has_many :managers, :join_table => "project_managers_and_projects"
     #
     def t_has_many(name, options={})
       extend(HasMany::ClassMethods)
-      association = Association.new(:t_has_many, name, options)
+      association = Association.new(:t_has_many, name, self, options)
       initialize_has_many_association(association)
 
       define_method(association.name) do |*params|

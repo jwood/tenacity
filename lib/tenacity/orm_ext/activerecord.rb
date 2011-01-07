@@ -75,23 +75,20 @@ begin
       end
 
       def _t_clear_associates(association)
-        t_join_table_name = self.class._t_join_table_name(association)
-        self.connection.execute("delete from #{t_join_table_name} where #{self.class._t_my_id_column} = #{self.id}")
+        self.connection.execute("delete from #{association.join_table} where #{self.class._t_my_id_column} = #{self.id}")
       end
 
       def _t_associate_many(association, associate_ids)
-        t_join_table_name = self.class._t_join_table_name(association)
         values = associate_ids.map { |associate_id| "(#{self.id}, '#{associate_id}')" }.join(',')
 
         self.transaction do
           _t_clear_associates(association)
-          self.connection.execute("insert into #{t_join_table_name} (#{self.class._t_my_id_column}, #{self.class._t_associate_id_column(association)}) values #{values}")
+          self.connection.execute("insert into #{association.join_table} (#{self.class._t_my_id_column}, #{self.class._t_associate_id_column(association)}) values #{values}")
         end
       end
 
       def _t_get_associate_ids(association)
-        t_join_table_name = self.class._t_join_table_name(association)
-        rows = self.connection.execute("select #{self.class._t_associate_id_column(association)} from #{t_join_table_name} where #{self.class._t_my_id_column} = #{self.id}")
+        rows = self.connection.execute("select #{self.class._t_associate_id_column(association)} from #{association.join_table} where #{self.class._t_my_id_column} = #{self.id}")
         ids = []; rows.each { |r| ids << r[0] }; ids
       end
 
@@ -104,11 +101,6 @@ begin
       def self._t_associate_id_column(association)
         association.name.to_s.singularize + '_id'
       end
-
-      def self._t_join_table_name(association)
-        association.name.to_s < table_name ? "#{association.name}_#{table_name}" : "#{table_name}_#{association.name}"
-      end
-
     end
   end
 rescue LoadError

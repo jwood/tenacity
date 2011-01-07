@@ -1,12 +1,15 @@
 module Tenacity
   class Association
-    attr_reader :type, :name, :class_name, :foreign_key, :foreign_keys_property
+    attr_reader :type, :name, :source, :class_name, :foreign_key,
+                :foreign_keys_property, :join_table
 
-    def initialize(type, name, options={})
+    def initialize(type, name, source, options={})
       @type = type
       @name = name
+      @source = source
       @foreign_key = options[:foreign_key]
       @foreign_keys_property = options[:foreign_keys_property]
+      @join_table = options[:join_table]
 
       if @foreign_keys_property
         if @foreign_keys_property.to_s == ActiveSupport::Inflector.singularize(name) + "_ids"
@@ -37,6 +40,10 @@ module Tenacity
 
     def foreign_keys_property
       @foreign_keys_property || "t_" + ActiveSupport::Inflector.singularize(name) + "_ids"
+    end
+
+    def join_table
+      @join_table || (name.to_s < @source.table_name ? "#{name}_#{@source.table_name}" : "#{@source.table_name}_#{name}")
     end
   end
 end

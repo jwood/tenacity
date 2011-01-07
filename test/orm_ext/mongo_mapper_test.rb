@@ -60,7 +60,7 @@ class MongoMapperTest < Test::Unit::TestCase
       nut_2 = ActiveRecordNut.create
       nut_3 = ActiveRecordNut.create
       wheel = MongoMapperWheel.create
-      wheel._t_associate_many(Tenacity::Association.new(:t_has_many, :active_record_nuts), [nut_1.id, nut_2.id, nut_3.id])
+      wheel._t_associate_many(association, [nut_1.id, nut_2.id, nut_3.id])
       assert_set_equal [nut_1.id.to_s, nut_2.id.to_s, nut_3.id.to_s], wheel.t_active_record_nut_ids
     end
 
@@ -70,14 +70,13 @@ class MongoMapperTest < Test::Unit::TestCase
       nut_3 = ActiveRecordNut.create
       wheel = MongoMapperWheel.create
 
-      association = Tenacity::Association.new(:t_has_many, :active_record_nuts)
       wheel._t_associate_many(association, [nut_1.id, nut_2.id, nut_3.id])
       assert_set_equal [nut_1.id.to_s, nut_2.id.to_s, nut_3.id.to_s], wheel._t_get_associate_ids(association)
     end
 
     should "return an empty array when trying to fetch associate ids for an object with no associates" do
       wheel = MongoMapperWheel.create
-      assert_equal [], wheel._t_get_associate_ids(Tenacity::Association.new(:t_has_many, :active_record_nuts))
+      assert_equal [], wheel._t_get_associate_ids(association)
     end
 
     should "be able to clear the associates of an object" do
@@ -86,12 +85,15 @@ class MongoMapperTest < Test::Unit::TestCase
       nut_3 = ActiveRecordNut.create
       wheel = MongoMapperWheel.create
 
-      association = Tenacity::Association.new(:t_has_many, :active_record_nuts)
       wheel._t_associate_many(association, [nut_1.id, nut_2.id, nut_3.id])
       assert_set_equal [nut_1.id.to_s, nut_2.id.to_s, nut_3.id.to_s], wheel._t_get_associate_ids(association)
       wheel._t_clear_associates(association)
       assert_equal [], wheel._t_get_associate_ids(association)
     end
+  end
+
+  def association
+    Tenacity::Association.new(:t_has_many, :active_record_nuts, MongoMapperWheel)
   end
 
 end
