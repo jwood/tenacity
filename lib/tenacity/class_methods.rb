@@ -234,10 +234,10 @@ module Tenacity
     #   Specify the name of the property that stores the ids of the associated objects. By default
     #   this is guessed to be the name of the association with a "t_" prefix and an "_ids" suffix.
     #   So a class that defines a <tt>t_has_many :people</tt> association will use t_people_ids as
-    #   the property to store the ids of the associated People objects.  The name of the association
-    #   with an "_ids" suffix should not be used as the property name, since tenacity adds a method
-    #   with this name to the object.  This option is only valid for objects that store associated
-    #   ids in an array instaed of a join table (CouchRest, MongoMapper, etc).
+    #   the property to store the ids of the associated People objects. This option is only valid
+    #   for objects that store associated ids in an array instaed of a join table (CouchRest,
+    #   MongoMapper, etc). <b>WARNING:</b> The name of the association with an "_ids" suffix should
+    #   not be used as the property name, since tenacity adds a method with this name to the object.
     #
     # Option examples:
     #   t_has_many :products, :class_name => "SpecialProduct"
