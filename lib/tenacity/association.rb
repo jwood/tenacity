@@ -1,7 +1,8 @@
 module Tenacity
   class Association
     attr_reader :type, :name, :source, :class_name, :foreign_key,
-                :foreign_keys_property, :join_table
+                :foreign_keys_property, :join_table, :association_key,
+                :association_foreign_key
 
     def initialize(type, name, source, options={})
       @type = type
@@ -10,6 +11,8 @@ module Tenacity
       @foreign_key = options[:foreign_key]
       @foreign_keys_property = options[:foreign_keys_property]
       @join_table = options[:join_table]
+      @association_key = options[:association_key]
+      @association_foreign_key = options[:association_foreign_key]
 
       if @foreign_keys_property
         if @foreign_keys_property.to_s == ActiveSupport::Inflector.singularize(name) + "_ids"
@@ -44,6 +47,14 @@ module Tenacity
 
     def join_table
       @join_table || (name.to_s < @source.table_name ? "#{name}_#{@source.table_name}" : "#{@source.table_name}_#{name}")
+    end
+
+    def association_key
+      @association_key || @source.table_name.singularize + '_id'
+    end
+
+    def association_foreign_key
+      @association_foreign_key || name.to_s.singularize + '_id'
     end
   end
 end

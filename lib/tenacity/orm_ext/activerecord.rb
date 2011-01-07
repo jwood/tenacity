@@ -75,7 +75,7 @@ begin
       end
 
       def _t_clear_associates(association)
-        self.connection.execute("delete from #{association.join_table} where #{self.class._t_my_id_column} = #{self.id}")
+        self.connection.execute("delete from #{association.join_table} where #{association.association_key} = #{self.id}")
       end
 
       def _t_associate_many(association, associate_ids)
@@ -83,24 +83,15 @@ begin
 
         self.transaction do
           _t_clear_associates(association)
-          self.connection.execute("insert into #{association.join_table} (#{self.class._t_my_id_column}, #{self.class._t_associate_id_column(association)}) values #{values}")
+          self.connection.execute("insert into #{association.join_table} (#{association.association_key}, #{association.association_foreign_key}) values #{values}")
         end
       end
 
       def _t_get_associate_ids(association)
-        rows = self.connection.execute("select #{self.class._t_associate_id_column(association)} from #{association.join_table} where #{self.class._t_my_id_column} = #{self.id}")
+        rows = self.connection.execute("select #{association.association_foreign_key} from #{association.join_table} where #{association.association_key} = #{self.id}")
         ids = []; rows.each { |r| ids << r[0] }; ids
       end
 
-      private
-
-      def self._t_my_id_column
-        table_name.singularize + '_id'
-      end
-
-      def self._t_associate_id_column(association)
-        association.name.to_s.singularize + '_id'
-      end
     end
   end
 rescue LoadError

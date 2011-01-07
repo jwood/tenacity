@@ -242,12 +242,27 @@ module Tenacity
     #   Specify the name of the join table if the default based on lexical order isn't what you want.
     #   This option is only valid if one of the models in the association is backed by a relational
     #   database.
+    # [:association_foreign_key]
+    #   Specify the foreign key in the join table used for the association on the receiving side of
+    #   the association. By default this is guessed to be the name of the associated class in
+    #   lower-case and "_id" suffixed. So if a Person class makes a +t_has_many+ association to
+    #   Project, the association will use "project_id" as the default <tt>:association_foreign_key</tt>.
+    #   This option is only valid if one of the associated objects is backed by a relational
+    #   database.
+    # [:association_key]
+    #   Specify the key in the join table used for the association on the declaring side of
+    #   the association. By default this is guessed to be the name of this class in lower-case and
+    #   "_id" suffixed. So if a Person class makes a +t_has_many+ association to Project, the
+    #   association will use "person_id" as the default <tt>:association_key</tt>.  This option is
+    #   only valid if one of the associated objects is backed by a relational database.
     #
     # Option examples:
     #   t_has_many :products, :class_name => "SpecialProduct"
     #   t_has_many :engineers, :foreign_key => "project_id"  # within class named SecretProject
     #   t_has_many :engineers, :foreign_keys_property => "worker_ids"
     #   t_has_many :managers, :join_table => "project_managers_and_projects"
+    #   t_has_many :managers, :join_table => "project_managers_and_projects",
+    #       :association_foreign_key => "mgr_id", :association_key => "proj_id"
     #
     def t_has_many(name, options={})
       extend(HasMany::ClassMethods)

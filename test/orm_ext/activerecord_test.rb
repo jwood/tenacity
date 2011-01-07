@@ -65,7 +65,7 @@ class ActiveRecordTest < Test::Unit::TestCase
     should "be able to associate many objects with the given object" do
       nut = ActiveRecordNut.create
       nut._t_associate_many(association, ['abc123', 'def456', 'ghi789'])
-      rows = ActiveRecordNut.connection.execute("select mongo_mapper_wheel_id from nuts_and_wheels where active_record_nut_id = #{nut.id}")
+      rows = ActiveRecordNut.connection.execute("select mongo_mapper_wheel_id from nuts_and_wheels where nut_id = #{nut.id}")
       ids = []; rows.each { |r| ids << r[0] }; ids
       assert_set_equal ['abc123', 'def456', 'ghi789'], ids
     end
@@ -85,7 +85,8 @@ class ActiveRecordTest < Test::Unit::TestCase
   private
 
   def association
-    Tenacity::Association.new(:t_has_many, :mongo_mapper_wheels, ActiveRecordNut, :join_table => :nuts_and_wheels)
+    Tenacity::Association.new(:t_has_many, :mongo_mapper_wheels, ActiveRecordNut, :join_table => :nuts_and_wheels,
+                              :association_key => :nut_id)
   end
 
 end
