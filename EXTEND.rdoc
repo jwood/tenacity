@@ -72,12 +72,14 @@ the data fetched from the database.  Return nothing.
 
 Create has_many associations between this object and the objects with ids
 specified in the array of associate_ids.  This method could involve writing
-the associate_ids into a join table, or into an object's hash.
+the associate_ids into a join table, or into one of the object's properties.
+Return nothing.
 
   _t_get_associate_ids(association)
 
 Get the ids of the objects associated with this object through the specified
-association, and return them in an array.
+association, and return them in an array.  Return an empty array if there
+are no associated objects.
 
   _t_clear_associates(association)
 
