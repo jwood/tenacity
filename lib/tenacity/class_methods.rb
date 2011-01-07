@@ -109,7 +109,7 @@ module Tenacity
     #
     def t_has_one(name, options={})
       extend(HasOne::ClassMethods)
-      association = Association.new(:t_has_one, name, options)
+      association = Association.new(:t_has_one, name, self, options)
       initialize_has_one_association(association)
 
       define_method(association.name) do |*params|
@@ -164,7 +164,7 @@ module Tenacity
     #
     def t_belongs_to(name, options={})
       extend(BelongsTo::ClassMethods)
-      association = Association.new(:t_belongs_to, name, options)
+      association = Association.new(:t_belongs_to, name, self, options)
       initialize_belongs_to_association(association)
 
       define_method(association.name) do |*params|
@@ -230,14 +230,43 @@ module Tenacity
     #   Specify the foreign key used for the association. By default this is guessed to be the name
     #   of this class in lower-case and "_id" suffixed. So a Person class that makes a +t_has_many+
     #   association will use "person_id" as the default <tt>:foreign_key</tt>.
+    # [:foreign_keys_property]
+    #   Specify the name of the property that stores the ids of the associated objects. By default
+    #   this is guessed to be the name of the association with a "t_" prefix and an "_ids" suffix.
+    #   So a class that defines a <tt>t_has_many :people</tt> association will use t_people_ids as
+    #   the property to store the ids of the associated People objects. This option is only valid
+    #   for objects that store associated ids in an array instaed of a join table (CouchRest,
+    #   MongoMapper, etc). <b>WARNING:</b> The name of the association with an "_ids" suffix should
+    #   not be used as the property name, since tenacity adds a method with this name to the object.
+    # [:join_table]
+    #   Specify the name of the join table if the default based on lexical order isn't what you want.
+    #   This option is only valid if one of the models in the association is backed by a relational
+    #   database.
+    # [:association_foreign_key]
+    #   Specify the foreign key in the join table used for the association on the receiving side of
+    #   the association. By default this is guessed to be the name of the associated class in
+    #   lower-case and "_id" suffixed. So if a Person class makes a +t_has_many+ association to
+    #   Project, the association will use "project_id" as the default <tt>:association_foreign_key</tt>.
+    #   This option is only valid if one of the associated objects is backed by a relational
+    #   database.
+    # [:association_key]
+    #   Specify the key in the join table used for the association on the declaring side of
+    #   the association. By default this is guessed to be the name of this class in lower-case and
+    #   "_id" suffixed. So if a Person class makes a +t_has_many+ association to Project, the
+    #   association will use "person_id" as the default <tt>:association_key</tt>.  This option is
+    #   only valid if one of the associated objects is backed by a relational database.
     #
     # Option examples:
     #   t_has_many :products, :class_name => "SpecialProduct"
     #   t_has_many :engineers, :foreign_key => "project_id"  # within class named SecretProject
+    #   t_has_many :engineers, :foreign_keys_property => "worker_ids"
+    #   t_has_many :managers, :join_table => "project_managers_and_projects"
+    #   t_has_many :managers, :join_table => "project_managers_and_projects",
+    #       :association_foreign_key => "mgr_id", :association_key => "proj_id"
     #
     def t_has_many(name, options={})
       extend(HasMany::ClassMethods)
-      association = Association.new(:t_has_many, name, options)
+      association = Association.new(:t_has_many, name, self, options)
       initialize_has_many_association(association)
 
       define_method(association.name) do |*params|

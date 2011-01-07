@@ -78,8 +78,8 @@ begin
           t.string :mongo_mapper_wheel_id
         end
 
-        create_table :active_record_nuts_mongo_mapper_wheels, :force => true do |t|
-          t.integer :active_record_nut_id
+        create_table :nuts_and_wheels, :force => true do |t|
+          t.integer :nut_id
           t.string :mongo_mapper_wheel_id
         end
 

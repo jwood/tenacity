@@ -62,7 +62,7 @@ class CouchRestTest < Test::Unit::TestCase
       button_2 = MongoMapperButton.create
       button_3 = MongoMapperButton.create
       radio = CouchRestRadio.create({})
-      radio._t_associate_many(Tenacity::Association.new(:t_has_many, :mongo_mapper_buttons), [button_1.id, button_2.id, button_3.id])
+      radio._t_associate_many(association, [button_1.id, button_2.id, button_3.id])
       assert_set_equal [button_1.id.to_s, button_2.id.to_s, button_3.id.to_s], radio.t_mongo_mapper_button_ids
     end
 
@@ -72,14 +72,13 @@ class CouchRestTest < Test::Unit::TestCase
       button_3 = MongoMapperButton.create
       radio = CouchRestRadio.create({})
 
-      association = Tenacity::Association.new(:t_has_many, :mongo_mapper_buttons)
       radio._t_associate_many(association, [button_1.id, button_2.id, button_3.id])
       assert_set_equal [button_1.id.to_s, button_2.id.to_s, button_3.id.to_s], radio._t_get_associate_ids(association)
     end
 
     should "return an empty array when trying to fetch associate ids for an object with no associates" do
       radio = CouchRestRadio.create({})
-      assert_equal [], radio._t_get_associate_ids(Tenacity::Association.new(:t_has_many, :mongo_mapper_buttons))
+      assert_equal [], radio._t_get_associate_ids(association)
     end
 
     should "be able to clear the associates of an object" do
@@ -88,12 +87,16 @@ class CouchRestTest < Test::Unit::TestCase
       button_3 = MongoMapperButton.create
       radio = CouchRestRadio.create({})
 
-      association = Tenacity::Association.new(:t_has_many, :mongo_mapper_buttons)
       radio._t_associate_many(association, [button_1.id, button_2.id, button_3.id])
       assert_set_equal [button_1.id.to_s, button_2.id.to_s, button_3.id.to_s], radio._t_get_associate_ids(association)
       radio._t_clear_associates(association)
       assert_equal [], radio._t_get_associate_ids(association)
     end
+  end
 
+  private
+
+  def association
+    Tenacity::Association.new(:t_has_many, :mongo_mapper_buttons, CouchRestRadio)
   end
 end
