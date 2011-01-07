@@ -17,6 +17,7 @@
 * Bug fixes
 
   * t_has_one association was being initialized on the wrong class in the association
+  * Fixed bug that causing t_has_many associations not to work with SQLite
 
 == 0.1.1
 
