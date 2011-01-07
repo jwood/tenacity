@@ -19,7 +19,7 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'tenacity'
 
-Dir[File.join(File.dirname(__FILE__), 'fixtures/*.rb')].each { |file| require file }
+Dir[File.join(File.dirname(__FILE__), 'fixtures', '*.rb')].each { |file| require file }
 
 def setup_fixtures
   ActiveRecordCar.delete_all

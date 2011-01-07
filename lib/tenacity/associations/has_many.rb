@@ -15,7 +15,7 @@ module Tenacity
 
     def set_has_many_associate_ids(association, associate_ids)
       clazz = association.associate_class
-      instance_variable_set ivar_name(association), clazz._t_find_bulk(associate_ids)
+      instance_variable_set _t_ivar_name(association), clazz._t_find_bulk(associate_ids)
     end
 
     def save_without_callback
@@ -37,7 +37,7 @@ module Tenacity
 
         _t_clear_old_associations(record, association)
 
-        associates = (record.instance_variable_get "@_t_#{association.name}") || []
+        associates = (record.instance_variable_get record._t_ivar_name(association)) || []
         associates.each do |associate|
           associate.send("#{association.foreign_key(record.class)}=", record.id.to_s)
           save_associate(associate)

@@ -107,14 +107,10 @@ See EXTEND.rdoc for information on extendeding Tenacity to work with other ORMs.
 
 == Development
 
-* MySQL, MongoDB, and CouchDB must be installed and configured.
+* SQLite, MongoDB, and CouchDB must be installed and configured.
 * Install the dependencies
 
   bundler install
-
-* Setup the test databases
-
-  rake test:prepare
 
 * Run the tests
 

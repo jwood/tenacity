@@ -2,14 +2,22 @@
 
 * Major enhancements
 
+  * Added options to override assumptions on names of classes, foreign keys,
+    tables, and columns.
+
+* Minor enhancements
+
   * Added support for the :class_name option to all associations
   * Added support for the :foreign_key option to all associations
   * Added support for the :foreign_keys_property option to the t_has_many association
   * Added support for the :join_table option to the t_has_many association
+  * Added support for the :association_foreign_key option to the t_has_many association
+  * Added support for the :association_key option to the t_has_many association
 
 * Bug fixes
 
   * t_has_one association was being initialized on the wrong class in the association
+  * Fixed bug that causing t_has_many associations not to work with SQLite
 
 == 0.1.1
 

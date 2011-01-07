@@ -79,11 +79,11 @@ begin
       end
 
       def _t_associate_many(association, associate_ids)
-        values = associate_ids.map { |associate_id| "(#{self.id}, '#{associate_id}')" }.join(',')
-
         self.transaction do
           _t_clear_associates(association)
-          self.connection.execute("insert into #{association.join_table} (#{association.association_key}, #{association.association_foreign_key}) values #{values}")
+          associate_ids.each do |associate_id|
+            self.connection.execute("insert into #{association.join_table} (#{association.association_key}, #{association.association_foreign_key}) values (#{self.id}, '#{associate_id}')")
+          end
         end
       end
 

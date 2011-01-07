@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "mongo_mapper", "~> 0.8.6"
   s.add_development_dependency "bson_ext", "~> 1.1.3"
   s.add_development_dependency "activerecord", "~> 2.3"
-  s.add_development_dependency "mysql", "~> 2.8.1"
+  s.add_development_dependency "sqlite3-ruby", "~> 1.3.1"
   s.add_development_dependency "couchrest", "~> 1.0.0"
   s.add_development_dependency "couchrest_extended_document", "~> 1.0.0"
 
