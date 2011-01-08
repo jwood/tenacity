@@ -4,6 +4,8 @@
 
   * Automatically save object when added to a t_has_many association, unless the
     parent object is not yet saved itself.
+  * Added suport for destroy_all to the t_has_many association
+  * Added suport for delete_all to the t_has_many association
 
 == 0.2.0
 

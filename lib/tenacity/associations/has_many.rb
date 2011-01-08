@@ -1,6 +1,11 @@
 module Tenacity
   module HasMany #:nodoc:
 
+    def _t_remove_associates(association)
+      instance_variable_set _t_ivar_name(association), []
+      _t_clear_associates(association)
+    end
+
     private
 
     def has_many_associates(association)

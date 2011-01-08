@@ -3,9 +3,10 @@ module Tenacity
     alias_method :proxy_respond_to?, :respond_to?
     instance_methods.each { |m| undef_method m unless m =~ /(^__|^nil\?$|^send$|proxy_|^object_id$)/ }
 
-    def initialize(parent, target)
+    def initialize(parent, target, association)
       @parent = parent
       @target = target
+      @association = association
     end
 
     def respond_to?(*args)
@@ -22,7 +23,24 @@ module Tenacity
       @target << object
     end
 
+    def destroy_all
+      ids = prepare_for_delete
+      @association.associate_class._t_delete(ids)
+    end
+
+    def delete_all
+      ids = prepare_for_delete
+      @association.associate_class._t_delete(ids, false)
+    end
+
     private
+
+    def prepare_for_delete
+      ids = @parent._t_get_associate_ids(@association)
+      @parent._t_remove_associates(@association)
+      @parent.save
+      ids
+    end
 
     def method_missing(method, *args)
       if block_given?

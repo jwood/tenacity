@@ -221,6 +221,12 @@ module Tenacity
     #   Note that this operation does not update the association until the parent object is saved.
     # [collection.delete(object, ...)]
     #   Removes one or more objects from the collection.
+    # [collection.destroy_all]
+    #   Removes all objects from the collection, and deletes them from their respective
+    #   database. If the deleted objects have any delete callbacks defined, they will be called.
+    # [collection.delete_all]
+    #   Removes all objects from the collection, and deletes them from their respective
+    #   database. No delete callbacks will be called, regardless of whether or not they are defined.
     # [collection=objects]
     #   Replaces the collections content by setting it to the list of specified objects.
     # [collection_singular_ids]

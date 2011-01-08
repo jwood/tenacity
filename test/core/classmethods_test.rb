@@ -47,6 +47,8 @@ class ClassmethodsTest < Test::Unit::TestCase
     should("respond to clear") { assert @nuts.respond_to?(:clear) }
     should("respond to empty?") { assert @nuts.respond_to?(:empty?) }
     should("respond to size") { assert @nuts.respond_to?(:size) }
+    should("respond to delete_all") { assert @nuts.respond_to?(:delete_all) }
+    should("respond to destroy_all") { assert @nuts.respond_to?(:destroy_all) }
   end
 
 end
