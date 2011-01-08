@@ -86,7 +86,7 @@ much the same way, supporting many of the same options.
 * MongoMapper
 * CouchRest (CouchModel and ExtendedDocument)
 
-See EXTEND.rdoc for information on extendeding Tenacity to work with other database clients.
+See EXTEND.rdoc for information on extending Tenacity to work with other database clients.
 
 
 == Documentation
