@@ -23,6 +23,16 @@ module Tenacity
       @target << object
     end
 
+    def push(*objects)
+      objects.each { |object| object.save } unless @parent.id.nil?
+      @target.push(*objects)
+    end
+
+    def concat(objects)
+      objects.each { |object| object.save } unless @parent.id.nil?
+      @target.concat(objects)
+    end
+
     def destroy_all
       ids = prepare_for_delete
       @association.associate_class._t_delete(ids)

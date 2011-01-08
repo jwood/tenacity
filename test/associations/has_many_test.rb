@@ -140,6 +140,22 @@ class HasManyTest < Test::Unit::TestCase
         assert_set_equal [@wheel_1, @wheel_2, @wheel_3, wheel_4], ActiveRecordCar.find(@car.id).mongo_mapper_wheels
       end
 
+      should "be able to add an associated object using the push method" do
+        wheel_4 = MongoMapperWheel.create
+        wheel_5 = MongoMapperWheel.create
+        @car.mongo_mapper_wheels.push(wheel_4, wheel_5)
+        @car.save
+        assert_set_equal [@wheel_1, @wheel_2, @wheel_3, wheel_4, wheel_5], ActiveRecordCar.find(@car.id).mongo_mapper_wheels
+      end
+
+      should "be able to add an associated object using the concat method" do
+        wheel_4 = MongoMapperWheel.create
+        wheel_5 = MongoMapperWheel.create
+        @car.mongo_mapper_wheels.concat([wheel_4, wheel_5])
+        @car.save
+        assert_set_equal [@wheel_1, @wheel_2, @wheel_3, wheel_4, wheel_5], ActiveRecordCar.find(@car.id).mongo_mapper_wheels
+      end
+
       should "be able to remove an associated object using the delete method" do
         @car.mongo_mapper_wheels.delete(@wheel_3)
         @car.save
