@@ -65,6 +65,19 @@ class HasManyTest < Test::Unit::TestCase
       car.couch_rest_doors << door_1
       assert_equal old_count, CouchRestDoor.count
     end
+
+    should "save all unsaved associates when the parent object is saved" do
+      car = ActiveRecordCar.new
+      door_1 = CouchRestDoor.new({})
+      assert_nil door_1.id
+
+      old_count = CouchRestDoor.count
+      car.couch_rest_doors << door_1
+      assert_equal old_count, CouchRestDoor.count
+      car.save
+      assert_equal old_count + 1, CouchRestDoor.count
+      assert_set_equal [door_1], ActiveRecordCar.find(car.id).couch_rest_doors
+    end
   end
 
   context "An ActiveRecord class with a has_many association to a MongoMapper class" do
