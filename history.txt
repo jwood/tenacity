@@ -1,3 +1,10 @@
+== NEXT VERSION
+
+* Minor enhancements
+
+  * Automatically save object when added to a t_has_many association, unless the
+    parent object is not yet saved itself.
+
 == 0.2.0
 
 * Major enhancements

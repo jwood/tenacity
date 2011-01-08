@@ -8,11 +8,11 @@ module Tenacity
     private
 
     def get_associate(association, params)
-      _t_reload
+      _t_reload unless id.nil?
       force_reload = params.first unless params.empty?
-      value = instance_variable_get _t_ivar_name(association)
+      value = create_proxy(instance_variable_get(_t_ivar_name(association)))
       if value.nil? || force_reload
-        value = yield
+        value = create_proxy(yield)
         instance_variable_set _t_ivar_name(association), value
       end
       value
@@ -21,6 +21,10 @@ module Tenacity
     def set_associate(association, associate)
       yield if block_given?
       instance_variable_set _t_ivar_name(association), associate
+    end
+
+    def create_proxy(value)
+      value.respond_to?(:each) ? AssociatesProxy.new(self, value) : value
     end
 
   end

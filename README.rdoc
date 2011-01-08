@@ -110,7 +110,7 @@ See EXTEND.rdoc for information on extending Tenacity to work with other databas
 * SQLite, MongoDB, and CouchDB must be installed and configured.
 * Install the dependencies
 
-  bundler install
+  bundle install
 
 * Run the tests
 

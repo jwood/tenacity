@@ -70,6 +70,14 @@ begin
         before_save { |record| record.class._t_stringify_belongs_to_value(record, association) }
       end
 
+      def self._t_delete(ids, run_callbacks=true)
+        if run_callbacks
+          destroy_all(["id in (?)", ids])
+        else
+          delete_all(["id in (?)", ids])
+        end
+      end
+
       def _t_reload
         reload
       end
@@ -88,6 +96,7 @@ begin
       end
 
       def _t_get_associate_ids(association)
+        return [] if self.id.nil?
         rows = self.connection.execute("select #{association.association_foreign_key} from #{association.join_table} where #{association.association_key} = #{self.id}")
         ids = []; rows.each { |r| ids << r[0] }; ids
       end
