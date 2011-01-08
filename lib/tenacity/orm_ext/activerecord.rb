@@ -88,6 +88,7 @@ begin
       end
 
       def _t_get_associate_ids(association)
+        return [] if self.id.nil?
         rows = self.connection.execute("select #{association.association_foreign_key} from #{association.join_table} where #{association.association_key} = #{self.id}")
         ids = []; rows.each { |r| ids << r[0] }; ids
       end

@@ -45,6 +45,26 @@ class HasManyTest < Test::Unit::TestCase
       assert_set_equal [door_1, door_2, door_3], ActiveRecordCar.find(car.id).couch_rest_doors
       assert_set_equal [door_1.id.to_s, door_2.id.to_s, door_3.id.to_s], ActiveRecordCar.find(car.id).couch_rest_door_ids
     end
+
+    should "save the associate object when it is added as an associate if the parent object is saved" do
+      car = ActiveRecordCar.create
+      door_1 = CouchRestDoor.new({})
+      assert_nil door_1.id
+
+      old_count = CouchRestDoor.count
+      car.couch_rest_doors << door_1
+      assert_equal old_count + 1, CouchRestDoor.count
+    end
+
+    should "not save the associate object when it is added as an associate if the parent object is not saved" do
+      car = ActiveRecordCar.new
+      door_1 = CouchRestDoor.new({})
+      assert_nil door_1.id
+
+      old_count = CouchRestDoor.count
+      car.couch_rest_doors << door_1
+      assert_equal old_count, CouchRestDoor.count
+    end
   end
 
   context "An ActiveRecord class with a has_many association to a MongoMapper class" do
