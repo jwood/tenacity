@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
   s.authors     = ["John Wood"]
   s.email       = ["john@johnpwood.net"]
   s.homepage    = "http://github.com/jwood/tenacity"
-  s.summary     = %Q{A ORM independent way of specifying simple relationships between models backed by different databases.}
-  s.description = %Q{Tenacity provides an ORM independent way of specifying simple relationships between models backed by different databases.}
+  s.summary     = %Q{A database client independent way of specifying simple relationships between models backed by different databases.}
+  s.description = %Q{Tenacity provides a database client independent way of specifying simple relationships between models backed by different databases.}
 
   s.rubyforge_project = "tenacity"
 

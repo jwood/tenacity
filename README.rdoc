@@ -1,16 +1,16 @@
 = Tenacity
 
-An ORM independent way of managing relationships between models
+A database client independent way of managing relationships between models
 backed by different databases.
 
 It is sometimes necessary, or advantageous, to use more than one database in a
-given application (polyglot persistence).  However, most ORMs do not support
-inter-database relationships.  So, writing code that manages relationships
+given application (polyglot persistence).  However, most database clients do not
+support inter-database relationships.  So, writing code that manages relationships
 between objects backed by different databases hasn’t been nearly as easy as
 writing code to manage relationships between objects in the same database.
 
-Tenacity aims to address this by providing an ORM independent way of managing
-relationships between models backed by different databases.
+Tenacity aims to address this by providing a database client independent way
+of managing relationships between models backed by different databases.
 
 Tenacity is heavily based on ActiveRecord's associations, and aims to behave in
 much the same way, supporting many of the same options.
@@ -80,13 +80,13 @@ much the same way, supporting many of the same options.
 * The directories that contain your model classes must be in your load path in order for Tenacity to find them.
 
 
-== Supported ORMs
+== Supported Database Clients
 
 * ActiveRecord
 * MongoMapper
 * CouchRest (CouchModel and ExtendedDocument)
 
-See EXTEND.rdoc for information on extendeding Tenacity to work with other ORMs.
+See EXTEND.rdoc for information on extendeding Tenacity to work with other database clients.
 
 
 == Documentation

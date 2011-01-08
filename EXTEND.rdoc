@@ -1,16 +1,16 @@
-For Tenacity to interact with an ORM, the ORM needs to be extended to support
-the methods listed below.  Beyond that, no additional configuration or code is
-necessary.  Tenacity communicates with the ORM using these methods only, so
-as long as they have been implemented and are available on the model object,
-Tenacity will be able to manage the object's relationships.
+For Tenacity to interact with a database client, the client needs to be extended
+to support the methods listed below.  Beyond that, no additional configuration
+or code is necessary.  Tenacity communicates with the client using these methods
+only, so as long as they have been implemented and are available on the model
+object, Tenacity will be able to manage the object's relationships.
 
 
 == A note about IDs
 
 An ID can be an integer, a string, or an object, depending on the database
-and ORM you are using.  To be as compatible as possible, Tenacity treats
-all IDs as strings.  So, all ORM extensions should accept strings for IDs
-as input parameters, and return strings for IDs.
+and database client you are using.  To be as compatible as possible, Tenacity
+treats all IDs as strings.  So, all database client extensions should accept
+strings for IDs as input parameters, and return strings for IDs.
 
 
 == The Association Class
@@ -44,19 +44,20 @@ return them in an array.  If no objects could be found, return an empty array.
 
   _t_initialize_has_many_association(association)
 
-Perform any ORM specific initialization necessary to support a has many
-association.  This could include defining properties, or callback methods,
+Perform any database client specific initialization necessary to support a has
+many association.  This could include defining properties, or callback methods,
 on the object.  This method is optional, and does not need to be defined.
 
   _t_initialize_belongs_to_association(association)
 
-Perform any ORM specific initialization necessary to support a belongs to
-association.  This could include defining properties, or callback methods,
-on the object.  This method is optional, and does not need to be defined.
+Perform any database client specific initialization necessary to support a
+belongs to association.  This could include defining properties, or callback
+methods, on the object.  This method is optional, and does not need to be
+defined.
 
   _t_initialize_has_one_association(association)
 
-Perform any ORM specific initialization necessary to support a has one
+Perform any database client specific initialization necessary to support a has one
 association.  This could include defining properties, or callback methods,
 on the object.  This method is optional, and does not need to be defined.
 
