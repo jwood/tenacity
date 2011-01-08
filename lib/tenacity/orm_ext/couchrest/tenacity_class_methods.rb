@@ -39,5 +39,14 @@ module CouchRest
         before_save { |record| _t_stringify_belongs_to_value(record, association) if self.respond_to?(:_t_stringify_belongs_to_value) }
       end
     end
+
+    def _t_delete(ids, run_callbacks=true)
+      docs = _t_find_bulk(ids)
+      if run_callbacks
+        docs.each { |doc| doc.destroy }
+      else
+        docs.each { |doc| database.delete_doc(doc) }
+      end
+    end
   end
 end

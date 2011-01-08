@@ -80,6 +80,26 @@ class ActiveRecordTest < Test::Unit::TestCase
       nut = ActiveRecordNut.create
       assert_set_equal [], nut._t_get_associate_ids(association)
     end
+
+    should "be able to delete a set of objects, issuing their callbacks" do
+      nut_1 = ActiveRecordNut.create(:mongo_mapper_wheel_id => 'abc123')
+      nut_2 = ActiveRecordNut.create(:mongo_mapper_wheel_id => 'abc123')
+      nut_3 = ActiveRecordNut.create(:mongo_mapper_wheel_id => 'xyz456')
+
+      old_count = ActiveRecordNut.count
+      ActiveRecordNut._t_delete([nut_1.id, nut_2.id, nut_3.id])
+      assert_equal old_count - 3, ActiveRecordNut.count
+    end
+
+    should "be able to delete a setup of objects, without issuing their callbacks" do
+      nut_1 = ActiveRecordNut.create(:mongo_mapper_wheel_id => 'abc123')
+      nut_2 = ActiveRecordNut.create(:mongo_mapper_wheel_id => 'abc123')
+      nut_3 = ActiveRecordNut.create(:mongo_mapper_wheel_id => 'xyz456')
+
+      old_count = ActiveRecordNut.count
+      ActiveRecordNut._t_delete([nut_1.id, nut_2.id, nut_3.id], false)
+      assert_equal old_count - 3, ActiveRecordNut.count
+    end
   end
 
   private

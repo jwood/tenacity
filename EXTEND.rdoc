@@ -42,6 +42,13 @@ and return it.  If no object could be found, return nil.
 Find all objects by the specified property name, with the specified id, and
 return them in an array.  If no objects could be found, return an empty array.
 
+  _t_delete(ids, run_callbacks=true)
+
+Delete all objects with the specified ids.  If <tt>run_callbacks</tt> is true, the
+objects should be deleted in such a way that their delete callback methods
+are run.  If false, the objects should be deleted in such a way that their
+delete callback meethods are not run.  Return nothing.
+
   _t_initialize_has_many_association(association)
 
 Perform any database client specific initialization necessary to support a has

@@ -59,6 +59,14 @@ module TenacityMongoMapperPlugin
         before_save { |record| _t_stringify_belongs_to_value(record, association) }
       end
     end
+
+    def _t_delete(ids, run_callbacks=true)
+      if run_callbacks
+        destroy(ids)
+      else
+        delete(ids)
+      end
+    end
   end
 
   module InstanceMethods #:nodoc:

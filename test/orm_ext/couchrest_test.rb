@@ -92,6 +92,26 @@ class CouchRestTest < Test::Unit::TestCase
       radio._t_clear_associates(association)
       assert_equal [], radio._t_get_associate_ids(association)
     end
+
+    should "be able to delete a set of objects, issuing their callbacks" do
+      radio_1 = CouchRestRadio.create({})
+      radio_2 = CouchRestRadio.create({})
+      radio_3 = CouchRestRadio.create({})
+
+      old_count = CouchRestRadio.count
+      CouchRestRadio._t_delete([radio_1.id, radio_2.id, radio_3.id])
+      assert_equal old_count - 3, CouchRestRadio.count
+    end
+
+    should "be able to delete a setup of objects, without issuing their callbacks" do
+      radio_1 = CouchRestRadio.create({})
+      radio_2 = CouchRestRadio.create({})
+      radio_3 = CouchRestRadio.create({})
+
+      old_count = CouchRestRadio.count
+      CouchRestRadio._t_delete([radio_1.id, radio_2.id, radio_3.id], false)
+      assert_equal old_count - 3, CouchRestRadio.count
+    end
   end
 
   private

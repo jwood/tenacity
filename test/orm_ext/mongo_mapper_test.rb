@@ -90,6 +90,26 @@ class MongoMapperTest < Test::Unit::TestCase
       wheel._t_clear_associates(association)
       assert_equal [], wheel._t_get_associate_ids(association)
     end
+
+    should "be able to delete a set of objects, issuing their callbacks" do
+      wheel_1 = MongoMapperWheel.create(:active_record_car_id => '101')
+      wheel_2 = MongoMapperWheel.create(:active_record_car_id => '101')
+      wheel_3 = MongoMapperWheel.create(:active_record_car_id => '102')
+
+      old_count = MongoMapperWheel.count
+      MongoMapperWheel._t_delete([wheel_1.id, wheel_2.id, wheel_3.id])
+      assert_equal old_count - 3, MongoMapperWheel.count
+    end
+
+    should "be able to delete a setup of objects, without issuing their callbacks" do
+      wheel_1 = MongoMapperWheel.create(:active_record_car_id => '101')
+      wheel_2 = MongoMapperWheel.create(:active_record_car_id => '101')
+      wheel_3 = MongoMapperWheel.create(:active_record_car_id => '102')
+
+      old_count = MongoMapperWheel.count
+      MongoMapperWheel._t_delete([wheel_1.id, wheel_2.id, wheel_3.id], false)
+      assert_equal old_count - 3, MongoMapperWheel.count
+    end
   end
 
   def association
