@@ -78,6 +78,33 @@ class HasManyTest < Test::Unit::TestCase
       assert_equal old_count + 1, CouchRestDoor.count
       assert_set_equal [door_1], ActiveRecordCar.find(car.id).couch_rest_doors
     end
+
+    context "with a set of associates that need to be deleted" do
+      setup do
+        @new_car = ActiveRecordCar.create
+        @door_1 = CouchRestDoor.create({})
+        @door_2 = CouchRestDoor.create({})
+        @door_3 = CouchRestDoor.create({})
+        @new_car.couch_rest_doors = [@door_1, @door_2, @door_3]
+        @new_car.save
+      end
+
+      should "be able to delete all associates" do
+        assert_set_equal [@door_1, @door_2, @door_3], ActiveRecordCar.find(@new_car.id).couch_rest_doors
+        old_count = CouchRestDoor.count
+        @new_car.couch_rest_doors.delete_all
+        assert_equal old_count - 3, CouchRestDoor.count
+        assert_set_equal [], ActiveRecordCar.find(@new_car.id).couch_rest_doors
+      end
+
+      should "be able to destroy all associates" do
+        assert_set_equal [@door_1, @door_2, @door_3], ActiveRecordCar.find(@new_car.id).couch_rest_doors
+        old_count = CouchRestDoor.count
+        @new_car.couch_rest_doors.destroy_all
+        assert_equal old_count - 3, CouchRestDoor.count
+        assert_set_equal [], ActiveRecordCar.find(@new_car.id).couch_rest_doors
+      end
+    end
   end
 
   context "An ActiveRecord class with a has_many association to a MongoMapper class" do
