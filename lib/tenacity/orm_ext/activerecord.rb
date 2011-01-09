@@ -1,6 +1,4 @@
-begin
-  require 'active_record'
-
+module Tenacity
   # Tenacity relationships on ActiveRecord objects require that certain columns
   # exist on the associated table, and that join tables exist for one-to-many
   # relationships.  Take the following class for example:
@@ -43,41 +41,43 @@ begin
   #   end
   #
   module ActiveRecord
-    class Base #:nodoc:
 
-      def self._t_find(id)
+    module ClassMethods #:nodoc:
+      def _t_find(id)
         find_by_id(id)
       end
 
-      def self._t_find_bulk(ids)
+      def _t_find_bulk(ids)
         return [] if ids.nil? || ids.empty?
         find(:all, :conditions => ["id in (?)", ids])
       end
 
-      def self._t_find_first_by_associate(property, id)
+      def _t_find_first_by_associate(property, id)
         find(:first, :conditions => ["#{property} = ?", id.to_s])
       end
 
-      def self._t_find_all_by_associate(property, id)
+      def _t_find_all_by_associate(property, id)
         find(:all, :conditions => ["#{property} = ?", id.to_s])
       end
 
-      def self._t_initialize_has_many_association(association)
+      def _t_initialize_has_many_association(association)
         after_save { |record| record.class._t_save_associates(record, association) }
       end
 
-      def self._t_initialize_belongs_to_association(association)
+      def _t_initialize_belongs_to_association(association)
         before_save { |record| record.class._t_stringify_belongs_to_value(record, association) }
       end
 
-      def self._t_delete(ids, run_callbacks=true)
+      def _t_delete(ids, run_callbacks=true)
         if run_callbacks
           destroy_all(["id in (?)", ids])
         else
           delete_all(["id in (?)", ids])
         end
       end
+    end
 
+    module InstanceMethods
       def _t_reload
         reload
       end
@@ -100,9 +100,7 @@ begin
         rows = self.connection.execute("select #{association.association_foreign_key} from #{association.join_table} where #{association.association_key} = #{self.id}")
         ids = []; rows.each { |r| ids << r[0] }; ids
       end
-
     end
+
   end
-rescue LoadError
-  # ActiveRecord not available
 end
