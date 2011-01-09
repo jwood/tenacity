@@ -218,7 +218,10 @@ module Tenacity
     #   An empty array is returned if none are found.
     # [collection<<(object, ...)]
     #   Adds one or more objects to the collection by setting their foreign keys to the collection's primary key.
-    #   Note that this operation does not update the association until the parent object is saved.
+    # [collection.push(object, ...)]
+    #   Adds one or more objects to the collection by setting their foreign keys to the collection's primary key.
+    # [collection.concat(other_array)]
+    #   Adds the objects in the other array to the collection by setting their foreign keys to the collection's primary key.
     # [collection.delete(object, ...)]
     #   Removes one or more objects from the collection.
     # [collection.destroy_all]
