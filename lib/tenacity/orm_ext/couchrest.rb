@@ -30,6 +30,28 @@ module Tenacity
   #
   module CouchRest
 
+    def self.setup(model) #:nodoc:
+      begin
+        require 'couchrest_model'
+        if model.superclass == ::CouchRest::Model::Base
+          model.send :include, CouchRest::InstanceMethods
+          model.extend CouchRest::ClassMethods
+        end
+      rescue LoadError
+        # CouchRest::Model not available
+      end
+
+      begin
+        require 'couchrest_extended_document'
+        if model.superclass == ::CouchRest::ExtendedDocument
+          model.send :include, CouchRest::InstanceMethods
+          model.extend CouchRest::ClassMethods
+        end
+      rescue LoadError
+        # CouchRest::ExtendedDocument not available
+      end
+    end
+
     module ClassMethods #:nodoc:
       def _t_find(id)
         get(id)

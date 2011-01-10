@@ -31,6 +31,16 @@ module Tenacity
   #
   module Mongoid
 
+    def self.setup(model) #:nodoc:
+      require 'mongoid'
+      if model.included_modules.include?(::Mongoid::Document)
+        model.send :include, Mongoid::InstanceMethods
+        model.extend Mongoid::ClassMethods
+      end
+    rescue LoadError
+      # Mongoid not available
+    end
+
     module ClassMethods #:nodoc:
       def _t_find(id)
         find(id)

@@ -31,6 +31,16 @@ module Tenacity
   #
   module MongoMapper
 
+    def self.setup(model) #:nodoc:
+      require 'mongo_mapper'
+      if model.included_modules.include?(::MongoMapper::Document)
+        model.send :include, MongoMapper::InstanceMethods
+        model.extend MongoMapper::ClassMethods
+      end
+    rescue LoadError
+      # MongoMapper not available
+    end
+
     module ClassMethods #:nodoc:
       def _t_find(id)
         find(id)
