@@ -10,6 +10,7 @@ require File.join(File.dirname(__FILE__), 'tenacity', 'associations', 'has_one')
 require File.join(File.dirname(__FILE__), 'tenacity', 'orm_ext', 'activerecord')
 require File.join(File.dirname(__FILE__), 'tenacity', 'orm_ext', 'couchrest')
 require File.join(File.dirname(__FILE__), 'tenacity', 'orm_ext', 'mongo_mapper')
+require File.join(File.dirname(__FILE__), 'tenacity', 'orm_ext', 'mongoid')
 
 module Tenacity #:nodoc:
   include InstanceMethods
@@ -22,6 +23,7 @@ module Tenacity #:nodoc:
     include_active_record(model)
     include_couchrest(model)
     include_mongo_mapper(model)
+    include_mongoid(model)
 
     raise "Tenacity does not support the database client used by #{model}" unless model.respond_to?(:_t_find)
     model.extend(ClassMethods)
@@ -69,6 +71,16 @@ module Tenacity #:nodoc:
     end
   rescue LoadError
     # MongoMapper not available
+  end
+
+  def self.include_mongoid(model)
+    require 'mongoid'
+    if model.included_modules.include?(::Mongoid::Document)
+      model.send :include, Mongoid::InstanceMethods
+      model.extend Mongoid::ClassMethods
+    end
+  rescue LoadError
+    # Mongoid not available
   end
 
 end

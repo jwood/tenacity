@@ -22,12 +22,19 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rake", "~> 0.8.7"
   s.add_development_dependency "rcov", "~> 0.9.9"
   s.add_development_dependency "shoulda", "~> 2.11.3"
+
+  # Relational DBs
+  s.add_development_dependency "sqlite3-ruby", "~> 1.3.1"
+  s.add_development_dependency "activerecord", "~> 3.0.0"
+
+  # MongoDB
   s.add_development_dependency "mongo_mapper", "~> 0.8.6"
   s.add_development_dependency "bson_ext", "~> 1.1.3"
-  s.add_development_dependency "activerecord", "~> 3.0.0"
-  s.add_development_dependency "sqlite3-ruby", "~> 1.3.1"
+  s.add_development_dependency "mongoid", "~> 2.0.0.beta"
+
+  # CouchDB
   s.add_development_dependency "couchrest", "~> 1.0.0"
-  s.add_development_dependency "couchrest_model"
+  s.add_development_dependency "couchrest_model", "~> 1.0.0.beta"
 
   s.files        = `git ls-files`.split("\n")
   s.executables  = `git ls-files`.split("\n").map{|f| f =~ /^bin\/(.*)/ ? $1 : nil}.compact
