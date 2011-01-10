@@ -12,8 +12,9 @@ require 'test/unit'
 require 'shoulda'
 
 require File.join(File.dirname(__FILE__), 'helpers', 'active_record_test_helper')
-require File.join(File.dirname(__FILE__), 'helpers', 'mongo_mapper_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'couch_rest_test_helper')
+require File.join(File.dirname(__FILE__), 'helpers', 'mongo_mapper_test_helper')
+require File.join(File.dirname(__FILE__), 'helpers', 'mongoid_test_helper')
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
@@ -29,6 +30,9 @@ def setup_fixtures
   ActiveRecordNut.delete_all
   MongoMapperDashboard.delete_all
   MongoMapperWheel.delete_all
+  MongoMapperCoil.delete_all
+
+  MongoidAlternator.delete_all
 
   ActiveRecordCar.connection.execute("delete from active_record_cars_mongo_mapper_wheels")
   ActiveRecordCar.connection.execute("delete from active_record_cars_couch_rest_doors")
