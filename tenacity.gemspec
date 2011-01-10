@@ -22,10 +22,16 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rake", "~> 0.8.7"
   s.add_development_dependency "rcov", "~> 0.9.9"
   s.add_development_dependency "shoulda", "~> 2.11.3"
+
+  # Relational DBs
+  s.add_development_dependency "sqlite3-ruby", "~> 1.3.1"
+  s.add_development_dependency "activerecord", "~> 2.3"
+
+  # MongoDB
   s.add_development_dependency "mongo_mapper", "~> 0.8.6"
   s.add_development_dependency "bson_ext", "~> 1.1.3"
-  s.add_development_dependency "activerecord", "~> 2.3"
-  s.add_development_dependency "sqlite3-ruby", "~> 1.3.1"
+
+  # CouchDB
   s.add_development_dependency "couchrest", "~> 1.0.0"
   s.add_development_dependency "couchrest_extended_document", "~> 1.0.0"
 

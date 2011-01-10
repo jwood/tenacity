@@ -42,6 +42,16 @@ module Tenacity
   #
   module ActiveRecord
 
+    def self.setup(model)
+      require 'active_record'
+      if model.superclass == ::ActiveRecord::Base
+        model.send :include, ActiveRecord::InstanceMethods
+        model.extend ActiveRecord::ClassMethods
+      end
+    rescue LoadError
+      # ActiveRecord not available
+    end
+
     module ClassMethods #:nodoc:
       def _t_find(id)
         find_by_id(id)
@@ -77,7 +87,7 @@ module Tenacity
       end
     end
 
-    module InstanceMethods
+    module InstanceMethods #:nodoc:
       def _t_reload
         reload
       end

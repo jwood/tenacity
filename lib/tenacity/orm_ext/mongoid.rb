@@ -1,10 +1,10 @@
 module Tenacity
-  # Tenacity relationships on MongoMapper objects require no special keys
+  # Tenacity relationships on Mongoid objects require no special keys
   # defined on the object.  Tenacity will define the keys that it needs
   # to support the relationships.  Take the following class for example:
   #
-  #   class Car < ActiveRecord::Base
-  #     include MongoMapper::Document
+  #   class Car
+  #     include Mongoid::Document
   #     include Tenacity
   #
   #     t_has_many    :wheels
@@ -29,54 +29,59 @@ module Tenacity
   # The +t_has_many+ association will define a key named after the association.
   # The example above will create a key named <tt>:wheels_ids</tt>
   #
-  module MongoMapper
+  module Mongoid
 
     def self.setup(model) #:nodoc:
-      require 'mongo_mapper'
-      if model.included_modules.include?(::MongoMapper::Document)
-        model.send :include, MongoMapper::InstanceMethods
-        model.extend MongoMapper::ClassMethods
+      require 'mongoid'
+      if model.included_modules.include?(::Mongoid::Document)
+        model.send :include, Mongoid::InstanceMethods
+        model.extend Mongoid::ClassMethods
       end
     rescue LoadError
-      # MongoMapper not available
+      # Mongoid not available
     end
 
     module ClassMethods #:nodoc:
       def _t_find(id)
         find(id)
+      rescue ::Mongoid::Errors::DocumentNotFound
+        nil
       end
 
-      def _t_find_bulk(ids=[])
+      def _t_find_bulk(ids)
         find(ids)
+      rescue ::Mongoid::Errors::DocumentNotFound
+        []
       end
 
       def _t_find_first_by_associate(property, id)
-        first(property => id.to_s)
+        find(:first, :conditions => { property => id })
       end
 
       def _t_find_all_by_associate(property, id)
-        all(property => id.to_s)
+        find(:all, :conditions => { property => id })
       end
 
       def _t_initialize_has_many_association(association)
         unless self.respond_to?(association.foreign_keys_property)
-          key association.foreign_keys_property, Array
-          after_save { |record| _t_save_associates(record, association) }
+          field association.foreign_keys_property, :type => Array
+          after_save { |record| self.class._t_save_associates(record, association) }
         end
       end
 
       def _t_initialize_belongs_to_association(association)
         unless self.respond_to?(association.foreign_key)
-          key association.foreign_key, String
-          before_save { |record| _t_stringify_belongs_to_value(record, association) }
+          field association.foreign_key, :type => String
+          before_save { |record| self.class._t_stringify_belongs_to_value(record, association) }
         end
       end
 
       def _t_delete(ids, run_callbacks=true)
+        docs = _t_find_bulk(ids)
         if run_callbacks
-          destroy(ids)
+          docs.each { |doc| doc.destroy }
         else
-          delete(ids)
+          docs.each { |doc| doc.delete }
         end
       end
     end
@@ -84,8 +89,6 @@ module Tenacity
     module InstanceMethods #:nodoc:
       def _t_reload
         reload
-      rescue ::MongoMapper::DocumentNotFound
-        nil
       end
 
       def _t_associate_many(association, associate_ids)
