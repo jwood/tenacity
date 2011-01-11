@@ -78,44 +78,44 @@ require_mongoid do
       should "return an empty array when trying to fetch associate ids for an object with no associates" do
         alternator = MongoidAlternator.create
         assert_equal [], alternator._t_get_associate_ids(association)
+      end
+
+      should "be able to clear the associates of an object" do
+        coil_1 = MongoMapperCoil.create
+        coil_2 = MongoMapperCoil.create
+        coil_3 = MongoMapperCoil.create
+        alternator = MongoidAlternator.create
+
+        alternator._t_associate_many(association, [coil_1.id, coil_2.id, coil_3.id])
+        assert_set_equal [coil_1.id.to_s, coil_2.id.to_s, coil_3.id.to_s], alternator._t_get_associate_ids(association)
+        alternator._t_clear_associates(association)
+        assert_equal [], alternator._t_get_associate_ids(association)
+      end
+
+      should "be able to delete a set of objects, issuing their callbacks" do
+        alternator_1 = MongoidAlternator.create(:active_record_engine_id => '101')
+        alternator_2 = MongoidAlternator.create(:active_record_engine_id => '101')
+        alternator_3 = MongoidAlternator.create(:active_record_engine_id => '102')
+
+        old_count = MongoidAlternator.count
+        MongoidAlternator._t_delete([alternator_1.id, alternator_2.id, alternator_3.id])
+        assert_equal old_count - 3, MongoidAlternator.count
+      end
+
+      should "be able to delete a setup of objects, without issuing their callbacks" do
+        alternator_1 = MongoidAlternator.create(:active_record_engine_id => '101')
+        alternator_2 = MongoidAlternator.create(:active_record_engine_id => '101')
+        alternator_3 = MongoidAlternator.create(:active_record_engine_id => '102')
+
+        old_count = MongoidAlternator.count
+        MongoidAlternator._t_delete([alternator_1.id, alternator_2.id, alternator_3.id], false)
+        assert_equal old_count - 3, MongoidAlternator.count
+      end
     end
 
-    should "be able to clear the associates of an object" do
-      coil_1 = MongoMapperCoil.create
-      coil_2 = MongoMapperCoil.create
-      coil_3 = MongoMapperCoil.create
-      alternator = MongoidAlternator.create
-
-      alternator._t_associate_many(association, [coil_1.id, coil_2.id, coil_3.id])
-      assert_set_equal [coil_1.id.to_s, coil_2.id.to_s, coil_3.id.to_s], alternator._t_get_associate_ids(association)
-      alternator._t_clear_associates(association)
-      assert_equal [], alternator._t_get_associate_ids(association)
+    def association
+      Tenacity::Association.new(:t_has_many, :mongo_mapper_coils, MongoidAlternator)
     end
 
-    should "be able to delete a set of objects, issuing their callbacks" do
-      alternator_1 = MongoidAlternator.create(:active_record_engine_id => '101')
-      alternator_2 = MongoidAlternator.create(:active_record_engine_id => '101')
-      alternator_3 = MongoidAlternator.create(:active_record_engine_id => '102')
-
-      old_count = MongoidAlternator.count
-      MongoidAlternator._t_delete([alternator_1.id, alternator_2.id, alternator_3.id])
-      assert_equal old_count - 3, MongoidAlternator.count
-    end
-
-    should "be able to delete a setup of objects, without issuing their callbacks" do
-      alternator_1 = MongoidAlternator.create(:active_record_engine_id => '101')
-      alternator_2 = MongoidAlternator.create(:active_record_engine_id => '101')
-      alternator_3 = MongoidAlternator.create(:active_record_engine_id => '102')
-
-      old_count = MongoidAlternator.count
-      MongoidAlternator._t_delete([alternator_1.id, alternator_2.id, alternator_3.id], false)
-      assert_equal old_count - 3, MongoidAlternator.count
-    end
   end
-
-  def association
-    Tenacity::Association.new(:t_has_many, :mongo_mapper_coils, MongoidAlternator)
-  end
-
-end
 end
