@@ -54,7 +54,7 @@ module Tenacity
 
     module ClassMethods #:nodoc:
       def _t_find(id)
-        get(id)
+        (id.nil? || id.strip == "") ? nil : get(id)
       end
 
       def _t_find_bulk(ids)

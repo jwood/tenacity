@@ -43,6 +43,10 @@ module Tenacity
       @association.associate_class._t_delete(ids, false)
     end
 
+    def inspect
+      @target.inspect
+    end
+
     private
 
     def prepare_for_delete

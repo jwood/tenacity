@@ -34,4 +34,14 @@ ActiveRecord::Schema.define :version => 0 do
     t.integer :nut_id
     t.string :mongo_mapper_wheel_id
   end
+
+  create_table :active_record_objects, :force => true do |t|
+  end
+
+  create_table :active_record_has_one_targets, :force => true do |t|
+    t.string :active_record_object_id
+    t.string :couch_rest_object_id
+    t.string :mongo_mapper_object_id
+    t.string :mongoid_object_id
+  end
 end

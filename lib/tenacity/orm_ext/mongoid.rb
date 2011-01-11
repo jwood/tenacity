@@ -43,7 +43,7 @@ module Tenacity
 
     module ClassMethods #:nodoc:
       def _t_find(id)
-        find(id)
+        (id.nil? || id.to_s.strip == "") ? nil : find(id)
       rescue ::Mongoid::Errors::DocumentNotFound
         nil
       end
