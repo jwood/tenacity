@@ -1,5 +1,10 @@
 module Tenacity
+
+  # The Associaiton class represents a Tenacity association.  Using this class,
+  # you can retrieve all sorts of information about the association, including
+  # it name, type, source, target class, etc.
   class Association
+
     # Type type of the association (<tt>:t_has_one</tt>, <tt>:t_has_many</tt>, or <tt>:t_belongs_to</tt>)
     attr_reader :type
 
