@@ -1,5 +1,3 @@
-require 'mongo_mapper'
-
 class MongoMapperAshTray
   include MongoMapper::Document
   include Tenacity

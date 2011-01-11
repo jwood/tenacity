@@ -1,5 +1,3 @@
-require 'couchrest_model'
-
 class CouchRestDoor < CouchRest::Model::Base
   include Tenacity
   use_database COUCH_DB

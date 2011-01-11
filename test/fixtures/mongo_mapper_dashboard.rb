@@ -1,5 +1,3 @@
-require 'mongo_mapper'
-
 class MongoMapperDashboard
   include MongoMapper::Document
   include Tenacity

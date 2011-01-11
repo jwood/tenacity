@@ -1,5 +1,3 @@
-require 'mongo_mapper'
-
 class MongoMapperCoil
   include MongoMapper::Document
   include Tenacity
