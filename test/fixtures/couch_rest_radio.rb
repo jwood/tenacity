@@ -1,5 +1,3 @@
-require 'couchrest_extended_document'
-
 class CouchRestRadio < CouchRest::ExtendedDocument
   include Tenacity
   use_database COUCH_DB
