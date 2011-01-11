@@ -85,7 +85,7 @@ end
 def class_for_extension(extension, type=nil)
   if type.nil?
     class_name = extension.to_s.camelcase + "Object"
-  elsif type == :belongs_to
+  elsif type == :belongs_to || type == :has_one
     class_name = extension.to_s.camelcase + "HasOneTarget"
   end
   Kernel.const_get(class_name)
@@ -94,6 +94,8 @@ end
 def foreign_key_for(extension, type)
   if type == :belongs_to
     "#{extension}_object"
+  elsif type == :has_one
+    "#{extension}_has_one_target"
   end
 end
 
