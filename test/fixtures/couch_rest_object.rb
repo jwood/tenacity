@@ -1,4 +1,4 @@
-class CouchRestObject < CouchRest::Model::Base
+class CouchRestObject < CouchRest::ExtendedDocument
   include Tenacity
   use_database COUCH_DB
 
