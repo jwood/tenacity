@@ -29,6 +29,8 @@ def setup_fixtures
 end
 
 def setup_active_record_fixtures
+  ActiveRecordObject.delete_all
+
   ActiveRecordCar.delete_all
   ActiveRecordClimateControlUnit.delete_all
   ActiveRecordEngine.delete_all
@@ -41,6 +43,8 @@ def setup_active_record_fixtures
 end
 
 def setup_mongo_mapper_fixtures
+  MongoMapperObject.delete_all
+
   MongoMapperAshTray.delete_all
   MongoMapperButton.delete_all
   MongoMapperCoil.delete_all
@@ -62,6 +66,37 @@ end
 def setup_all_fixtures
   setup_fixtures
   setup_couchdb_fixtures
+end
+
+def orm_extensions
+  [:active_record, :couch_rest, :mongo_mapper, :mongoid]
+end
+
+def for_each_orm_extension_combination
+  orm_extensions.each do |source|
+    orm_extensions.each do |target|
+      yield source, target
+    end
+  end
+end
+
+def class_for_extension(extension, type=nil)
+  if type.nil?
+    class_name = extension.to_s.camelcase + "Object"
+  elsif type == :belongs_to
+    class_name = extension.to_s.camelcase + "HasOneTarget"
+  end
+  Kernel.const_get(class_name)
+end
+
+def foreign_key_for(extension, type)
+  if type == :belongs_to
+    "#{extension}_object"
+  end
+end
+
+def foreign_key_id_for(extension, type)
+  foreign_key_for(extension, type) + "_id"
 end
 
 def assert_set_equal(expecteds, actuals, message = nil)
