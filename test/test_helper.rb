@@ -46,6 +46,14 @@ def setup_all_fixtures
   setup_couchdb_fixtures
 end
 
+def setup_fixtures_for(source, target)
+  if source == :couch_rest || target == :couch_rest
+    setup_all_fixtures
+  else
+    setup_fixtures
+  end
+end
+
 def orm_extensions
   extensions = [:active_record, :couch_rest, :mongo_mapper]
   require_mongoid { extensions << :mongoid }
