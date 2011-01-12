@@ -5,7 +5,7 @@ class BelongsToTest < Test::Unit::TestCase
   for_each_orm_extension_combination do |source, target|
     context "A #{source} class with a belongs_to association to a #{target} class" do
       setup do
-        setup_all_fixtures
+        setup_fixtures_for(source, target)
 
         @source_class = class_for_extension(source)
         @source = @source_class.create({})
