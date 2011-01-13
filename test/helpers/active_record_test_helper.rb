@@ -44,4 +44,31 @@ ActiveRecord::Schema.define :version => 0 do
     t.string :mongo_mapper_object_id
     t.string :mongoid_object_id
   end
+
+  create_table :active_record_has_many_targets, :force => true do |t|
+    t.integer :active_record_object_id
+    t.string :couch_rest_object_id
+    t.string :mongo_mapper_object_id
+    t.string :mongoid_object_id
+  end
+
+  create_table :active_record_has_many_targets_active_record_objects, :force => true do |t|
+    t.integer :active_record_object_id
+    t.string :active_record_has_many_target_id
+  end
+
+  create_table :active_record_objects_mongo_mapper_has_many_targets, :force => true do |t|
+    t.integer :active_record_object_id
+    t.string :mongo_mapper_has_many_target_id
+  end
+
+  create_table :active_record_objects_couch_rest_has_many_targets, :force => true do |t|
+    t.integer :active_record_object_id
+    t.string :couch_rest_has_many_target_id
+  end
+
+  create_table :active_record_objects_mongoid_has_many_targets, :force => true do |t|
+    t.integer :active_record_object_id
+    t.string :mongoid_has_many_target_id
+  end
 end

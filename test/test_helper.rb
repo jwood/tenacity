@@ -32,9 +32,16 @@ def setup_fixtures
     end
   end
 
-  ActiveRecordCar.connection.execute("delete from active_record_cars_mongo_mapper_wheels")
-  ActiveRecordCar.connection.execute("delete from active_record_cars_couch_rest_doors")
-  ActiveRecordCar.connection.execute("delete from nuts_and_wheels")
+  join_tables = %w{
+                    active_record_cars_mongo_mapper_wheels
+                    active_record_cars_couch_rest_doors
+                    nuts_and_wheels
+                    active_record_has_many_targets_active_record_objects
+                    active_record_objects_mongo_mapper_has_many_targets
+                    active_record_objects_couch_rest_has_many_targets
+                    active_record_objects_mongoid_has_many_targets
+                  }
+  join_tables.each { |join_table| ActiveRecordCar.connection.execute("delete from #{join_table}") }
 end
 
 def setup_couchdb_fixtures
@@ -73,6 +80,8 @@ def class_for_extension(extension, type=nil)
     class_name = extension.to_s.camelcase + "Object"
   elsif type == :belongs_to || type == :has_one
     class_name = extension.to_s.camelcase + "HasOneTarget"
+  elsif type == :has_many
+    class_name = extension.to_s.camelcase + "HasManyTarget"
   end
   Kernel.const_get(class_name)
 end
@@ -82,11 +91,19 @@ def foreign_key_for(extension, type)
     "#{extension}_object"
   elsif type == :has_one
     "#{extension}_has_one_target"
+  elsif type == :has_many
+    "#{extension}_has_many_targets"
   end
 end
 
 def foreign_key_id_for(extension, type)
-  foreign_key_for(extension, type) + "_id"
+  if type == :belongs_to
+    "#{extension}_object_id"
+  elsif type == :has_one
+    "#{extension}_has_one_target_id"
+  elsif type == :has_many
+    "#{extension}_has_many_target_ids"
+  end
 end
 
 def assert_set_equal(expecteds, actuals, message = nil)

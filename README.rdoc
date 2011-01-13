@@ -83,8 +83,9 @@ much the same way, supporting many of the same options.
 == Supported Database Clients
 
 * ActiveRecord
-* MongoMapper
 * CouchRest (CouchModel and ExtendedDocument)
+* MongoMapper
+* Mongoid
 
 See EXTEND.rdoc for information on extending Tenacity to work with other database clients.
 

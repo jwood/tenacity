@@ -44,6 +44,7 @@ module Tenacity
 
         associates = (record.instance_variable_get record._t_ivar_name(association)) || []
         associates.each do |associate|
+          associate._t_reload
           associate.send("#{association.foreign_key(record.class)}=", record.id.to_s)
           save_associate(associate)
         end

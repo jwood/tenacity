@@ -105,6 +105,7 @@ module Tenacity
 
     module InstanceMethods #:nodoc:
       def _t_reload
+        return if self.id.nil?
         new_doc = database.get(self.id)
         self.clear
         new_doc.each { |k,v| self[k] = new_doc[k] }
