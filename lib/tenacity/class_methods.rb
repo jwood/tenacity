@@ -7,6 +7,7 @@ module Tenacity
   # methods.
   #
   #   class Project
+  #     include SupportedDatabaseClient
   #     include Tenacity
   #
   #     t_belongs_to    :portfolio
@@ -56,6 +57,47 @@ module Tenacity
   #     include Tenacity
   #     t_belongs_to :manager     # foreign key - manager_id
   #   end
+  #
+  # == Is it a +t_belongs_to+ or +t_has_one+ association?
+  #
+  # Both express a 1-1 relationship. The difference is mostly where to place
+  # the foreign key, which is owned by the class declaring the +t_belongs_to+
+  # relationship.  Example:
+  #
+  #   class Employee < ActiveRecord::Base
+  #     include Tenacity
+  #     t_has_one :office
+  #   end
+  #
+  #   class Office
+  #     include MongoMapper::Document
+  #     include Tenacity
+  #     t_belongs_to :employee
+  #   end
+  #
+  # In this example, the foreign key, <tt>employee_id</tt>, would belong to the
+  # Office class.  If possible, tenacity will define the property to hold the
+  # foreign key.  When it cannot, it assumes that the foreign key has been
+  # defined.  See the documentation for the respective database client
+  # extension to see if tenacity will declare the foreign_key property.
+  #
+  # == Unsaved objects and associations
+  #
+  # You can manipulate objects and associations before they are saved to the database, but there is some special behavior you should be
+  # aware of, mostly involving the saving of associated objects.
+  #
+  # === One-to-one associations
+  #
+  # * Assigning an object to a +t_has_one+ association automatically saves that object and the object being replaced (if there is one), in
+  #   order to update their primary keys - except if the parent object is not yet stored in the database.
+  # * Assigning an object to a +t_belongs_to+ association does not save the object, since the foreign key field belongs on the parent. It
+  #   does not save the parent either.
+  #
+  # === Collections
+  #
+  # * Adding an object to a collection (+t_has_many+) automatically saves that object, except if the parent object
+  #   (the owner of the collection) is not yet stored in the database.
+  # * All unsaved members of the collection are automatically saved when the parent is saved.
   #
   # == Caching
   #

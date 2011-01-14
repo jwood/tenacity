@@ -8,112 +8,112 @@ class MongoMapperTest < Test::Unit::TestCase
     end
 
     should "be able to find the object in the database" do
-      wheel = MongoMapperWheel.create
-      assert_equal wheel, MongoMapperWheel._t_find(wheel.id)
+      object = MongoMapperObject.create
+      assert_equal object, MongoMapperObject._t_find(object.id)
     end
 
     should "return nil if the specified id could not be found in the database" do
-      assert_nil MongoMapperWheel._t_find('4d0e1224b28cdbfb72000042')
+      assert_nil MongoMapperObject._t_find('4d0e1224b28cdbfb72000042')
     end
 
     should "be able to find multiple objects in the database" do
-      wheel_1 = MongoMapperWheel.create
-      wheel_2 = MongoMapperWheel.create
-      assert_set_equal [wheel_1, wheel_2], MongoMapperWheel._t_find_bulk([wheel_1.id, wheel_2.id, '4d0e1224b28cdbfb72000042'])
+      object_1 = MongoMapperObject.create
+      object_2 = MongoMapperObject.create
+      assert_set_equal [object_1, object_2], MongoMapperObject._t_find_bulk([object_1.id, object_2.id, '4d0e1224b28cdbfb72000042'])
     end
 
     should "return an empty array if none of the specified object ids could be found in the database" do
-      assert_equal [], MongoMapperWheel._t_find_bulk(['4d0e1224b28cdbfb72000042', '4d0e1224b28cdbfb72000043', '4d0e1224b28cdbfb72000044'])
+      assert_equal [], MongoMapperObject._t_find_bulk(['4d0e1224b28cdbfb72000042', '4d0e1224b28cdbfb72000043', '4d0e1224b28cdbfb72000044'])
     end
 
     should "be able to find the first associate of an object" do
-      car = ActiveRecordCar.create
-      wheel = MongoMapperWheel.create(:active_record_car_id => car.id.to_s)
-      assert_equal wheel, MongoMapperWheel._t_find_first_by_associate(:active_record_car_id, car.id)
+      object = MongoMapperObject.create
+      target = MongoMapperHasOneTarget.create(:mongo_mapper_object_id => object.id.to_s)
+      assert_equal target, MongoMapperHasOneTarget._t_find_first_by_associate(:mongo_mapper_object_id, object.id)
     end
 
     should "return nil if the first associate of an object could not be found" do
-      assert_nil MongoMapperWheel._t_find_first_by_associate(:active_record_car_id, 12345)
+      assert_nil MongoMapperHasOneTarget._t_find_first_by_associate(:mongo_mapper_object_id, 12345)
     end
 
     should "be able to find the associates of an object" do
-      wheel_1 = MongoMapperWheel.create(:active_record_car_id => '101')
-      wheel_2 = MongoMapperWheel.create(:active_record_car_id => '101')
-      wheel_3 = MongoMapperWheel.create(:active_record_car_id => '102')
-      assert_set_equal [wheel_1, wheel_2], MongoMapperWheel._t_find_all_by_associate(:active_record_car_id, '101')
+      target_1 = MongoMapperHasOneTarget.create(:mongo_mapper_object_id => '101')
+      target_2 = MongoMapperHasOneTarget.create(:mongo_mapper_object_id => '101')
+      target_3 = MongoMapperHasOneTarget.create(:mongo_mapper_object_id => '102')
+      assert_set_equal [target_1, target_2], MongoMapperHasOneTarget._t_find_all_by_associate(:mongo_mapper_object_id, '101')
     end
 
     should "return an empty array if the object has no associates" do
-      assert_equal [], MongoMapperWheel._t_find_all_by_associate(:active_record_car_id, 1234)
+      assert_equal [], MongoMapperHasOneTarget._t_find_all_by_associate(:mongo_mapper_object_id, '1234')
     end
 
     should "be able to reload an object from the database" do
-      wheel = MongoMapperWheel.create
-      wheel.active_record_car_id = 101
-      assert_equal 101, wheel.active_record_car_id.to_i
-      wheel.reload
-      assert_equal '', wheel.active_record_car_id
+      target = MongoMapperHasOneTarget.create
+      target.mongo_mapper_object_id = 101
+      assert_equal '101', target.mongo_mapper_object_id
+      target.reload
+      assert_equal '', target.mongo_mapper_object_id
     end
 
     should "be able to associate many objects with the given object" do
-      nut_1 = ActiveRecordNut.create
-      nut_2 = ActiveRecordNut.create
-      nut_3 = ActiveRecordNut.create
-      wheel = MongoMapperWheel.create
-      wheel._t_associate_many(association, [nut_1.id, nut_2.id, nut_3.id])
-      assert_set_equal [nut_1.id.to_s, nut_2.id.to_s, nut_3.id.to_s], wheel.t_active_record_nut_ids
+      target_1 = MongoMapperHasManyTarget.create
+      target_2 = MongoMapperHasManyTarget.create
+      target_3 = MongoMapperHasManyTarget.create
+      object = MongoMapperObject.create
+      object._t_associate_many(association, [target_1.id, target_2.id, target_3.id])
+      assert_set_equal [target_1.id.to_s, target_2.id.to_s, target_3.id.to_s], object.t_mongo_mapper_has_many_target_ids
     end
 
     should "be able to get the ids of the objects associated with the given object" do
-      nut_1 = ActiveRecordNut.create
-      nut_2 = ActiveRecordNut.create
-      nut_3 = ActiveRecordNut.create
-      wheel = MongoMapperWheel.create
+      target_1 = MongoMapperHasManyTarget.create
+      target_2 = MongoMapperHasManyTarget.create
+      target_3 = MongoMapperHasManyTarget.create
+      object = MongoMapperObject.create
 
-      wheel._t_associate_many(association, [nut_1.id, nut_2.id, nut_3.id])
-      assert_set_equal [nut_1.id.to_s, nut_2.id.to_s, nut_3.id.to_s], wheel._t_get_associate_ids(association)
+      object._t_associate_many(association, [target_1.id, target_2.id, target_3.id])
+      assert_set_equal [target_1.id.to_s, target_2.id.to_s, target_3.id.to_s], object._t_get_associate_ids(association)
     end
 
     should "return an empty array when trying to fetch associate ids for an object with no associates" do
-      wheel = MongoMapperWheel.create
-      assert_equal [], wheel._t_get_associate_ids(association)
+      object = MongoMapperObject.create
+      assert_equal [], object._t_get_associate_ids(association)
     end
 
     should "be able to clear the associates of an object" do
-      nut_1 = ActiveRecordNut.create
-      nut_2 = ActiveRecordNut.create
-      nut_3 = ActiveRecordNut.create
-      wheel = MongoMapperWheel.create
+      target_1 = MongoMapperHasManyTarget.create
+      target_2 = MongoMapperHasManyTarget.create
+      target_3 = MongoMapperHasManyTarget.create
+      object = MongoMapperObject.create
 
-      wheel._t_associate_many(association, [nut_1.id, nut_2.id, nut_3.id])
-      assert_set_equal [nut_1.id.to_s, nut_2.id.to_s, nut_3.id.to_s], wheel._t_get_associate_ids(association)
-      wheel._t_clear_associates(association)
-      assert_equal [], wheel._t_get_associate_ids(association)
+      object._t_associate_many(association, [target_1.id, target_2.id, target_3.id])
+      assert_set_equal [target_1.id.to_s, target_2.id.to_s, target_3.id.to_s], object._t_get_associate_ids(association)
+      object._t_clear_associates(association)
+      assert_equal [], object._t_get_associate_ids(association)
     end
 
     should "be able to delete a set of objects, issuing their callbacks" do
-      wheel_1 = MongoMapperWheel.create(:active_record_car_id => '101')
-      wheel_2 = MongoMapperWheel.create(:active_record_car_id => '101')
-      wheel_3 = MongoMapperWheel.create(:active_record_car_id => '102')
+      object_1 = MongoMapperObject.create
+      object_2 = MongoMapperObject.create
+      object_3 = MongoMapperObject.create
 
-      old_count = MongoMapperWheel.count
-      MongoMapperWheel._t_delete([wheel_1.id, wheel_2.id, wheel_3.id])
-      assert_equal old_count - 3, MongoMapperWheel.count
+      old_count = MongoMapperObject.count
+      MongoMapperObject._t_delete([object_1.id, object_2.id, object_3.id])
+      assert_equal old_count - 3, MongoMapperObject.count
     end
 
     should "be able to delete a setup of objects, without issuing their callbacks" do
-      wheel_1 = MongoMapperWheel.create(:active_record_car_id => '101')
-      wheel_2 = MongoMapperWheel.create(:active_record_car_id => '101')
-      wheel_3 = MongoMapperWheel.create(:active_record_car_id => '102')
+      object_1 = MongoMapperObject.create
+      object_2 = MongoMapperObject.create
+      object_3 = MongoMapperObject.create
 
-      old_count = MongoMapperWheel.count
-      MongoMapperWheel._t_delete([wheel_1.id, wheel_2.id, wheel_3.id], false)
-      assert_equal old_count - 3, MongoMapperWheel.count
+      old_count = MongoMapperObject.count
+      MongoMapperObject._t_delete([object_1.id, object_2.id, object_3.id], false)
+      assert_equal old_count - 3, MongoMapperObject.count
     end
   end
 
   def association
-    Tenacity::Association.new(:t_has_many, :active_record_nuts, MongoMapperWheel)
+    Tenacity::Association.new(:t_has_many, :mongo_mapper_has_many_targets, MongoMapperObject)
   end
 
 end
