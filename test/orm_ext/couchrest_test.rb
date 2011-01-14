@@ -8,115 +8,115 @@ class CouchRestTest < Test::Unit::TestCase
     end
 
     should "be able to find the object in the database" do
-      radio = CouchRestRadio.create({})
-      assert_equal radio, CouchRestRadio._t_find(radio.id)
+      object = CouchRestObject.create({})
+      assert_equal object, CouchRestObject._t_find(object.id)
     end
 
     should "return nil if the specified id could not be found in the database" do
-      assert_nil CouchRestRadio._t_find("abc123")
+      assert_nil CouchRestObject._t_find("abc123")
     end
 
     should "be able to find multiple objects in the database" do
-      radio_1 = CouchRestRadio.create({})
-      radio_2 = CouchRestRadio.create({})
-      assert_set_equal [radio_1, radio_2], CouchRestRadio._t_find_bulk([radio_1.id, radio_2.id, "abc123"])
+      object_1 = CouchRestObject.create({})
+      object_2 = CouchRestObject.create({})
+      assert_set_equal [object_1, object_2], CouchRestObject._t_find_bulk([object_1.id, object_2.id, "abc123"])
     end
 
     should "return an empty array if unable to find the specified objects in the database" do
-      assert_equal [], CouchRestRadio._t_find_bulk(["abc123", "abc456", "abc789"])
+      assert_equal [], CouchRestObject._t_find_bulk(["abc123", "abc456", "abc789"])
     end
 
     should "be able to find the first associate of an object" do
-      dashboard = MongoMapperDashboard.create
-      radio = CouchRestRadio.create(:mongo_mapper_dashboard_id => dashboard.id)
-      assert_equal radio, CouchRestRadio._t_find_first_by_associate(:mongo_mapper_dashboard_id, dashboard.id)
+      object = CouchRestObject.create({})
+      target = CouchRestHasOneTarget.create(:couch_rest_object_id => object.id)
+      assert_equal target, CouchRestHasOneTarget._t_find_first_by_associate(:couch_rest_object_id, object.id)
     end
 
     should "return nil if the first associate of an object could not be found" do
-      assert_nil CouchRestRadio._t_find_first_by_associate(:mongo_mapper_dashboard_id, 12345)
+      assert_nil CouchRestHasOneTarget._t_find_first_by_associate(:couch_rest_object_id, 12345)
     end
 
     should "be able to find all associates of an object" do
-      dashboard = MongoMapperDashboard.create
-      radio_1 = CouchRestRadio.create(:mongo_mapper_dashboard_id => dashboard.id)
-      radio_2 = CouchRestRadio.create(:mongo_mapper_dashboard_id => dashboard.id)
-      radio_3 = CouchRestRadio.create(:mongo_mapper_dashboard_id => 'abc123')
-      assert_set_equal [radio_1, radio_2], CouchRestRadio._t_find_all_by_associate(:mongo_mapper_dashboard_id, dashboard.id)
+      object = CouchRestObject.create({})
+      target_1 = CouchRestHasManyTarget.create(:couch_rest_object_id => object.id)
+      target_2 = CouchRestHasManyTarget.create(:couch_rest_object_id => object.id)
+      target_3 = CouchRestHasManyTarget.create(:couch_rest_object_id => 'abc123')
+      assert_set_equal [target_1, target_2], CouchRestHasManyTarget._t_find_all_by_associate(:couch_rest_object_id, object.id)
     end
 
     should "return an empty array if unable to find the associates of an object" do
-      assert_equal [], CouchRestRadio._t_find_all_by_associate(:mongo_mapper_dashboard_id, 'abc123')
+      assert_set_equal [], CouchRestHasManyTarget._t_find_all_by_associate(:couch_rest_object_id, 'abc123')
     end
 
     should "be able to reload an object from the database" do
-      radio = CouchRestRadio.create({"abc" => "123"})
-      assert_equal "123", radio["abc"]
-      radio["abc"] = "456"
-      assert_equal "456", radio["abc"]
-      radio._t_reload
-      assert_equal "123", radio["abc"]
+      object = CouchRestObject.create({"abc" => "123"})
+      assert_equal "123", object["abc"]
+      object["abc"] = "456"
+      assert_equal "456", object["abc"]
+      object._t_reload
+      assert_equal "123", object["abc"]
     end
 
     should "be able to associate many objects with the given object" do
-      button_1 = MongoMapperButton.create
-      button_2 = MongoMapperButton.create
-      button_3 = MongoMapperButton.create
-      radio = CouchRestRadio.create({})
-      radio._t_associate_many(association, [button_1.id, button_2.id, button_3.id])
-      assert_set_equal [button_1.id.to_s, button_2.id.to_s, button_3.id.to_s], radio.t_mongo_mapper_button_ids
+      target_1 = CouchRestHasManyTarget.create({})
+      target_2 = CouchRestHasManyTarget.create({})
+      target_3 = CouchRestHasManyTarget.create({})
+      object = CouchRestObject.create({})
+      object._t_associate_many(association, [target_1.id, target_2.id, target_3.id])
+      assert_set_equal [target_1.id.to_s, target_2.id.to_s, target_3.id.to_s], object.t_couch_rest_has_many_target_ids
     end
 
     should "be able to get the ids of the objects associated with the given object" do
-      button_1 = MongoMapperButton.create
-      button_2 = MongoMapperButton.create
-      button_3 = MongoMapperButton.create
-      radio = CouchRestRadio.create({})
+      target_1 = CouchRestHasManyTarget.create({})
+      target_2 = CouchRestHasManyTarget.create({})
+      target_3 = CouchRestHasManyTarget.create({})
+      object = CouchRestObject.create({})
 
-      radio._t_associate_many(association, [button_1.id, button_2.id, button_3.id])
-      assert_set_equal [button_1.id.to_s, button_2.id.to_s, button_3.id.to_s], radio._t_get_associate_ids(association)
+      object._t_associate_many(association, [target_1.id, target_2.id, target_3.id])
+      assert_set_equal [target_1.id.to_s, target_2.id.to_s, target_3.id.to_s], object._t_get_associate_ids(association)
     end
 
     should "return an empty array when trying to fetch associate ids for an object with no associates" do
-      radio = CouchRestRadio.create({})
-      assert_equal [], radio._t_get_associate_ids(association)
+      object = CouchRestObject.create({})
+      assert_equal [], object._t_get_associate_ids(association)
     end
 
     should "be able to clear the associates of an object" do
-      button_1 = MongoMapperButton.create
-      button_2 = MongoMapperButton.create
-      button_3 = MongoMapperButton.create
-      radio = CouchRestRadio.create({})
+      target_1 = CouchRestHasManyTarget.create({})
+      target_2 = CouchRestHasManyTarget.create({})
+      target_3 = CouchRestHasManyTarget.create({})
+      object = CouchRestObject.create({})
 
-      radio._t_associate_many(association, [button_1.id, button_2.id, button_3.id])
-      assert_set_equal [button_1.id.to_s, button_2.id.to_s, button_3.id.to_s], radio._t_get_associate_ids(association)
-      radio._t_clear_associates(association)
-      assert_equal [], radio._t_get_associate_ids(association)
+      object._t_associate_many(association, [target_1.id, target_2.id, target_3.id])
+      assert_set_equal [target_1.id.to_s, target_2.id.to_s, target_3.id.to_s], object._t_get_associate_ids(association)
+      object._t_clear_associates(association)
+      assert_equal [], object._t_get_associate_ids(association)
     end
 
     should "be able to delete a set of objects, issuing their callbacks" do
-      radio_1 = CouchRestRadio.create({})
-      radio_2 = CouchRestRadio.create({})
-      radio_3 = CouchRestRadio.create({})
+      object_1 = CouchRestObject.create({})
+      object_2 = CouchRestObject.create({})
+      object_3 = CouchRestObject.create({})
 
-      old_count = CouchRestRadio.count
-      CouchRestRadio._t_delete([radio_1.id, radio_2.id, radio_3.id])
-      assert_equal old_count - 3, CouchRestRadio.count
+      old_count = CouchRestObject.count
+      CouchRestObject._t_delete([object_1.id, object_2.id, object_3.id])
+      assert_equal old_count - 3, CouchRestObject.count
     end
 
     should "be able to delete a setup of objects, without issuing their callbacks" do
-      radio_1 = CouchRestRadio.create({})
-      radio_2 = CouchRestRadio.create({})
-      radio_3 = CouchRestRadio.create({})
+      object_1 = CouchRestObject.create({})
+      object_2 = CouchRestObject.create({})
+      object_3 = CouchRestObject.create({})
 
-      old_count = CouchRestRadio.count
-      CouchRestRadio._t_delete([radio_1.id, radio_2.id, radio_3.id], false)
-      assert_equal old_count - 3, CouchRestRadio.count
+      old_count = CouchRestObject.count
+      CouchRestObject._t_delete([object_1.id, object_2.id, object_3.id], false)
+      assert_equal old_count - 3, CouchRestObject.count
     end
   end
 
   private
 
   def association
-    Tenacity::Association.new(:t_has_many, :mongo_mapper_buttons, CouchRestRadio)
+    Tenacity::Association.new(:t_has_many, :couch_rest_has_many_targets, CouchRestObject)
   end
 end
