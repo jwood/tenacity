@@ -114,7 +114,7 @@ require_mongoid do
     end
 
     def association
-      Tenacity::Association.new(:t_has_many, :mongoid_has_many_targets, MongoidAlternator)
+      Tenacity::Association.new(:t_has_many, :mongoid_has_many_targets, MongoidObject)
     end
 
   end
