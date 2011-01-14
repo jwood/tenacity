@@ -1,7 +1,9 @@
 *.swp
 *.swo
+.yardoc
 .bundle
 rdoc/
+doc/
 coverage/
 pkg/
 Gemfile.lock

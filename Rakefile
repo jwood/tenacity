@@ -10,16 +10,21 @@ rescue Bundler::BundlerError => e
   $stderr.puts "Run `bundle install` to install missing gems"
   exit e.status_code
 end
-require 'rake'
 
+require 'rake'
 require 'rake/testtask'
+require 'rcov/rcovtask'
+require 'rake/rdoctask'
+require 'yard'
+
+task :default => :test
+
 Rake::TestTask.new(:test) do |test|
   test.libs << 'lib' << 'test' << 'test/fixtures'
   test.pattern = ENV['TEST_FILE'] || "test/**/*_test.rb"
   test.verbose = true
 end
 
-require 'rcov/rcovtask'
 Rcov::RcovTask.new do |test|
   test.libs << 'test' << 'test/fixtures'
   test.pattern = 'test/**/*_test.rb'
@@ -27,12 +32,8 @@ Rcov::RcovTask.new do |test|
   test.rcov_opts << '--exclude "gems/*"'
 end
 
-task :default => :test
-
-require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
-
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title = "tenacity #{version}"
   rdoc.rdoc_files.include('README*')
@@ -40,6 +41,16 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-desc 'Delete rcov, rdoc, and other generated files'
-task :clobber => [:clobber_rcov, :clobber_rdoc]
+YARD::Rake::YardocTask.new do |t|
+  t.files = ['lib/**/*.rb']
+end
+
+desc 'Delete rcov, rdoc, yard, and other generated files'
+task :clobber => [:clobber_rcov, :clobber_rdoc, :clobber_yard]
+
+desc 'Delete yard generated files'
+task :clobber_yard do
+  puts 'rm -rf doc .yardoc'
+  FileUtils.rm_rf ['doc', '.yardoc']
+end
 
