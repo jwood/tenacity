@@ -3,6 +3,7 @@
 * Major enhancements
 
   * Added support for Mongoid
+  * Added support for DataMapper
 
 * Minor enhancements
 

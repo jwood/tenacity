@@ -1,6 +1,8 @@
-class MongoMapperObject
-  include MongoMapper::Document
+class DataMapperObject
+  include DataMapper::Resource
   include Tenacity
+
+  property :id, Serial
 
   t_has_one :active_record_has_one_target
   t_has_one :couch_rest_has_one_target

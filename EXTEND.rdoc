@@ -41,6 +41,8 @@ and return it.  If no object could be found, return nil.
 
 Find all objects by the specified property name, with the specified id, and
 return them in an array.  If no objects could be found, return an empty array.
+If only some of the objects could be found, then simply return those objects
+in the array.
 
   _t_delete(ids, run_callbacks=true)
 

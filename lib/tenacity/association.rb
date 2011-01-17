@@ -67,21 +67,29 @@ module Tenacity
 
     # Get the name of the join table used by this association
     def join_table
-      if @join_table || @source.respond_to?(:table_name)
-        @join_table || (name.to_s < @source.table_name ? "#{name}_#{@source.table_name}" : "#{@source.table_name}_#{name}")
-      end
+      table_name = fetch_table_name
+      @join_table || (name.to_s < table_name ? "#{name}_#{table_name}" : "#{table_name}_#{name}")
     end
 
     # Get the name of the column in the join table that represents this object
     def association_key
-      if @association_key || @source.respond_to?(:table_name)
-        @association_key || @source.table_name.singularize + '_id'
-      end
+      table_name = fetch_table_name
+      @association_key || table_name.singularize + '_id'
     end
 
     # Get the name of the column in the join table that represents the associated object
     def association_foreign_key
       @association_foreign_key || name.to_s.singularize + '_id'
+    end
+
+    private
+
+    def fetch_table_name
+      if @source.respond_to?(:table_name)
+        @source.table_name
+      else
+        "#{ActiveSupport::Inflector.underscore(@source)}s"
+      end
     end
   end
 end
