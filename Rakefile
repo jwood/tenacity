@@ -42,7 +42,7 @@ Rake::RDocTask.new do |rdoc|
 end
 
 YARD::Rake::YardocTask.new do |t|
-  t.files = ['lib/**/*.rb']
+  t.files = ['lib/**/*.rb', '-', 'EXTEND.rdoc']
 end
 
 desc 'Delete rcov, rdoc, yard, and other generated files'
