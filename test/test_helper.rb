@@ -65,7 +65,7 @@ def setup_fixtures_for(source, target)
 end
 
 def orm_extensions
-  extensions = [:active_record, :couch_rest, :mongo_mapper]
+  extensions = [:active_record, :couch_rest, :data_mapper, :mongo_mapper]
   require_mongoid { extensions << :mongoid }
   extensions
 end

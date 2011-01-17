@@ -84,6 +84,7 @@ much the same way, supporting many of the same options.
 
 * ActiveRecord
 * CouchRest (CouchModel and ExtendedDocument)
+* DataMapper
 * MongoMapper
 * Mongoid
 

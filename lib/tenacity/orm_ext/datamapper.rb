@@ -93,6 +93,17 @@ module Tenacity
     end
 
     module InstanceMethods #:nodoc:
+      # DataMapper will not issue callbacks unless at least one of the properties is dirty.
+      # So, taint the object by marking one of the attributes as dirty, save the object,
+      # and resture the persisted_state by reloading the object from the database.
+      def save
+        if clean?
+          taint!; super; reload
+        else
+          super
+        end
+      end
+
       def _t_reload
         reload
       end
@@ -113,6 +124,14 @@ module Tenacity
       def _t_get_associate_ids(association)
         return [] if self.id.nil?
         self.repository.adapter.select("select #{association.association_foreign_key} from #{association.join_table} where #{association.association_key} = #{self.id}")
+      end
+
+      private
+
+      def taint!
+        property = properties.first.name
+        self.persisted_state = ::DataMapper::Resource::State::Dirty.new(self) unless self.persisted_state.kind_of?(::DataMapper::Resource::State::Dirty)
+        self.persisted_state.original_attributes[properties[property]] = self.send(property)
       end
     end
 
