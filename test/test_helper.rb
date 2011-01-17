@@ -13,6 +13,7 @@ require 'shoulda'
 
 require File.join(File.dirname(__FILE__), 'helpers', 'active_record_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'couch_rest_test_helper')
+require File.join(File.dirname(__FILE__), 'helpers', 'data_mapper_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'mongo_mapper_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'mongoid_test_helper')
 
@@ -21,6 +22,8 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'tenacity'
 
 Dir[File.join(File.dirname(__FILE__), 'fixtures', '*.rb')].each { |file| require file }
+
+DataMapper.auto_migrate!
 
 def setup_fixtures
   Dir.glob(File.join(File.dirname(__FILE__), 'fixtures', '*.rb')).each do |filename|

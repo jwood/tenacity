@@ -27,6 +27,8 @@ Gem::Specification.new do |s|
   # Relational DBs
   s.add_development_dependency "sqlite3-ruby", "~> 1.3.1"
   s.add_development_dependency "activerecord", "~> 3.0.0"
+  s.add_development_dependency "datamapper", "~> 1.0.2"
+  s.add_development_dependency "dm-sqlite-adapter", "~> 1.0.2"
 
   # MongoDB
   s.add_development_dependency "mongo_mapper", "~> 0.8.6"

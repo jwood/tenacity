@@ -1,6 +1,8 @@
-class CouchRestObject < CouchRest::Model::Base
+class DataMapperObject
+  include DataMapper::Resource
   include Tenacity
-  use_database COUCH_DB
+
+  property :id, Serial
 
   t_has_one :active_record_has_one_target
   t_has_one :couch_rest_has_one_target
@@ -14,4 +16,3 @@ class CouchRestObject < CouchRest::Model::Base
   t_has_many :mongo_mapper_has_many_targets
   require_mongoid { t_has_many :mongoid_has_many_targets }
 end
-
