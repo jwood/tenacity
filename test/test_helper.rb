@@ -16,6 +16,7 @@ require File.join(File.dirname(__FILE__), 'helpers', 'couch_rest_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'data_mapper_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'mongo_mapper_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'mongoid_test_helper')
+require File.join(File.dirname(__FILE__), 'helpers', 'sequel_test_helper')
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
