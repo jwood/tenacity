@@ -21,7 +21,7 @@ task :default => :test
 
 Rake::TestTask.new(:test) do |test|
   test.libs << 'lib' << 'test' << 'test/fixtures'
-  test.pattern = ENV['TEST_FILE'] || "test/**/*_test.rb"
+  test.pattern = ENV['TEST'] || "test/**/*_test.rb"
   test.verbose = true
 end
 
