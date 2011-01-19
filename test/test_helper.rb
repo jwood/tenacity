@@ -31,7 +31,17 @@ def setup_fixtures
     begin
       filename =~ /.*\/(.*)\.rb/
       clazz = Kernel.const_get($1.camelcase)
-      clazz.delete_all if clazz.respond_to?(:delete_all)
+      if clazz.respond_to?(:delete_all)
+        clazz.delete_all
+      elsif clazz.respond_to?(:db)
+        clazz.db["delete from #{clazz.table_name}"].delete
+      elsif clazz.respond_to?(:destroy)
+        clazz.destroy
+      elsif filename =~ /\/couch_rest/
+        # CouchDB fixtures are destroyed with the database
+      else
+        puts "WARN: Don't know how to clear fixtures for #{clazz}"
+      end
     rescue NameError
     end
   end
