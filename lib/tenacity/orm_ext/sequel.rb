@@ -45,7 +45,7 @@ module Tenacity
 
     def self.setup(model)
       require 'sequel'
-      if model.superclass == ::Sequel::Model
+      if model.ancestors.include?(::Sequel::Model)
         model.send :include, Sequel::InstanceMethods
         model.extend Sequel::ClassMethods
       end
