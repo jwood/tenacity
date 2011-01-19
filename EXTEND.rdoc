@@ -30,7 +30,8 @@ return nil.
   _t_find_bulk(ids=[])
 
 Find many objects by the specified ids, and return them in an array.
-If no objects could be found, return an empty array.
+If no objects could be found, return an empty array.  If only some of
+the objects could be found, then simply return those objects in the array.
 
   _t_find_first_by_associate(property, id)
 
