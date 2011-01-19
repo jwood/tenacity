@@ -44,6 +44,7 @@ ActiveRecord::Schema.define :version => 0 do
     t.string :data_mapper_object_id
     t.string :mongo_mapper_object_id
     t.string :mongoid_object_id
+    t.string :sequel_object_id
   end
 
   create_table :active_record_has_many_targets, :force => true do |t|
@@ -52,6 +53,7 @@ ActiveRecord::Schema.define :version => 0 do
     t.string :data_mapper_object_id
     t.string :mongo_mapper_object_id
     t.string :mongoid_object_id
+    t.string :sequel_object_id
   end
 
   create_table :active_record_has_many_targets_active_record_objects, :force => true do |t|
@@ -77,5 +79,10 @@ ActiveRecord::Schema.define :version => 0 do
   create_table :active_record_objects_mongoid_has_many_targets, :force => true do |t|
     t.integer :active_record_object_id
     t.string :mongoid_has_many_target_id
+  end
+
+  create_table :active_record_objects_sequel_has_many_targets, :force => true do |t|
+    t.integer :active_record_object_id
+    t.string :sequel_has_many_target_id
   end
 end

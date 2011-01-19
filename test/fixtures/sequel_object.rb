@@ -1,4 +1,4 @@
-class ActiveRecordObject < ActiveRecord::Base
+class SequelObject < Sequel::Model
   include Tenacity
 
   t_has_one :active_record_has_one_target

@@ -4,6 +4,7 @@
 
   * Added support for Mongoid
   * Added support for DataMapper
+  * Added support for Sequel
 
 * Minor enhancements
 

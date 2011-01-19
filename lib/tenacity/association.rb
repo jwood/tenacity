@@ -86,7 +86,7 @@ module Tenacity
 
     def fetch_table_name
       if @source.respond_to?(:table_name)
-        @source.table_name
+        @source.table_name.to_s
       else
         "#{ActiveSupport::Inflector.underscore(@source)}s"
       end

@@ -12,6 +12,7 @@ require File.join(File.dirname(__FILE__), 'tenacity', 'orm_ext', 'couchrest')
 require File.join(File.dirname(__FILE__), 'tenacity', 'orm_ext', 'datamapper')
 require File.join(File.dirname(__FILE__), 'tenacity', 'orm_ext', 'mongo_mapper')
 require File.join(File.dirname(__FILE__), 'tenacity', 'orm_ext', 'mongoid')
+require File.join(File.dirname(__FILE__), 'tenacity', 'orm_ext', 'sequel')
 
 module Tenacity #:nodoc:
   include InstanceMethods
@@ -26,6 +27,7 @@ module Tenacity #:nodoc:
     DataMapper.setup(model)
     MongoMapper.setup(model)
     Mongoid.setup(model)
+    Sequel.setup(model)
 
     raise "Tenacity does not support the database client used by #{model}" unless model.respond_to?(:_t_find)
     model.extend(ClassMethods)
