@@ -87,6 +87,7 @@ much the same way, supporting many of the same options.
 * DataMapper
 * MongoMapper
 * Mongoid
+* Sequel
 
 See EXTEND.rdoc for information on extending Tenacity to work with other database clients.
 

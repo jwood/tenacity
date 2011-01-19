@@ -32,6 +32,11 @@ migration 1, :create_join_tables do
       column :data_mapper_object_id, Integer
       column :mongoid_has_many_target_id, String
     end
+
+    create_table :data_mapper_objects_sequel_has_many_targets do
+      column :data_mapper_object_id, Integer
+      column :sequel_has_many_target_id, String
+    end
   end
 end
 
