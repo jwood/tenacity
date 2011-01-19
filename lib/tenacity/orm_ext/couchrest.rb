@@ -33,7 +33,7 @@ module Tenacity
     def self.setup(model) #:nodoc:
       begin
         require 'couchrest_model'
-        if model.superclass == ::CouchRest::Model::Base
+        if model.ancestors.include?(::CouchRest::Model::Base)
           model.send :include, CouchRest::InstanceMethods
           model.extend CouchRest::ClassMethods
         end
@@ -43,11 +43,23 @@ module Tenacity
 
       begin
         require 'couchrest_extended_document'
-        if model.superclass == ::CouchRest::ExtendedDocument
+        if model.ancestors.include?(::CouchRest::ExtendedDocument)
           model.send :include, CouchRest::InstanceMethods
           model.extend CouchRest::ClassMethods
         end
       rescue LoadError
+        # CouchRest::ExtendedDocument not available
+      end
+
+      # For pre 1.0 versions of couchrest
+      begin
+        require 'couchrest'
+        if model.ancestors.include?(::CouchRest::ExtendedDocument)
+          model.send :include, CouchRest::InstanceMethods
+          model.extend CouchRest::ClassMethods
+        end
+      rescue LoadError
+      rescue NameError
         # CouchRest::ExtendedDocument not available
       end
     end

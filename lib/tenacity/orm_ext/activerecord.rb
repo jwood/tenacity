@@ -44,7 +44,7 @@ module Tenacity
 
     def self.setup(model)
       require 'active_record'
-      if model.superclass == ::ActiveRecord::Base
+      if model.ancestors.include?(::ActiveRecord::Base)
         model.send :include, ActiveRecord::InstanceMethods
         model.extend ActiveRecord::ClassMethods
       end
