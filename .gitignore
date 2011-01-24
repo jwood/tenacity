@@ -1,6 +1,7 @@
 *.swp
 *.swo
 .yardoc
+.rvmrc
 .bundle
 rdoc/
 doc/
