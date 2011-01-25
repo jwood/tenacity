@@ -17,17 +17,17 @@ require File.join(File.dirname(__FILE__), 'tenacity', 'orm_ext', 'sequel')
 module Tenacity #:nodoc:
   include InstanceMethods
 
-  include BelongsTo
-  include HasMany
-  include HasOne
+  include Associations::BelongsTo
+  include Associations::HasMany
+  include Associations::HasOne
 
   def self.included(model)
-    ActiveRecord.setup(model)
-    CouchRest.setup(model)
-    DataMapper.setup(model)
-    MongoMapper.setup(model)
-    Mongoid.setup(model)
-    Sequel.setup(model)
+    OrmExt::ActiveRecord.setup(model)
+    OrmExt::CouchRest.setup(model)
+    OrmExt::DataMapper.setup(model)
+    OrmExt::MongoMapper.setup(model)
+    OrmExt::Mongoid.setup(model)
+    OrmExt::Sequel.setup(model)
 
     raise "Tenacity does not support the database client used by #{model}" unless model.respond_to?(:_t_find)
     model.extend(ClassMethods)
