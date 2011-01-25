@@ -176,7 +176,7 @@ module Tenacity
     #   t_has_one :project_manager, :foreign_key => "project_id"  # within class named SecretProject
     #
     def t_has_one(name, options={})
-      extend(HasOne::ClassMethods)
+      extend(Associations::HasOne::ClassMethods)
       association = Association.new(:t_has_one, name, self, options)
       initialize_has_one_association(association)
 
@@ -231,7 +231,7 @@ module Tenacity
     #   t_belongs_to :valid_coupon, :class_name => "Coupon", :foreign_key => "coupon_id"
     #
     def t_belongs_to(name, options={})
-      extend(BelongsTo::ClassMethods)
+      extend(Associations::BelongsTo::ClassMethods)
       association = Association.new(:t_belongs_to, name, self, options)
       initialize_belongs_to_association(association)
 
@@ -346,7 +346,7 @@ module Tenacity
     #       :association_foreign_key => "mgr_id", :association_key => "proj_id"
     #
     def t_has_many(name, options={})
-      extend(HasMany::ClassMethods)
+      extend(Associations::HasMany::ClassMethods)
       association = Association.new(:t_has_many, name, self, options)
       initialize_has_many_association(association)
 
