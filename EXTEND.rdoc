@@ -62,8 +62,9 @@ on the object.  This method is optional, and does not need to be defined.
 
 Perform any database client specific initialization necessary to support a
 belongs to association.  This could include defining properties, or callback
-methods, on the object.  This method is optional, and does not need to be
-defined.
+methods, on the object.  This method must also call
+_t_cleanup_belongs_to_association(association) to cleanup the association
+when the after the object has been deleted.
 
   _t_initialize_has_one_association(association)
 

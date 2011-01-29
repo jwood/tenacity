@@ -17,6 +17,9 @@ module Tenacity
     # The name of the associated class
     attr_reader :class_name
 
+    # What happens to the associated object when the object is deleted
+    attr_reader :dependent
+
     def initialize(type, name, source, options={})
       @type = type
       @name = name
@@ -33,6 +36,7 @@ module Tenacity
       @join_table = options[:join_table]
       @association_key = options[:association_key]
       @association_foreign_key = options[:association_foreign_key]
+      @dependent = options[:dependent]
 
       if @foreign_keys_property
         if @foreign_keys_property.to_s == ActiveSupport::Inflector.singularize(name) + "_ids"

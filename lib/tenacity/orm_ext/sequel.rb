@@ -107,6 +107,12 @@ module Tenacity
           super
         end
 
+        def after_destroy
+          associations = self.class._t_belongs_to_associations || []
+          associations.each { |association| self._t_cleanup_belongs_to_association(association) }
+          super
+        end
+
         def _t_reload
           reload
         end

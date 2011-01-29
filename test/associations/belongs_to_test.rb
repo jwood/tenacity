@@ -38,6 +38,12 @@ class BelongsToTest < Test::Unit::TestCase
       should "return nil if no association is set" do
         assert_nil @target_class._t_find(@target.id.to_s).send(@foreign_key)
       end
+
+      should "be able to invoke the post delete callback" do
+        @target.send("#{@foreign_key}=", @source)
+        @target.save
+        @target_class._t_delete([@target.id])
+      end
     end
   end
 
