@@ -74,6 +74,7 @@ module Tenacity
           unless self.respond_to?(association.foreign_key)
             field association.foreign_key, :type => String
             before_save { |record| self.class._t_stringify_belongs_to_value(record, association) }
+            after_destroy { |record| record._t_cleanup_belongs_to_association(association) }
           end
         end
 

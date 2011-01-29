@@ -225,6 +225,12 @@ module Tenacity
     #   association will use "person_id" as the default <tt>:foreign_key</tt>. Similarly,
     #   <tt>t_belongs_to :favorite_person, :class_name => "Person"</tt> will use a foreign key
     #   of "favorite_person_id".
+    # [:dependent]
+    #   If set to <tt>:destroy</tt>, the associated object is deleted when this object is, calling all delete
+    #   callbacks.  If set to <tt>:delete</tt>, the associated object is deleted *without* calling any of
+    #   its delete callbacks.  This option should not be specified when <tt>t_belongs_to</tt> is used in
+    #   conjuction with a <tt>t_has_many</tt> relationship on another class because of the potential
+    #   to leave orphaned records behind.
     #
     # Option examples:
     #   t_belongs_to :project_manager, :class_name => "Person"

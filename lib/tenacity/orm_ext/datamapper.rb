@@ -81,6 +81,10 @@ module Tenacity
           before :save do |record|
             record.class._t_stringify_belongs_to_value(record, association)
           end
+
+          after :destroy do |record|
+            record._t_cleanup_belongs_to_association(association)
+          end
         end
 
         def _t_delete(ids, run_callbacks=true)

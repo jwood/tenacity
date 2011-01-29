@@ -2,6 +2,14 @@ module Tenacity
   module Associations
     module BelongsTo #:nodoc:
 
+      def _t_cleanup_belongs_to_association(association)
+        if association.dependent == :destroy
+          association.associate_class._t_delete(self.send(association.foreign_key))
+        elsif association.dependent == :delete
+          association.associate_class._t_delete(self.send(association.foreign_key), false)
+        end
+      end
+
       private
 
       def belongs_to_associate(association)

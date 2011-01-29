@@ -37,6 +37,24 @@ class BelongsToTest < Test::Unit::TestCase
       assert_equal car.id, engine.car_id
       assert !engine.respond_to?(:active_record_car_id)
     end
+
+    should "be able to destroy the associated object when an object is destroyed" do
+      engine = ActiveRecordEngine.create
+      air_filter = MongoMapperAirFilter.create(:active_record_engine => engine)
+      air_filter.destroy
+
+      assert_nil ActiveRecordEngine.find_by_id(engine.id)
+      assert_nil MongoMapperAirFilter.find(air_filter.id)
+    end
+
+    should "be able to delete the associated object when an object is destroyed" do
+      engine = ActiveRecordEngine.create
+      alternator = MongoMapperAlternator.create(:active_record_engine => engine)
+      alternator.destroy
+
+      assert_nil ActiveRecordEngine.find_by_id(engine.id)
+      assert_nil MongoMapperAlternator.find(alternator.id)
+    end
   end
 
 end
