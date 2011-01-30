@@ -10,6 +10,7 @@ end
 
 require 'test/unit'
 require 'shoulda'
+require 'mocha'
 
 require File.join(File.dirname(__FILE__), 'helpers', 'active_record_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'couch_rest_test_helper')

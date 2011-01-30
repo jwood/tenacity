@@ -50,7 +50,8 @@ module Tenacity
         end
 
         def _t_find_bulk(ids)
-          find(ids)
+          docs = find(ids)
+          docs.respond_to?(:each) ? docs : [docs]
         rescue ::Mongoid::Errors::DocumentNotFound
           []
         end
