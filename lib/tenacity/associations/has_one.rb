@@ -2,6 +2,20 @@ module Tenacity
   module Associations
     module HasOne #:nodoc:
 
+      def _t_cleanup_has_one_association(association)
+        associate = has_one_associate(association)
+        unless associate.nil?
+          if association.dependent == :destroy
+            association.associate_class._t_delete([associate.id.to_s])
+          elsif association.dependent == :delete
+            association.associate_class._t_delete([associate.id.to_s], false)
+          elsif association.dependent == :nullify
+            associate.send "#{association.foreign_key(self.class)}=", nil
+            associate.save
+          end
+        end
+      end
+
       private
 
       def has_one_associate(association)

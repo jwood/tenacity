@@ -63,6 +63,10 @@ module Tenacity
           find(:all, :conditions => { property => id })
         end
 
+        def _t_initialize_has_one_association(association)
+          after_destroy { |record| record._t_cleanup_has_one_association(association) }
+        end
+
         def _t_initialize_has_many_association(association)
           unless self.respond_to?(association.foreign_keys_property)
             field association.foreign_keys_property, :type => Array

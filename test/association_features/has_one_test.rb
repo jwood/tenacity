@@ -4,7 +4,7 @@ class HasOneTest < Test::Unit::TestCase
 
   context "A class with a has_one association to another class" do
     setup do
-      setup_fixtures
+      setup_all_fixtures
       @climate_control_unit = ActiveRecordClimateControlUnit.create
       @dashboard = MongoMapperDashboard.create(:active_record_climate_control_unit => @climate_control_unit)
     end
@@ -35,6 +35,41 @@ class HasOneTest < Test::Unit::TestCase
 
       engine = ActiveRecordEngine.create(:active_record_car => car)
       assert_equal engine, car.active_record_engine
+    end
+
+    should "be able to destroy the associated object when an object is destroyed" do
+      ash_tray = MongoMapperAshTray.create
+      dashboard = MongoMapperDashboard.create
+      dashboard.ash_tray = ash_tray
+      assert_equal dashboard.id.to_s, ash_tray.dashboard.id.to_s
+      dashboard.destroy
+
+      assert_nil MongoMapperAshTray.find(ash_tray.id)
+      assert_nil MongoMapperDashboard.find(dashboard.id)
+    end
+
+    should "be able to delete the associated object when an object is destroyed" do
+      dashboard = MongoMapperDashboard.create
+      car = ActiveRecordCar.create
+      car.mongo_mapper_dashboard = dashboard
+      assert_equal car.id.to_s, dashboard.active_record_car_id.to_s
+      car.destroy
+
+      assert_nil ActiveRecordCar.find_by_id(car.id)
+      assert_nil MongoMapperDashboard.find(dashboard.id)
+    end
+
+    should "be able to nullify the foreign key of the associated object when an object is destroyed" do
+      engine = ActiveRecordEngine.create
+      car = ActiveRecordCar.create
+      car.active_record_engine = engine
+      assert_equal car.id, engine.car_id
+      car.destroy
+
+      assert_nil ActiveRecordCar.find_by_id(car.id)
+      engine = ActiveRecordEngine.find_by_id(engine.id)
+      assert_not_nil engine
+      assert_nil engine.car_id
     end
   end
 
