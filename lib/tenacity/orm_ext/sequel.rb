@@ -55,6 +55,7 @@ module Tenacity
       end
 
       module ClassMethods #:nodoc:
+        attr_accessor :_t_has_one_associations
         attr_accessor :_t_has_many_associations
         attr_accessor :_t_belongs_to_associations
 
@@ -73,6 +74,11 @@ module Tenacity
 
         def _t_find_all_by_associate(property, id)
           filter(property => id)
+        end
+
+        def _t_initialize_has_one_association(association)
+          @_t_has_one_associations ||= []
+          @_t_has_one_associations << association
         end
 
         def _t_initialize_has_many_association(association)
@@ -110,6 +116,9 @@ module Tenacity
         def after_destroy
           associations = self.class._t_belongs_to_associations || []
           associations.each { |association| self._t_cleanup_belongs_to_association(association) }
+
+          associations = self.class._t_has_one_associations || []
+          associations.each { |association| self._t_cleanup_has_one_association(association) }
           super
         end
 

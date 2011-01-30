@@ -170,8 +170,15 @@ module Tenacity
     #   Specify the foreign key used for the association. By default this is guessed to be the name
     #   of this class in lower-case and "_id" suffixed. So a Person class that makes a +t_has_one+ association
     #   will use "person_id" as the default <tt>:foreign_key</tt>.
+    # [:dependent]
+    #   If set to <tt>:destroy</tt>, the associated object is deleted when this object is, and all delete
+    #   callbacks are called.  If set to <tt>:delete</tt>, the associated object is deleted *without*
+    #   calling any of its delete callbacks.  If set to <tt>:nullify</tt>, the associated object's
+    #   foreign key is set to +NULL+.
     #
     # Option examples:
+    #   t_has_one :credit_card, :dependent => :destroy  # destroys the associated credit card
+    #   t_has_one :credit_card, :dependent => :nullify  # updates the associated records foreign key value to NULL rather than destroying it
     #   t_has_one :project_manager, :class_name => "Person"
     #   t_has_one :project_manager, :foreign_key => "project_id"  # within class named SecretProject
     #

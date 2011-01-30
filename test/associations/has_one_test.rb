@@ -24,6 +24,11 @@ class HasOneTest < Test::Unit::TestCase
       should "return nil if no association is set" do
         assert_nil @source_class._t_find(@source.id.to_s).send(@foreign_key)
       end
+
+      should "be able to invoke the post delete callback" do
+        @source.send("#{@foreign_key}=", @target)
+        @source_class._t_delete([@source.id])
+      end
     end
   end
 
