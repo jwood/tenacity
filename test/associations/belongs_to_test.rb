@@ -39,10 +39,22 @@ class BelongsToTest < Test::Unit::TestCase
         assert_nil @target_class._t_find(@target.id.to_s).send(@foreign_key)
       end
 
-      should "be able to invoke the post delete callback" do
+      should "be able to destroy the associated object when the source object is destroyed" do
+        Tenacity::Association.any_instance.stubs(:dependent).returns(:destroy)
         @target.send("#{@foreign_key}=", @source)
         @target.save
-        @target_class._t_delete([@target.id])
+        @target_class._t_delete([@target.id.to_s])
+        assert_nil @source_class._t_find(@source.id.to_s)
+        assert_nil @target_class._t_find(@target.id.to_s)
+      end
+
+      should "be able to delete the associated object when the source object is destroyed" do
+        Tenacity::Association.any_instance.stubs(:dependent).returns(:delete)
+        @target.send("#{@foreign_key}=", @source)
+        @target.save
+        @target_class._t_delete([@target.id.to_s])
+        assert_nil @source_class._t_find(@source.id.to_s)
+        assert_nil @target_class._t_find(@target.id.to_s)
       end
     end
   end

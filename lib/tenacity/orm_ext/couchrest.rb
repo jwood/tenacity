@@ -72,6 +72,7 @@ module Tenacity
 
         def _t_find_bulk(ids)
           return [] if ids.nil? || ids.empty?
+          ids = [ids] unless ids.class == Array
 
           docs = []
           result = database.get_bulk ids
