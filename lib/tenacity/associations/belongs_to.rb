@@ -4,7 +4,7 @@ module Tenacity
 
       def _t_cleanup_belongs_to_association(association)
         associate_id = self.send(association.foreign_key)
-        if associate_id != nil && associate_id.strip != ''
+        if associate_id != nil && associate_id.to_s.strip != ''
           if association.dependent == :destroy
             association.associate_class._t_delete(associate_id)
           elsif association.dependent == :delete

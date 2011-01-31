@@ -80,6 +80,39 @@ class HasManyTest < Test::Unit::TestCase
           source = @source_class.create({})
           assert_set_equal [], @source_class._t_find(source.id.to_s).send(@foreign_key)
         end
+
+        should "be able to destroy the associated object when an object is destroyed" do
+          Tenacity::Association.any_instance.stubs(:dependent).returns(:destroy, nil)
+          @source.destroy
+
+          assert_nil @source_class._t_find(@source.id.to_s)
+          assert_nil @target_class._t_find(@target_1.id.to_s)
+          assert_nil @target_class._t_find(@target_2.id.to_s)
+          assert_nil @target_class._t_find(@target_3.id.to_s)
+        end
+
+        should "be able to delete the associated object when an object is destroyed" do
+          Tenacity::Association.any_instance.stubs(:dependent).returns(:delete_all)
+          @source.destroy
+
+          assert_nil @source_class._t_find(@source.id.to_s)
+          assert_nil @target_class._t_find(@target_1.id.to_s)
+          assert_nil @target_class._t_find(@target_2.id.to_s)
+          assert_nil @target_class._t_find(@target_3.id.to_s)
+        end
+
+        should "be able to nullify the foreign key of the associated object when an object is destroyed" do
+          Tenacity::Association.any_instance.stubs(:dependent).returns(:nullify)
+          @source.destroy
+
+          assert_nil @source_class._t_find(@source.id.to_s)
+          assert_not_nil @target_class._t_find(@target_1.id.to_s)
+          assert_not_nil @target_class._t_find(@target_2.id.to_s)
+          assert_not_nil @target_class._t_find(@target_3.id.to_s)
+          assert_equal "", @target_class._t_find(@target_1.id.to_s).send(foreign_key_id_for(target, :belongs_to)).to_s
+          assert_equal "", @target_class._t_find(@target_2.id.to_s).send(foreign_key_id_for(target, :belongs_to)).to_s
+          assert_equal "", @target_class._t_find(@target_3.id.to_s).send(foreign_key_id_for(target, :belongs_to)).to_s
+        end
       end
     end
   end
