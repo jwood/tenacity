@@ -332,6 +332,12 @@ module Tenacity
     #   for objects that store associated ids in an array instaed of a join table (CouchRest,
     #   MongoMapper, etc). <b>WARNING:</b> The name of the association with an "_ids" suffix should
     #   not be used as the property name, since tenacity adds a method with this name to the object.
+    # [:dependent]
+    #   If set to <tt>:destroy</tt> all the associated objects are deleted alongside this object
+    #   in addition to calling their delete callbacks.  If set to <tt>:delete_all</tt> all
+    #   associated objects are deleted *without* calling their delete callbacks.  If set to
+    #   <tt>:nullify</tt> all associated objects' foreign keys are set to +NULL+ *without* calling
+    #   their save backs.
     # [:join_table]
     #   Specify the name of the join table if the default based on lexical order isn't what you want.
     #   This option is only valid if one of the models in the association is backed by a relational
@@ -357,6 +363,7 @@ module Tenacity
     #   t_has_many :managers, :join_table => "project_managers_and_projects"
     #   t_has_many :managers, :join_table => "project_managers_and_projects",
     #       :association_foreign_key => "mgr_id", :association_key => "proj_id"
+    #   t_has_many :tasks, :dependent => :destroy
     #
     def t_has_many(name, options={})
       extend(Associations::HasMany::ClassMethods)

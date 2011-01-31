@@ -7,6 +7,22 @@ module Tenacity
         _t_clear_associates(association)
       end
 
+      def _t_cleanup_has_many_association(association)
+        associates = has_many_associates(association)
+        unless associates.nil? || associates.empty?
+          if association.dependent == :destroy
+            associates.each { |associate| association.associate_class._t_delete([associate.id.to_s]) }
+          elsif association.dependent == :delete_all
+            associates.each { |associate| association.associate_class._t_delete([associate.id.to_s], false) }
+          elsif association.dependent == :nullify
+            associates.each do |associate|
+              associate.send "#{association.foreign_key(self.class)}=", nil
+              associate.save
+            end
+          end
+        end
+      end
+
       private
 
       def has_many_associates(association)
