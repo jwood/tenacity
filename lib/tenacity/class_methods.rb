@@ -278,7 +278,9 @@ module Tenacity
     # [collection.concat(other_array)]
     #   Adds the objects in the other array to the collection by setting their foreign keys to the collection's primary key.
     # [collection.delete(object, ...)]
-    #   Removes one or more objects from the collection.
+    #   Removes one or more objects from the collection by setting their foreign keys to +NULL+.
+    #   Objects will be in addition deleted and callbacks called if they're associated with <tt>:dependent => :destroy</tt>,
+    #   and deleted and callbacks skipped if they're associated with <tt>:dependent => :delete_all</tt>.
     # [collection.destroy_all]
     #   Removes all objects from the collection, and deletes them from their respective
     #   database. If the deleted objects have any delete callbacks defined, they will be called.
@@ -292,7 +294,10 @@ module Tenacity
     # [collection_singular_ids=ids]
     #   Replace the collection with the objects identified by the primary keys in +ids+.
     # [collection.clear]
-    #   Removes every object from the collection.
+    #   Removes every object from the collection. This deletes the associated objects and issues callbacks
+    #   if they are associated with <tt>:dependent => :destroy</tt>, deletes them directly from the
+    #   database without calling any callbacks if <tt>:dependent => :delete_all</tt>, otherwise sets their
+    #   foreign keys to +NULL+.
     # [collection.empty?]
     #   Returns +true+ if there are no associated objects.
     # [collection.size]

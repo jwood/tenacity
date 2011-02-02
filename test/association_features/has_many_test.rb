@@ -4,7 +4,7 @@ class HasManyTest < Test::Unit::TestCase
 
   context "A class with a belongs_to association to another class" do
     setup do
-      setup_fixtures
+      setup_all_fixtures
       @car = ActiveRecordCar.create
       @wheels = [MongoMapperWheel.create, MongoMapperWheel.create, MongoMapperWheel.create]
 
@@ -103,6 +103,84 @@ class HasManyTest < Test::Unit::TestCase
         @new_car.couch_rest_doors.destroy_all
         assert_equal old_count - 3, CouchRestDoor.count
         assert_set_equal [], ActiveRecordCar.find(@new_car.id).couch_rest_doors
+      end
+
+      context "the delete method" do
+        should "not delete the object from the database if no dependent option is specified" do
+          dashboard = MongoMapperDashboard.create
+          vent_1 = MongoMapperVent.create
+          vent_2 = MongoMapperVent.create
+          vent_3 = MongoMapperVent.create
+          dashboard.vents = [vent_1, vent_2, vent_3]
+          dashboard.save
+          assert_set_equal [vent_1, vent_2, vent_3], MongoMapperDashboard.find(dashboard.id).vents
+
+          dashboard.vents.delete(vent_1)
+          dashboard.save
+          assert_set_equal [vent_2, vent_3], MongoMapperDashboard.find(dashboard.id).vents
+          assert_not_nil MongoMapperVent.find(vent_1.id)
+        end
+
+        should "delete the associated object and issue callbacks if association is configured to :destroy dependents" do
+          wheel_1 = MongoMapperWheel.create
+          wheel_2 = MongoMapperWheel.create
+          wheel_3 = MongoMapperWheel.create
+          @new_car.mongo_mapper_wheels = [wheel_1, wheel_2, wheel_3]
+          @new_car.save
+          assert_set_equal [wheel_1, wheel_2, wheel_3], ActiveRecordCar.find(@new_car.id).mongo_mapper_wheels
+
+          @new_car.mongo_mapper_wheels.delete(wheel_1)
+          @new_car.save
+          assert_set_equal [wheel_2, wheel_3], ActiveRecordCar.find(@new_car.id).mongo_mapper_wheels
+          assert_nil MongoMapperWheel._t_find(wheel_1.id.to_s)
+        end
+
+        should "delete the associated object without issuing callbacks if association is configured to :delete_all dependents" do
+          @new_car.couch_rest_doors.delete(@door_1)
+          @new_car.save
+          assert_set_equal [@door_2, @door_3], ActiveRecordCar.find(@new_car.id).couch_rest_doors
+          assert_nil CouchRestDoor._t_find(@door_1.id.to_s)
+        end
+      end
+
+      context "the clear method" do
+        should "not delete the object from the database if no dependent option is specified" do
+          dashboard = MongoMapperDashboard.create
+          vent_1 = MongoMapperVent.create
+          vent_2 = MongoMapperVent.create
+          dashboard.vents = [vent_1, vent_2]
+          dashboard.save
+          assert_set_equal [vent_1, vent_2], MongoMapperDashboard.find(dashboard.id).vents
+
+          dashboard.vents.clear
+          dashboard.save
+          assert_set_equal [], MongoMapperDashboard.find(dashboard.id).vents
+          assert_not_nil MongoMapperVent.find(vent_1.id)
+          assert_not_nil MongoMapperVent.find(vent_2.id)
+        end
+
+        should "delete the associated object and issue callbacks if association is configured to :destroy dependents" do
+          wheel_1 = MongoMapperWheel.create
+          wheel_2 = MongoMapperWheel.create
+          @new_car.mongo_mapper_wheels = [wheel_1, wheel_2]
+          @new_car.save
+          assert_set_equal [wheel_1, wheel_2], ActiveRecordCar.find(@new_car.id).mongo_mapper_wheels
+
+          @new_car.mongo_mapper_wheels.clear
+          @new_car.save
+          assert_set_equal [], ActiveRecordCar.find(@new_car.id).mongo_mapper_wheels
+          assert_nil MongoMapperWheel._t_find(wheel_1.id.to_s)
+          assert_nil MongoMapperWheel._t_find(wheel_2.id.to_s)
+        end
+
+        should "delete the associated object without issuing callbacks if association is configured to :delete_all dependents" do
+          @new_car.couch_rest_doors.clear
+          @new_car.save
+          assert_set_equal [], ActiveRecordCar.find(@new_car.id).couch_rest_doors
+          assert_nil CouchRestDoor._t_find(@door_1.id.to_s)
+          assert_nil CouchRestDoor._t_find(@door_2.id.to_s)
+          assert_nil CouchRestDoor._t_find(@door_3.id.to_s)
+        end
       end
     end
   end
