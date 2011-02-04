@@ -77,9 +77,13 @@ def setup_fixtures_for(source, target)
 end
 
 def orm_extensions
-  extensions = [:active_record, :couch_rest, :data_mapper, :mongo_mapper, :sequel]
-  require_mongoid { extensions << :mongoid }
-  extensions
+  if ENV['QUICK'] == 'true'
+    extensions = [:active_record, :mongo_mapper]
+  else
+    extensions = [:active_record, :couch_rest, :data_mapper, :mongo_mapper, :sequel]
+    require_mongoid { extensions << :mongoid }
+    extensions
+  end
 end
 
 def for_each_orm_extension_combination
