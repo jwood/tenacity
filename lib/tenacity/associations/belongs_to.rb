@@ -18,7 +18,8 @@ module Tenacity
       def belongs_to_associate(association)
         associate_id = self.send(association.foreign_key)
         clazz = association.associate_class
-        clazz._t_find(associate_id)
+        associate = clazz._t_find(associate_id)
+        associate.nil? ? nil : AssociateProxy.new(associate, association)
       end
 
       def set_belongs_to_associate(association, associate)
