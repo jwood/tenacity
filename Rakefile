@@ -25,6 +25,12 @@ Rake::TestTask.new(:test) do |test|
   test.verbose = true
 end
 
+desc 'Run an abbreviated version of the test suite'
+task :quick_test do
+  ENV['QUICK'] = 'true'
+  Rake::Task["test"].invoke
+end
+
 Rcov::RcovTask.new do |test|
   test.libs << 'test' << 'test/fixtures'
   test.pattern = 'test/**/*_test.rb'

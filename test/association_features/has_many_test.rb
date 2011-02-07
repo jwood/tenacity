@@ -79,6 +79,19 @@ class HasManyTest < Test::Unit::TestCase
       assert_set_equal [door_1], ActiveRecordCar.find(car.id).couch_rest_doors
     end
 
+    should "not be able to modify an associated object if the readonly option is set" do
+      car = ActiveRecordCar.create
+      wheel_1 = MongoMapperWheel.create
+      wheel_2 = MongoMapperWheel.create
+      wheel_3 = MongoMapperWheel.create
+      car.mongo_mapper_wheels = [wheel_1, wheel_2, wheel_3]
+      car.save
+
+      wheel = car.mongo_mapper_wheels.first
+      wheel.prop = "value"
+      assert_raises(Tenacity::ReadOnlyError) { wheel.save }
+    end
+
     context "with a set of associates that need to be deleted" do
       setup do
         @new_car = ActiveRecordCar.create

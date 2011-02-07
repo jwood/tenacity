@@ -20,6 +20,9 @@ module Tenacity
     # What happens to the associated object when the object is deleted
     attr_reader :dependent
 
+    # Are the associated objects read only?
+    attr_reader :readonly
+
     def initialize(type, name, source, options={})
       @type = type
       @name = name
@@ -37,6 +40,7 @@ module Tenacity
       @association_key = options[:association_key]
       @association_foreign_key = options[:association_foreign_key]
       @dependent = options[:dependent]
+      @readonly = options[:readonly]
 
       if @foreign_keys_property
         if @foreign_keys_property.to_s == ActiveSupport::Inflector.singularize(name) + "_ids"
@@ -84,6 +88,11 @@ module Tenacity
     # Get the name of the column in the join table that represents the associated object
     def association_foreign_key
       @association_foreign_key || name.to_s.singularize + '_id'
+    end
+
+    # Are the associated objects read only?
+    def readonly?
+      @readonly == true
     end
 
     private

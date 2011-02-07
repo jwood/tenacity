@@ -37,6 +37,14 @@ class BelongsToTest < Test::Unit::TestCase
       assert_equal car.id, engine.car_id
       assert !engine.respond_to?(:active_record_car_id)
     end
+
+    should "not be able to modify the associated object if the readonly option is set" do
+      engine = ActiveRecordEngine.create
+      air_filter = MongoMapperAirFilter.create(:active_record_engine => engine)
+      engine = air_filter.active_record_engine
+      engine.prop = "value"
+      assert_raises(Tenacity::ReadOnlyError) { engine.save }
+    end
   end
 
 end

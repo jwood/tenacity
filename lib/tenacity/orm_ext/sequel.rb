@@ -65,7 +65,7 @@ module Tenacity
 
         def _t_find_bulk(ids)
           return [] if ids.nil? || ids.empty?
-          filter(:id => ids)
+          filter(:id => ids).to_a
         end
 
         def _t_find_first_by_associate(property, id)
@@ -73,7 +73,7 @@ module Tenacity
         end
 
         def _t_find_all_by_associate(property, id)
-          filter(property => id)
+          filter(property => id).to_a
         end
 
         def _t_initialize_has_one_association(association)

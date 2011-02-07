@@ -3,6 +3,7 @@
 * Major enhancements
 
   * Added support for the :dependent option to all associations
+  * Added support for the :readonly option to all associations
 
 == 0.3.0
 

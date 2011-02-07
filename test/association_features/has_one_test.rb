@@ -36,6 +36,14 @@ class HasOneTest < Test::Unit::TestCase
       engine = ActiveRecordEngine.create(:active_record_car => car)
       assert_equal engine, car.active_record_engine
     end
+
+    should "not be able to modify the associated object if the readonly option is set" do
+      car = ActiveRecordCar.create
+      dashboard = MongoMapperDashboard.create(:active_record_car => car)
+      dashboard = car.mongo_mapper_dashboard
+      dashboard.prop = "value"
+      assert_raises(Tenacity::ReadOnlyError) { dashboard.save }
+    end
   end
 
 end
