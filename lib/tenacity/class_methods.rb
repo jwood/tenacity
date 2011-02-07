@@ -175,12 +175,15 @@ module Tenacity
     #   callbacks are called.  If set to <tt>:delete</tt>, the associated object is deleted *without*
     #   calling any of its delete callbacks.  If set to <tt>:nullify</tt>, the associated object's
     #   foreign key is set to +NULL+.
+    # [:readonly]
+    #   If true, the associated object is readonly through the association.
     #
     # Option examples:
     #   t_has_one :credit_card, :dependent => :destroy  # destroys the associated credit card
     #   t_has_one :credit_card, :dependent => :nullify  # updates the associated records foreign key value to NULL rather than destroying it
     #   t_has_one :project_manager, :class_name => "Person"
     #   t_has_one :project_manager, :foreign_key => "project_id"  # within class named SecretProject
+    #   t_has_one :boss, :readonly => :true
     #
     def t_has_one(name, options={})
       extend(Associations::HasOne::ClassMethods)
@@ -238,10 +241,13 @@ module Tenacity
     #   its delete callbacks.  This option should not be specified when <tt>t_belongs_to</tt> is used in
     #   conjuction with a <tt>t_has_many</tt> relationship on another class because of the potential
     #   to leave orphaned records behind.
+    # [:readonly]
+    #   If true, the associated object is readonly through the association.
     #
     # Option examples:
     #   t_belongs_to :project_manager, :class_name => "Person"
     #   t_belongs_to :valid_coupon, :class_name => "Coupon", :foreign_key => "coupon_id"
+    #   t_belongs_to :project, :readonly => true
     #
     def t_belongs_to(name, options={})
       extend(Associations::BelongsTo::ClassMethods)
@@ -360,6 +366,8 @@ module Tenacity
     #   "_id" suffixed. So if a Person class makes a +t_has_many+ association to Project, the
     #   association will use "person_id" as the default <tt>:association_key</tt>.  This option is
     #   only valid if one of the associated objects is backed by a relational database.
+    # [:readonly]
+    #   If true, all the associated objects are readonly through the association.
     #
     # Option examples:
     #   t_has_many :products, :class_name => "SpecialProduct"
@@ -369,6 +377,7 @@ module Tenacity
     #   t_has_many :managers, :join_table => "project_managers_and_projects",
     #       :association_foreign_key => "mgr_id", :association_key => "proj_id"
     #   t_has_many :tasks, :dependent => :destroy
+    #   t_has_many :reports, :readonly => true
     #
     def t_has_many(name, options={})
       extend(Associations::HasMany::ClassMethods)

@@ -9,6 +9,7 @@ ActiveRecord::Schema.define :version => 0 do
   end
 
   create_table :active_record_engines, :force => true do |t|
+    t.string :prop
     t.integer :car_id
   end
 

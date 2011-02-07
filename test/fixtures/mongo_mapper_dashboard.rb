@@ -2,6 +2,8 @@ class MongoMapperDashboard
   include MongoMapper::Document
   include Tenacity
 
+  key :prop, String
+
   t_belongs_to :active_record_car
   t_has_one :active_record_climate_control_unit
 
