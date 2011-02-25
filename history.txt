@@ -1,9 +1,11 @@
 == Next version
 
-* Major enhancements
+* Minor enhancements
 
   * Added support for the :dependent option to all associations
   * Added support for the :readonly option to all associations
+  * Added support for the :limit option to the t_has_many association
+  * Added support for the :offset option to the t_has_many association
 
 == 0.3.0
 

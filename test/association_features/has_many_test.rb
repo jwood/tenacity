@@ -92,6 +92,51 @@ class HasManyTest < Test::Unit::TestCase
       assert_raises(Tenacity::ReadOnlyError) { wheel.save }
     end
 
+    should "only return the number of results specified by the :limit option" do
+      car = ActiveRecordCar.create
+      wheel_1 = MongoMapperWheel.create
+      wheel_2 = MongoMapperWheel.create
+      wheel_3 = MongoMapperWheel.create
+      wheel_4 = MongoMapperWheel.create
+      wheel_5 = MongoMapperWheel.create
+      wheel_6 = MongoMapperWheel.create
+      wheel_7 = MongoMapperWheel.create
+      wheel_8 = MongoMapperWheel.create
+      car.mongo_mapper_wheels = [wheel_1, wheel_2, wheel_3, wheel_4, wheel_5, wheel_6, wheel_7, wheel_8]
+      car.save
+
+      sorted_wheels = car.mongo_mapper_wheels.sort { |a,b| a.id.to_s <=> b.id.to_s }
+      sorted_wheel_ids = sorted_wheels.map { |wheel| wheel.id.to_s }
+
+      assert_set_equal [sorted_wheels[0], sorted_wheels[1], sorted_wheels[2], sorted_wheels[3], sorted_wheels[4]],
+        ActiveRecordCar.find(car.id).mongo_mapper_wheels
+      assert_set_equal [sorted_wheel_ids[0], sorted_wheel_ids[1], sorted_wheel_ids[2], sorted_wheel_ids[3], sorted_wheel_ids[4]],
+        ActiveRecordCar.find(car.id).mongo_mapper_wheel_ids
+    end
+
+    should "skip over the first group of results, as specified by the :offset option" do
+      car = ActiveRecordCar.create
+      window_1 = MongoMapperWindow.create
+      window_2 = MongoMapperWindow.create
+      window_3 = MongoMapperWindow.create
+      window_4 = MongoMapperWindow.create
+      window_5 = MongoMapperWindow.create
+      window_6 = MongoMapperWindow.create
+      window_7 = MongoMapperWindow.create
+      window_8 = MongoMapperWindow.create
+      window_9 = MongoMapperWindow.create
+      car.mongo_mapper_windows = [window_1, window_2, window_3, window_4, window_5, window_6, window_7, window_8, window_9]
+      car.save
+
+      sorted_windows = car.mongo_mapper_windows.sort { |a,b| a.id.to_s <=> b.id.to_s }
+      sorted_window_ids = sorted_windows.map { |window| window.id.to_s }
+
+      assert_set_equal [sorted_windows[3], sorted_windows[4], sorted_windows[5], sorted_windows[6], sorted_windows[7]],
+        ActiveRecordCar.find(car.id).mongo_mapper_windows
+      assert_set_equal [sorted_window_ids[3], sorted_window_ids[4], sorted_window_ids[5], sorted_window_ids[6], sorted_window_ids[7]],
+        ActiveRecordCar.find(car.id).mongo_mapper_window_ids
+    end
+
     context "with a set of associates that need to be deleted" do
       setup do
         @new_car = ActiveRecordCar.create

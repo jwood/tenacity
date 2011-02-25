@@ -368,6 +368,12 @@ module Tenacity
     #   only valid if one of the associated objects is backed by a relational database.
     # [:readonly]
     #   If true, all the associated objects are readonly through the association.
+    # [:limit]
+    #   An integer determining the limit on the number of rows that should be returned. Results
+    #   are ordered by a string representation of the id.
+    # [:offset]
+    #   An integer determining the offset from where the rows should be fetched. So at 5, it would skip the first 4 rows.
+    #   Results are ordered by a string representation of the id.
     #
     # Option examples:
     #   t_has_many :products, :class_name => "SpecialProduct"
