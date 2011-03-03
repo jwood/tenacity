@@ -23,6 +23,12 @@ module Tenacity
     # Are the associated objects read only?
     attr_reader :readonly
 
+    # The limit on the number of results to be returned.
+    attr_reader :limit
+
+    # The offset from where the results should be fetched.
+    attr_reader :offset
+
     def initialize(type, name, source, options={})
       @type = type
       @name = name
@@ -41,6 +47,8 @@ module Tenacity
       @association_foreign_key = options[:association_foreign_key]
       @dependent = options[:dependent]
       @readonly = options[:readonly]
+      @limit = options[:limit]
+      @offset = options[:offset]
 
       if @foreign_keys_property
         if @foreign_keys_property.to_s == ActiveSupport::Inflector.singularize(name) + "_ids"

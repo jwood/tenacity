@@ -27,12 +27,14 @@ module Tenacity
 
       def has_many_associates(association)
         ids = _t_get_associate_ids(association)
+        pruned_ids = prune_associate_ids(association, ids)
         clazz = association.associate_class
-        clazz._t_find_bulk(ids)
+        clazz._t_find_bulk(pruned_ids)
       end
 
       def has_many_associate_ids(association)
-        _t_get_associate_ids(association)
+        ids = _t_get_associate_ids(association)
+        prune_associate_ids(association, ids)
       end
 
       def set_has_many_associate_ids(association, associate_ids)
@@ -45,6 +47,18 @@ module Tenacity
         save
       ensure
         @perform_save_associates_callback = true
+      end
+
+      def prune_associate_ids(association, associate_ids)
+        if association.limit || association.offset
+          sorted_ids = associate_ids.sort { |a,b| a.to_s <=> b.to_s }
+
+          limit = association.limit || associate_ids.size
+          offset = association.offset || 0
+          sorted_ids[offset...(offset + limit)]
+        else
+          associate_ids
+        end
       end
 
       module ClassMethods #:nodoc:
