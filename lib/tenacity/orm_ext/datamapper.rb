@@ -54,21 +54,25 @@ module Tenacity
       end
 
       module ClassMethods #:nodoc:
+        def _t_id_type
+          Integer
+        end
+
         def _t_find(id)
           get(id)
         end
 
         def _t_find_bulk(ids)
-          return [] if ids.nil? || ids.empty?
+          return [] if ids.nil? || ids == []
           all(:id => ids)
         end
 
         def _t_find_first_by_associate(property, id)
-          first(property => id.to_s)
+          first(property => id)
         end
 
         def _t_find_all_by_associate(property, id)
-          all(property => id.to_s)
+          all(property => id)
         end
 
         def _t_initialize_has_one_association(association)

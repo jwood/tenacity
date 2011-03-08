@@ -29,7 +29,7 @@ require_mongoid do
 
       should "be able to find the first associate of an object" do
         object = MongoidObject.create
-        target = MongoidHasOneTarget.create(:mongoid_object_id => object.id.to_s)
+        target = MongoidHasOneTarget.create(:mongoid_object_id => object.id)
         assert_equal target, MongoidHasOneTarget._t_find_first_by_associate(:mongoid_object_id, object.id)
       end
 
@@ -50,10 +50,10 @@ require_mongoid do
 
       should "be able to reload an object from the database" do
         target = MongoidHasOneTarget.create
-        target.mongoid_object_id = 101
+        target.mongoid_object_id = '101'
         assert_equal '101', target.mongoid_object_id
         target.reload
-        assert_equal '', target.mongoid_object_id
+        assert_nil target.mongoid_object_id
       end
 
       should "be able to associate many objects with the given object" do
@@ -62,7 +62,7 @@ require_mongoid do
         target_3 = MongoidHasManyTarget.create
         object = MongoidObject.create
         object._t_associate_many(association, [target_1.id, target_2.id, target_3.id])
-        assert_set_equal [target_1.id.to_s, target_2.id.to_s, target_3.id.to_s], object.t_mongoid_has_many_target_ids
+        assert_set_equal [target_1.id, target_2.id, target_3.id], object.t_mongoid_has_many_target_ids
       end
 
       should "be able to get the ids of the objects associated with the given object" do
@@ -72,7 +72,7 @@ require_mongoid do
         object = MongoidObject.create
 
         object._t_associate_many(association, [target_1.id, target_2.id, target_3.id])
-        assert_set_equal [target_1.id.to_s, target_2.id.to_s, target_3.id.to_s], object._t_get_associate_ids(association)
+        assert_set_equal [target_1.id, target_2.id, target_3.id], object._t_get_associate_ids(association)
       end
 
       should "return an empty array when trying to fetch associate ids for an object with no associates" do
@@ -87,7 +87,7 @@ require_mongoid do
         object = MongoidObject.create
 
         object._t_associate_many(association, [target_1.id, target_2.id, target_3.id])
-        assert_set_equal [target_1.id.to_s, target_2.id.to_s, target_3.id.to_s], object._t_get_associate_ids(association)
+        assert_set_equal [target_1.id, target_2.id, target_3.id], object._t_get_associate_ids(association)
         object._t_clear_associates(association)
         assert_equal [], object._t_get_associate_ids(association)
       end

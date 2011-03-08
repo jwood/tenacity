@@ -6,9 +6,9 @@ module Tenacity
         associate = has_one_associate(association)
         unless associate.nil?
           if association.dependent == :destroy
-            association.associate_class._t_delete([associate.id.to_s])
+            association.associate_class._t_delete([_t_serialize(associate.id)])
           elsif association.dependent == :delete
-            association.associate_class._t_delete([associate.id.to_s], false)
+            association.associate_class._t_delete([_t_serialize(associate.id)], false)
           elsif association.dependent == :nullify
             associate.send "#{association.foreign_key(self.class)}=", nil
             associate.save
@@ -20,12 +20,12 @@ module Tenacity
 
       def has_one_associate(association)
         clazz = association.associate_class
-        associate = clazz._t_find_first_by_associate(association.foreign_key(self.class), self.id.to_s)
+        associate = clazz._t_find_first_by_associate(association.foreign_key(self.class), _t_serialize(self.id))
         associate.nil? ? nil : AssociateProxy.new(associate, association)
       end
 
       def set_has_one_associate(association, associate)
-        associate.send "#{association.foreign_key(self.class)}=", self.id.to_s
+        associate.send "#{association.foreign_key(self.class)}=", _t_serialize(self.id)
         associate.save
       end
 

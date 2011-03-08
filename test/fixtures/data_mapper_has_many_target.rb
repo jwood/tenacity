@@ -3,12 +3,12 @@ class DataMapperHasManyTarget
   include Tenacity
 
   property :id, Serial
-  property :active_record_object_id, String
+  property :active_record_object_id, Integer
   property :couch_rest_object_id, String
-  property :data_mapper_object_id, String
+  property :data_mapper_object_id, Integer
   property :mongo_mapper_object_id, String
   property :mongoid_object_id, String
-  property :sequel_object_id, String
+  property :sequel_object_id, Integer
 
   t_belongs_to :active_record_object
   t_belongs_to :couch_rest_object

@@ -1,5 +1,11 @@
 == Next version
 
+* Major enhancements
+
+  * Tenacity will no longer convert foreign keys to strings before storing them
+    in the database.  Instead, the ID will be stored without any modification
+    (if at all possible).
+
 * Minor enhancements
 
   * Added support for the :dependent option to all associations

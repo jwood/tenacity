@@ -43,7 +43,7 @@ class HasManyTest < Test::Unit::TestCase
       car.save
 
       assert_set_equal [door_1, door_2, door_3], ActiveRecordCar.find(car.id).couch_rest_doors
-      assert_set_equal [door_1.id.to_s, door_2.id.to_s, door_3.id.to_s], ActiveRecordCar.find(car.id).couch_rest_door_ids
+      assert_set_equal [door_1.id, door_2.id, door_3.id], ActiveRecordCar.find(car.id).couch_rest_door_ids
     end
 
     should "save the associate object when it is added as an associate if the parent object is saved" do
@@ -190,14 +190,14 @@ class HasManyTest < Test::Unit::TestCase
           @new_car.mongo_mapper_wheels.delete(wheel_1)
           @new_car.save
           assert_set_equal [wheel_2, wheel_3], ActiveRecordCar.find(@new_car.id).mongo_mapper_wheels
-          assert_nil MongoMapperWheel._t_find(wheel_1.id.to_s)
+          assert_nil MongoMapperWheel._t_find(wheel_1.id)
         end
 
         should "delete the associated object without issuing callbacks if association is configured to :delete_all dependents" do
           @new_car.couch_rest_doors.delete(@door_1)
           @new_car.save
           assert_set_equal [@door_2, @door_3], ActiveRecordCar.find(@new_car.id).couch_rest_doors
-          assert_nil CouchRestDoor._t_find(@door_1.id.to_s)
+          assert_nil CouchRestDoor._t_find(@door_1.id)
         end
       end
 
@@ -227,17 +227,17 @@ class HasManyTest < Test::Unit::TestCase
           @new_car.mongo_mapper_wheels.clear
           @new_car.save
           assert_set_equal [], ActiveRecordCar.find(@new_car.id).mongo_mapper_wheels
-          assert_nil MongoMapperWheel._t_find(wheel_1.id.to_s)
-          assert_nil MongoMapperWheel._t_find(wheel_2.id.to_s)
+          assert_nil MongoMapperWheel._t_find(wheel_1.id)
+          assert_nil MongoMapperWheel._t_find(wheel_2.id)
         end
 
         should "delete the associated object without issuing callbacks if association is configured to :delete_all dependents" do
           @new_car.couch_rest_doors.clear
           @new_car.save
           assert_set_equal [], ActiveRecordCar.find(@new_car.id).couch_rest_doors
-          assert_nil CouchRestDoor._t_find(@door_1.id.to_s)
-          assert_nil CouchRestDoor._t_find(@door_2.id.to_s)
-          assert_nil CouchRestDoor._t_find(@door_3.id.to_s)
+          assert_nil CouchRestDoor._t_find(@door_1.id)
+          assert_nil CouchRestDoor._t_find(@door_2.id)
+          assert_nil CouchRestDoor._t_find(@door_3.id)
         end
       end
     end

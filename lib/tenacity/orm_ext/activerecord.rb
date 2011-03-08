@@ -54,6 +54,10 @@ module Tenacity
       end
 
       module ClassMethods #:nodoc:
+        def _t_id_type
+          Integer
+        end
+
         def _t_find(id)
           find_by_id(id)
         end
@@ -64,11 +68,11 @@ module Tenacity
         end
 
         def _t_find_first_by_associate(property, id)
-          find(:first, :conditions => ["#{property} = ?", id.to_s])
+          find(:first, :conditions => ["#{property} = ?", id])
         end
 
         def _t_find_all_by_associate(property, id)
-          find(:all, :conditions => ["#{property} = ?", id.to_s])
+          find(:all, :conditions => ["#{property} = ?", id])
         end
 
         def _t_initialize_has_one_association(association)

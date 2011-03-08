@@ -43,6 +43,12 @@ module Tenacity
       end
 
       module ClassMethods #:nodoc:
+        include Tenacity::OrmExt::Helpers
+
+        def _t_id_type
+          String
+        end
+
         def _t_find(id)
           find(id)
         end
@@ -52,11 +58,11 @@ module Tenacity
         end
 
         def _t_find_first_by_associate(property, id)
-          first(property => id.to_s)
+          first(property => _t_serialize(id))
         end
 
         def _t_find_all_by_associate(property, id)
-          all(property => id.to_s)
+          all(property => _t_serialize(id))
         end
 
         def _t_initialize_has_one_association(association)
@@ -73,7 +79,7 @@ module Tenacity
 
         def _t_initialize_belongs_to_association(association)
           unless self.respond_to?(association.foreign_key)
-            key association.foreign_key, String
+            key association.foreign_key, id_class_for(association)
             before_save { |record| _t_stringify_belongs_to_value(record, association) }
             after_destroy { |record| record._t_cleanup_belongs_to_association(association) }
           end
@@ -96,7 +102,7 @@ module Tenacity
         end
 
         def _t_associate_many(association, associate_ids)
-          self.send(association.foreign_keys_property + '=', associate_ids.map { |associate_id| associate_id.to_s })
+          self.send(association.foreign_keys_property + '=', associate_ids.map { |associate_id| associate_id })
         end
 
         def _t_get_associate_ids(association)

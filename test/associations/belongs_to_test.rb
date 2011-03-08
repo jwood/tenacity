@@ -17,44 +17,44 @@ class BelongsToTest < Test::Unit::TestCase
       end
 
       should "be able to fetch the id of the associated object" do
-        @target.send("#{@foreign_key_id}=", @source.id.to_s)
+        @target.send("#{@foreign_key_id}=", serialize_id(@source))
         @target.save
-        assert_equal @source.id.to_s, @target_class._t_find(@target.id.to_s).send(@foreign_key_id)
+        assert_equal serialize_id(@source), @target_class._t_find(serialize_id(@target)).send(@foreign_key_id)
       end
 
       should "be able to load the associated object" do
         @target.send("#{@foreign_key}=", @source)
         @target.save
-        assert_equal @source.id.to_s, @target_class._t_find(@target.id.to_s).send(@foreign_key_id)
-        assert_equal @source, @target_class._t_find(@target.id.to_s).send(@foreign_key)
+        assert_equal serialize_id(@source), @target_class._t_find(serialize_id(@target)).send(@foreign_key_id)
+        assert_equal @source, @target_class._t_find(serialize_id(@target)).send(@foreign_key)
       end
 
       should "be be able to load the associated object if all we have is the id" do
-        @target.send("#{@foreign_key_id}=", @source.id.to_s)
+        @target.send("#{@foreign_key_id}=", @source.id)
         @target.save
-        assert_equal @source, @target_class._t_find(@target.id.to_s).send(@foreign_key)
+        assert_equal @source, @target_class._t_find(serialize_id(@target)).send(@foreign_key)
       end
 
       should "return nil if no association is set" do
-        assert_nil @target_class._t_find(@target.id.to_s).send(@foreign_key)
+        assert_nil @target_class._t_find(serialize_id(@target)).send(@foreign_key)
       end
 
       should "be able to destroy the associated object when the source object is destroyed" do
         Tenacity::Association.any_instance.stubs(:dependent).returns(:destroy)
         @target.send("#{@foreign_key}=", @source)
         @target.save
-        @target_class._t_delete([@target.id.to_s])
-        assert_nil @source_class._t_find(@source.id.to_s)
-        assert_nil @target_class._t_find(@target.id.to_s)
+        @target_class._t_delete([serialize_id(@target)])
+        assert_nil @source_class._t_find(serialize_id(@source))
+        assert_nil @target_class._t_find(serialize_id(@target))
       end
 
       should "be able to delete the associated object when the source object is destroyed" do
         Tenacity::Association.any_instance.stubs(:dependent).returns(:delete)
         @target.send("#{@foreign_key}=", @source)
         @target.save
-        @target_class._t_delete([@target.id.to_s])
-        assert_nil @source_class._t_find(@source.id.to_s)
-        assert_nil @target_class._t_find(@target.id.to_s)
+        @target_class._t_delete([serialize_id(@target)])
+        assert_nil @source_class._t_find(serialize_id(@source))
+        assert_nil @target_class._t_find(serialize_id(@target))
       end
     end
   end

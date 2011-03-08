@@ -43,6 +43,12 @@ module Tenacity
       end
 
       module ClassMethods #:nodoc:
+        include Tenacity::OrmExt::Helpers
+
+        def _t_id_type
+          String
+        end
+
         def _t_find(id)
           (id.nil? || id.to_s.strip == "") ? nil : find(id)
         rescue ::Mongoid::Errors::DocumentNotFound
@@ -78,7 +84,7 @@ module Tenacity
 
         def _t_initialize_belongs_to_association(association)
           unless self.respond_to?(association.foreign_key)
-            field association.foreign_key, :type => String
+            field association.foreign_key, :type => id_class_for(association)
             before_save { |record| self.class._t_stringify_belongs_to_value(record, association) }
             after_destroy { |record| record._t_cleanup_belongs_to_association(association) }
           end
@@ -100,7 +106,7 @@ module Tenacity
         end
 
         def _t_associate_many(association, associate_ids)
-          self.send(association.foreign_keys_property + '=', associate_ids.map { |associate_id| associate_id.to_s })
+          self.send(association.foreign_keys_property + '=', associate_ids.map { |associate_id| associate_id })
         end
 
         def _t_get_associate_ids(association)

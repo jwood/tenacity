@@ -415,6 +415,16 @@ module Tenacity
       end
     end
 
+    def _t_serialize(object_id) #:nodoc:
+      if object_id.nil?
+        nil
+      elsif [Fixnum].include?(object_id.class)
+        object_id
+      else
+        object_id.to_s
+      end
+    end
+
   end
 end
 

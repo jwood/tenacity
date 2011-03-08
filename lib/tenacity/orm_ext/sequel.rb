@@ -59,6 +59,10 @@ module Tenacity
         attr_accessor :_t_has_many_associations
         attr_accessor :_t_belongs_to_associations
 
+        def _t_id_type
+          Integer
+        end
+
         def _t_find(id)
           self[id]
         end

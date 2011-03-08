@@ -66,6 +66,12 @@ module Tenacity
       end
 
       module ClassMethods #:nodoc:
+        include Tenacity::OrmExt::Helpers
+
+        def _t_id_type
+          String
+        end
+
         def _t_find(id)
           (id.nil? || id.strip == "") ? nil : get(id)
         end
@@ -83,11 +89,11 @@ module Tenacity
         end
 
         def _t_find_first_by_associate(property, id)
-          self.send("by_#{property}", :key => id.to_s).first
+          self.send("by_#{property}", :key => id).first
         end
 
         def _t_find_all_by_associate(property, id)
-          self.send("by_#{property}", :key => id.to_s)
+          self.send("by_#{property}", :key => id)
         end
 
         def _t_initialize_has_one_association(association)
@@ -96,7 +102,7 @@ module Tenacity
 
         def _t_initialize_has_many_association(association)
           unless self.respond_to?(association.foreign_keys_property)
-            property association.foreign_keys_property, :type => [String]
+            property association.foreign_keys_property, :type => [id_class_for(association)]
             view_by association.foreign_keys_property
             after_save { |record| record.class._t_save_associates(record, association) if record.class.respond_to?(:_t_save_associates) }
             after_destroy { |record| record._t_cleanup_has_many_association(association) }
@@ -106,7 +112,7 @@ module Tenacity
         def _t_initialize_belongs_to_association(association)
           property_name = association.foreign_key
           unless self.respond_to?(property_name)
-            property property_name, :type => String
+            property property_name, :type => id_class_for(association)
             view_by property_name
             before_save { |record| _t_stringify_belongs_to_value(record, association) if self.respond_to?(:_t_stringify_belongs_to_value) }
             after_destroy { |record| record._t_cleanup_belongs_to_association(association) }
@@ -132,7 +138,7 @@ module Tenacity
         end
 
         def _t_associate_many(association, associate_ids)
-          self.send(association.foreign_keys_property + '=', associate_ids.map { |associate_id| associate_id.to_s })
+          self.send(association.foreign_keys_property + '=', associate_ids.map { |associate_id| associate_id })
         end
 
         def _t_get_associate_ids(association)

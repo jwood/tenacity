@@ -23,7 +23,7 @@ module Tenacity
       end
 
       def set_belongs_to_associate(association, associate)
-        self.send "#{association.foreign_key}=", associate.id.to_s
+        self.send "#{association.foreign_key}=", _t_serialize(associate.id)
       end
 
       module ClassMethods #:nodoc:
@@ -32,7 +32,7 @@ module Tenacity
         end
 
         def _t_stringify_belongs_to_value(record, association)
-          record.send "#{association.foreign_key}=", record.send(association.foreign_key).to_s
+          record.send "#{association.foreign_key}=", _t_serialize(record.send(association.foreign_key))
         end
       end
 
