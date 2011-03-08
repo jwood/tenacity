@@ -50,24 +50,24 @@ module Tenacity
         end
 
         def _t_find(id)
-          (id.nil? || id.to_s.strip == "") ? nil : find(id)
+          (id.nil? || id.to_s.strip == "") ? nil : find(_t_serialize(id))
         rescue ::Mongoid::Errors::DocumentNotFound
           nil
         end
 
         def _t_find_bulk(ids)
-          docs = find(ids)
+          docs = find(_t_serialize_ids(ids))
           docs.respond_to?(:each) ? docs : [docs]
         rescue ::Mongoid::Errors::DocumentNotFound
           []
         end
 
         def _t_find_first_by_associate(property, id)
-          find(:first, :conditions => { property => id })
+          find(:first, :conditions => { property => _t_serialize(id) })
         end
 
         def _t_find_all_by_associate(property, id)
-          find(:all, :conditions => { property => id })
+          find(:all, :conditions => { property => _t_serialize(id) })
         end
 
         def _t_initialize_has_one_association(association)
@@ -106,7 +106,7 @@ module Tenacity
         end
 
         def _t_associate_many(association, associate_ids)
-          self.send(association.foreign_keys_property + '=', associate_ids.map { |associate_id| associate_id })
+          self.send(association.foreign_keys_property + '=', associate_ids)
         end
 
         def _t_get_associate_ids(association)

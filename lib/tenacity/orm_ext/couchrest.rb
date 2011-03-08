@@ -73,7 +73,7 @@ module Tenacity
         end
 
         def _t_find(id)
-          (id.nil? || id.strip == "") ? nil : get(id)
+          (id.nil? || id.strip == "") ? nil : get(_t_serialize(id))
         end
 
         def _t_find_bulk(ids)
@@ -81,7 +81,7 @@ module Tenacity
           ids = [ids] unless ids.class == Array
 
           docs = []
-          result = database.get_bulk ids
+          result = database.get_bulk(_t_serialize_ids(ids))
           result['rows'].each do |row|
             docs << (row['doc'].nil? ? nil : create_from_database(row['doc']))
           end
@@ -89,11 +89,11 @@ module Tenacity
         end
 
         def _t_find_first_by_associate(property, id)
-          self.send("by_#{property}", :key => id).first
+          self.send("by_#{property}", :key => _t_serialize(id)).first
         end
 
         def _t_find_all_by_associate(property, id)
-          self.send("by_#{property}", :key => id)
+          self.send("by_#{property}", :key => _t_serialize(id))
         end
 
         def _t_initialize_has_one_association(association)
@@ -138,7 +138,7 @@ module Tenacity
         end
 
         def _t_associate_many(association, associate_ids)
-          self.send(association.foreign_keys_property + '=', associate_ids.map { |associate_id| associate_id })
+          self.send(association.foreign_keys_property + '=', associate_ids)
         end
 
         def _t_get_associate_ids(association)

@@ -50,11 +50,11 @@ module Tenacity
         end
 
         def _t_find(id)
-          find(id)
+          find(_t_serialize(id))
         end
 
         def _t_find_bulk(ids=[])
-          find(ids)
+          find(_t_serialize_ids(ids))
         end
 
         def _t_find_first_by_associate(property, id)
@@ -87,9 +87,9 @@ module Tenacity
 
         def _t_delete(ids, run_callbacks=true)
           if run_callbacks
-            destroy(ids)
+            destroy(_t_serialize_ids(ids))
           else
-            delete(ids)
+            delete(_t_serialize_ids(ids))
           end
         end
       end
@@ -102,7 +102,7 @@ module Tenacity
         end
 
         def _t_associate_many(association, associate_ids)
-          self.send(association.foreign_keys_property + '=', associate_ids.map { |associate_id| associate_id })
+          self.send(association.foreign_keys_property + '=', associate_ids)
         end
 
         def _t_get_associate_ids(association)

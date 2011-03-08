@@ -54,25 +54,27 @@ module Tenacity
       end
 
       module ClassMethods #:nodoc:
+        include Tenacity::OrmExt::Helpers
+
         def _t_id_type
           Integer
         end
 
         def _t_find(id)
-          find_by_id(id)
+          find_by_id(_t_serialize(id))
         end
 
         def _t_find_bulk(ids)
           return [] if ids.nil? || ids.empty?
-          find(:all, :conditions => ["id in (?)", ids])
+          find(:all, :conditions => ["id in (?)", _t_serialize_ids(ids)])
         end
 
         def _t_find_first_by_associate(property, id)
-          find(:first, :conditions => ["#{property} = ?", id])
+          find(:first, :conditions => ["#{property} = ?", _t_serialize(id)])
         end
 
         def _t_find_all_by_associate(property, id)
-          find(:all, :conditions => ["#{property} = ?", id])
+          find(:all, :conditions => ["#{property} = ?", _t_serialize(id)])
         end
 
         def _t_initialize_has_one_association(association)
@@ -91,34 +93,36 @@ module Tenacity
 
         def _t_delete(ids, run_callbacks=true)
           if run_callbacks
-            destroy_all(["id in (?)", ids])
+            destroy_all(["id in (?)", _t_serialize_ids(ids)])
           else
-            delete_all(["id in (?)", ids])
+            delete_all(["id in (?)", _t_serialize_ids(ids)])
           end
         end
       end
 
       module InstanceMethods #:nodoc:
+        include Tenacity::OrmExt::Helpers
+
         def _t_reload
           reload
         end
 
         def _t_clear_associates(association)
-          self.connection.execute("delete from #{association.join_table} where #{association.association_key} = #{self.id}")
+          self.connection.execute("delete from #{association.join_table} where #{association.association_key} = #{_t_serialize_id_for_sql(self.id)}")
         end
 
         def _t_associate_many(association, associate_ids)
           self.transaction do
             _t_clear_associates(association)
             associate_ids.each do |associate_id|
-              self.connection.execute("insert into #{association.join_table} (#{association.association_key}, #{association.association_foreign_key}) values (#{self.id}, '#{associate_id}')")
+              self.connection.execute("insert into #{association.join_table} (#{association.association_key}, #{association.association_foreign_key}) values (#{_t_serialize_id_for_sql(self.id)}, #{_t_serialize_id_for_sql(associate_id)})")
             end
           end
         end
 
         def _t_get_associate_ids(association)
           return [] if self.id.nil?
-          rows = self.connection.execute("select #{association.association_foreign_key} from #{association.join_table} where #{association.association_key} = #{self.id}")
+          rows = self.connection.execute("select #{association.association_foreign_key} from #{association.join_table} where #{association.association_key} = #{_t_serialize_id_for_sql(self.id)}")
           ids = []; rows.each { |r| ids << r[0] }; ids
         end
       end
