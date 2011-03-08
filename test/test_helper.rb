@@ -12,6 +12,10 @@ require 'test/unit'
 require 'shoulda'
 require 'mocha'
 
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
+$LOAD_PATH.unshift(File.dirname(__FILE__))
+require 'tenacity'
+
 require File.join(File.dirname(__FILE__), 'helpers', 'active_record_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'couch_rest_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'data_mapper_test_helper')
@@ -19,13 +23,9 @@ require File.join(File.dirname(__FILE__), 'helpers', 'mongo_mapper_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'mongoid_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'sequel_test_helper')
 
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-$LOAD_PATH.unshift(File.dirname(__FILE__))
-require 'tenacity'
+Dir[File.join(File.dirname(__FILE__), 'fixtures', '*.rb')].each { |file| autoload(file[file.rindex('/') + 1..-4].camelcase, file) }
 
-Dir[File.join(File.dirname(__FILE__), 'fixtures', '*.rb')].each { |file| require file }
-
-DataMapper.auto_migrate!
+migrate_data_mapper_tables
 
 def setup_fixtures
   Dir.glob(File.join(File.dirname(__FILE__), 'fixtures', '*.rb')).each do |filename|
@@ -127,5 +127,9 @@ end
 
 def assert_set_equal(expecteds, actuals, message = nil)
   assert_equal expecteds && Set.new(expecteds), actuals && Set.new(actuals), message
+end
+
+def serialize_id(object)
+  object.class._t_serialize(object.id)
 end
 

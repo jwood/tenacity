@@ -54,7 +54,7 @@ class DataMapperTest < Test::Unit::TestCase
       object.mongo_mapper_object_id = other_object.id
       assert_equal other_object.id.to_s, object.mongo_mapper_object_id
       object.reload
-      assert_equal '', object.mongo_mapper_object_id
+      assert_nil object.mongo_mapper_object_id
     end
 
     should "return an empty array if there are no objects associated with the given object ids" do

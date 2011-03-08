@@ -11,9 +11,9 @@ module Tenacity
         associates = has_many_associates(association)
         unless associates.nil? || associates.empty?
           if association.dependent == :destroy
-            associates.each { |associate| association.associate_class._t_delete([associate.id.to_s]) }
+            associates.each { |associate| association.associate_class._t_delete([_t_serialize(associate.id)]) }
           elsif association.dependent == :delete_all
-            associates.each { |associate| association.associate_class._t_delete([associate.id.to_s], false) }
+            associates.each { |associate| association.associate_class._t_delete([_t_serialize(associate.id)], false) }
           elsif association.dependent == :nullify
             associates.each do |associate|
               associate.send "#{association.foreign_key(self.class)}=", nil
@@ -51,7 +51,7 @@ module Tenacity
 
       def prune_associate_ids(association, associate_ids)
         if association.limit || association.offset
-          sorted_ids = associate_ids.sort { |a,b| a.to_s <=> b.to_s }
+          sorted_ids = associate_ids.sort { |a,b| a <=> b }
 
           limit = association.limit || associate_ids.size
           offset = association.offset || 0
@@ -84,12 +84,12 @@ module Tenacity
           associates = (record.instance_variable_get record._t_ivar_name(association)) || []
           associates.each do |associate|
             associate._t_reload
-            associate.send("#{association.foreign_key(record.class)}=", record.id.to_s)
+            associate.send("#{association.foreign_key(record.class)}=", _t_serialize(record.id))
             save_associate(associate)
           end
 
           unless associates.blank?
-            associate_ids = associates.map { |associate| associate.id.to_s }
+            associate_ids = associates.map { |associate| _t_serialize(associate.id) }
             record._t_associate_many(association, associate_ids)
             save_associate(record)
           end
@@ -116,14 +116,14 @@ module Tenacity
         def get_current_associates(record, association)
           clazz = association.associate_class
           property_name = association.foreign_key(record.class)
-          clazz._t_find_all_by_associate(property_name, record.id.to_s)
+          clazz._t_find_all_by_associate(property_name, _t_serialize(record.id))
         end
 
         def destroy_orphaned_associates(association, old_associates, associates)
           if association.dependent == :destroy || association.dependent == :delete_all
             issue_callbacks = (association.dependent == :destroy)
             (old_associates.map{|a| a.id} - associates.map{|a| a.id}).each do |associate_id|
-              association.associate_class._t_delete([associate_id.to_s], issue_callbacks)
+              association.associate_class._t_delete([_t_serialize(associate_id)], issue_callbacks)
             end
           end
         end

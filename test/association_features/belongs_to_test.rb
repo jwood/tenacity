@@ -30,7 +30,7 @@ class BelongsToTest < Test::Unit::TestCase
     should "be able to specify the foreign key to use for the associated class" do
       car = ActiveRecordCar.create
       windshield = CouchRestWindshield.create(:active_record_car => car)
-      assert_equal car.id.to_s, windshield.car_id
+      assert_equal car.id, windshield.car_id
       assert !windshield.respond_to?(:active_record_car_id)
 
       engine = ActiveRecordEngine.create(:active_record_car => car)

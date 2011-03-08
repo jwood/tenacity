@@ -28,7 +28,7 @@ class MongoMapperTest < Test::Unit::TestCase
 
     should "be able to find the first associate of an object" do
       object = MongoMapperObject.create
-      target = MongoMapperHasOneTarget.create(:mongo_mapper_object_id => object.id.to_s)
+      target = MongoMapperHasOneTarget.create(:mongo_mapper_object_id => object.id)
       assert_equal target, MongoMapperHasOneTarget._t_find_first_by_associate(:mongo_mapper_object_id, object.id)
     end
 
@@ -49,10 +49,10 @@ class MongoMapperTest < Test::Unit::TestCase
 
     should "be able to reload an object from the database" do
       target = MongoMapperHasOneTarget.create
-      target.mongo_mapper_object_id = 101
+      target.mongo_mapper_object_id = '101'
       assert_equal '101', target.mongo_mapper_object_id
       target.reload
-      assert_equal '', target.mongo_mapper_object_id
+      assert_nil target.mongo_mapper_object_id
     end
 
     should "be able to associate many objects with the given object" do
@@ -61,7 +61,7 @@ class MongoMapperTest < Test::Unit::TestCase
       target_3 = MongoMapperHasManyTarget.create
       object = MongoMapperObject.create
       object._t_associate_many(association, [target_1.id, target_2.id, target_3.id])
-      assert_set_equal [target_1.id.to_s, target_2.id.to_s, target_3.id.to_s], object.t_mongo_mapper_has_many_target_ids
+      assert_set_equal [target_1.id, target_2.id, target_3.id], object.t_mongo_mapper_has_many_target_ids
     end
 
     should "be able to get the ids of the objects associated with the given object" do
@@ -71,7 +71,7 @@ class MongoMapperTest < Test::Unit::TestCase
       object = MongoMapperObject.create
 
       object._t_associate_many(association, [target_1.id, target_2.id, target_3.id])
-      assert_set_equal [target_1.id.to_s, target_2.id.to_s, target_3.id.to_s], object._t_get_associate_ids(association)
+      assert_set_equal [target_1.id, target_2.id, target_3.id], object._t_get_associate_ids(association)
     end
 
     should "return an empty array when trying to fetch associate ids for an object with no associates" do
@@ -86,7 +86,7 @@ class MongoMapperTest < Test::Unit::TestCase
       object = MongoMapperObject.create
 
       object._t_associate_many(association, [target_1.id, target_2.id, target_3.id])
-      assert_set_equal [target_1.id.to_s, target_2.id.to_s, target_3.id.to_s], object._t_get_associate_ids(association)
+      assert_set_equal [target_1.id, target_2.id, target_3.id], object._t_get_associate_ids(association)
       object._t_clear_associates(association)
       assert_equal [], object._t_get_associate_ids(association)
     end

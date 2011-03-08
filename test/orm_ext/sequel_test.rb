@@ -53,7 +53,7 @@ class SequelTest < Test::Unit::TestCase
       object.mongo_mapper_object_id = 'abc123'
       assert_equal 'abc123', object.mongo_mapper_object_id
       object.reload
-      assert_equal '', object.mongo_mapper_object_id
+      assert_nil object.mongo_mapper_object_id
     end
 
     should "be able to clear the associates of a given object" do

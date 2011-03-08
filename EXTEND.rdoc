@@ -5,14 +5,6 @@ only, so as long as they have been implemented and are available on the model
 object, Tenacity will be able to manage the object's relationships.
 
 
-== A note about IDs
-
-An ID can be an integer, a string, or an object, depending on the database
-and database client you are using.  To be as compatible as possible, Tenacity
-treats all IDs as strings.  So, all database client extensions should accept
-strings for IDs as input parameters, and return strings for IDs.
-
-
 == The Association Class
 
 A few of the methods take an association as a parameter.  This association
