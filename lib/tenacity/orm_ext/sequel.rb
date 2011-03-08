@@ -55,6 +55,8 @@ module Tenacity
       end
 
       module ClassMethods #:nodoc:
+        include Tenacity::OrmExt::Helpers
+
         attr_accessor :_t_has_one_associations
         attr_accessor :_t_has_many_associations
         attr_accessor :_t_belongs_to_associations
@@ -64,20 +66,20 @@ module Tenacity
         end
 
         def _t_find(id)
-          self[id]
+          self[_t_serialize(id)]
         end
 
         def _t_find_bulk(ids)
           return [] if ids.nil? || ids.empty?
-          filter(:id => ids).to_a
+          filter(:id => _t_serialize_ids(ids)).to_a
         end
 
         def _t_find_first_by_associate(property, id)
-          first(property.to_sym => id)
+          first(property.to_sym => _t_serialize(id))
         end
 
         def _t_find_all_by_associate(property, id)
-          filter(property => id).to_a
+          filter(property => _t_serialize(id)).to_a
         end
 
         def _t_initialize_has_one_association(association)
@@ -97,14 +99,16 @@ module Tenacity
 
         def _t_delete(ids, run_callbacks=true)
           if run_callbacks
-            filter(:id => ids).destroy
+            filter(:id => _t_serialize_ids(ids)).destroy
           else
-            filter(:id => ids).delete
+            filter(:id => _t_serialize_ids(ids)).delete
           end
         end
       end
 
       module InstanceMethods #:nodoc:
+        include Tenacity::OrmExt::Helpers
+
         def before_save
           associations = self.class._t_belongs_to_associations || []
           associations.each { |association| self.class._t_stringify_belongs_to_value(self, association) }
@@ -134,21 +138,21 @@ module Tenacity
         end
 
         def _t_clear_associates(association)
-          db["delete from #{association.join_table} where #{association.association_key} = #{self.id}"].delete
+          db["delete from #{association.join_table} where #{association.association_key} = #{_t_serialize_id_for_sql(self.id)}"].delete
         end
 
         def _t_associate_many(association, associate_ids)
           db.transaction do
             _t_clear_associates(association)
             associate_ids.each do |associate_id|
-              db["insert into #{association.join_table} (#{association.association_key}, #{association.association_foreign_key}) values (#{self.id}, '#{associate_id}')"].insert
+              db["insert into #{association.join_table} (#{association.association_key}, #{association.association_foreign_key}) values (#{_t_serialize_id_for_sql(self.id)}, #{_t_serialize_id_for_sql(associate_id)})"].insert
             end
           end
         end
 
         def _t_get_associate_ids(association)
           return [] if self.id.nil?
-          rows = db["select #{association.association_foreign_key} from #{association.join_table} where #{association.association_key} = #{self.id}"].all
+          rows = db["select #{association.association_foreign_key} from #{association.join_table} where #{association.association_key} = #{_t_serialize_id_for_sql(self.id)}"].all
           rows.map { |row| row[association.association_foreign_key.to_sym] }
         end
       end

@@ -10,6 +10,25 @@ module Tenacity
         end
       end
 
+      def _t_serialize_ids(ids)
+        if ids.respond_to?(:map)
+          ids.map { |id| _t_serialize(id) }
+        else
+          _t_serialize(ids)
+        end
+      end
+
+      def _t_serialize_id_for_sql(id)
+        return id if id.nil?
+
+        serialized_id = _t_serialize(id)
+        if serialized_id.class == String
+          "'#{serialized_id}'"
+        else
+          serialized_id
+        end
+      end
+
     end
   end
 end

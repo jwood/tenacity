@@ -54,25 +54,27 @@ module Tenacity
       end
 
       module ClassMethods #:nodoc:
+        include Tenacity::OrmExt::Helpers
+
         def _t_id_type
           Integer
         end
 
         def _t_find(id)
-          get(id)
+          get(_t_serialize(id))
         end
 
         def _t_find_bulk(ids)
           return [] if ids.nil? || ids == []
-          all(:id => ids)
+          all(:id => _t_serialize_ids(ids))
         end
 
         def _t_find_first_by_associate(property, id)
-          first(property => id)
+          first(property => _t_serialize(id))
         end
 
         def _t_find_all_by_associate(property, id)
-          all(property => id)
+          all(property => _t_serialize(id))
         end
 
         def _t_initialize_has_one_association(association)
@@ -112,6 +114,8 @@ module Tenacity
       end
 
       module InstanceMethods #:nodoc:
+        include Tenacity::OrmExt::Helpers
+
         # DataMapper will not issue callbacks unless at least one of the properties is dirty.
         # So, taint the object by marking one of the attributes as dirty, save the object,
         # and resture the persisted_state by reloading the object from the database.
@@ -128,21 +132,21 @@ module Tenacity
         end
 
         def _t_clear_associates(association)
-          self.repository.adapter.execute("delete from #{association.join_table} where #{association.association_key} = #{self.id}")
+          self.repository.adapter.execute("delete from #{association.join_table} where #{association.association_key} = #{_t_serialize_id_for_sql(self.id)}")
         end
 
         def _t_associate_many(association, associate_ids)
           self.transaction do
             _t_clear_associates(association)
             associate_ids.each do |associate_id|
-              self.repository.adapter.execute("insert into #{association.join_table} (#{association.association_key}, #{association.association_foreign_key}) values (#{self.id}, '#{associate_id}')")
+              self.repository.adapter.execute("insert into #{association.join_table} (#{association.association_key}, #{association.association_foreign_key}) values (#{_t_serialize_id_for_sql(self.id)}, #{_t_serialize_id_for_sql(associate_id)})")
             end
           end
         end
 
         def _t_get_associate_ids(association)
           return [] if self.id.nil?
-          self.repository.adapter.select("select #{association.association_foreign_key} from #{association.join_table} where #{association.association_key} = #{self.id}")
+          self.repository.adapter.select("select #{association.association_foreign_key} from #{association.join_table} where #{association.association_key} = #{_t_serialize_id_for_sql(self.id)}")
         end
 
         private
