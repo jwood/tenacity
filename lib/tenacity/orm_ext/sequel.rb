@@ -109,12 +109,6 @@ module Tenacity
       module InstanceMethods #:nodoc:
         include Tenacity::OrmExt::Helpers
 
-        def before_save
-          associations = self.class._t_belongs_to_associations || []
-          associations.each { |association| self.class._t_stringify_belongs_to_value(self, association) }
-          super
-        end
-
         def after_save
           associations = self.class._t_has_many_associations || []
           associations.each { |association| self.class._t_save_associates(self, association) }

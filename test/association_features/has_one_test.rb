@@ -15,7 +15,7 @@ class HasOneTest < Test::Unit::TestCase
       other_climate_control_unit = ActiveRecordClimateControlUnit.create
       assert_equal @climate_control_unit, MongoMapperDashboard.find(@dashboard.id).active_record_climate_control_unit
       ActiveRecordClimateControlUnit.update(@climate_control_unit.id, :mongo_mapper_dashboard_id => nil)
-      ActiveRecordClimateControlUnit.update(other_climate_control_unit.id, :mongo_mapper_dashboard_id => @dashboard.id)
+      ActiveRecordClimateControlUnit.update(other_climate_control_unit.id, :mongo_mapper_dashboard_id => serialize_id(@dashboard))
       assert_equal other_climate_control_unit, MongoMapperDashboard.find(@dashboard.id).active_record_climate_control_unit
 
       assert_equal @climate_control_unit, @dashboard.active_record_climate_control_unit

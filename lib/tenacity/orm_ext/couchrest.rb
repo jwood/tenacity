@@ -114,7 +114,6 @@ module Tenacity
           unless self.respond_to?(property_name)
             property property_name, :type => id_class_for(association)
             view_by property_name
-            before_save { |record| _t_stringify_belongs_to_value(record, association) if self.respond_to?(:_t_stringify_belongs_to_value) }
             after_destroy { |record| record._t_cleanup_belongs_to_association(association) }
           end
         end

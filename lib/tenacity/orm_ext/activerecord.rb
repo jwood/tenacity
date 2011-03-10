@@ -87,7 +87,6 @@ module Tenacity
         end
 
         def _t_initialize_belongs_to_association(association)
-          before_save { |record| record.class._t_stringify_belongs_to_value(record, association) }
           after_destroy { |record| record._t_cleanup_belongs_to_association(association) }
         end
 
