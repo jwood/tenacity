@@ -14,4 +14,9 @@ class ActiveRecordObject < ActiveRecord::Base
   t_has_many :mongo_mapper_has_many_targets
   require_mongoid { t_has_many :mongoid_has_many_targets }
   t_has_many :sequel_has_many_targets
+
+  t_has_one :mongo_mapper_autosave_true_has_one_target, :autosave => true
+  t_has_one :mongo_mapper_autosave_false_has_one_target, :autosave => false
+  t_has_many :mongo_mapper_autosave_true_has_many_target, :autosave => true
+  t_has_many :mongo_mapper_autosave_false_has_many_target, :autosave => false
 end

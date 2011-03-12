@@ -44,6 +44,28 @@ class HasOneTest < Test::Unit::TestCase
       dashboard.prop = "value"
       assert_raises(Tenacity::ReadOnlyError) { dashboard.save }
     end
+
+    should "save the associated object if autosave is true" do
+      source = ActiveRecordObject.create
+      target = MongoMapperAutosaveTrueHasOneTarget.new(:prop => 'abc')
+      source.mongo_mapper_autosave_true_has_one_target = target
+      source.save
+      assert_equal 'abc', source.mongo_mapper_autosave_true_has_one_target.prop
+
+      source.mongo_mapper_autosave_true_has_one_target.prop = 'xyz'
+      source.save
+      source.reload && source.mongo_mapper_autosave_true_has_one_target(true)
+      assert_equal 'xyz', source.mongo_mapper_autosave_true_has_one_target.prop
+    end
+
+    should "not save the associated object upon assignment if autosave is false" do
+      source = ActiveRecordObject.create
+      target = MongoMapperAutosaveFalseHasOneTarget.new
+      source.mongo_mapper_autosave_false_has_one_target = target
+
+      source.save
+      assert_nil MongoMapperAutosaveFalseHasOneTarget.first(:active_record_object_id => source.id)
+    end
   end
 
 end

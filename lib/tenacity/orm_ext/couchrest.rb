@@ -96,6 +96,10 @@ module Tenacity
           self.send("by_#{property}", :key => _t_serialize(id))
         end
 
+        def _t_initialize_tenacity
+          after_save { |record| record._t_save_autosave_associations }
+        end
+
         def _t_initialize_has_one_association(association)
           before_destroy { |record| record._t_cleanup_has_one_association(association) }
         end

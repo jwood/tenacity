@@ -29,6 +29,9 @@ module Tenacity
     # The offset from where the results should be fetched.
     attr_reader :offset
 
+    # Should the associated object be saved when the parent object is saved?
+    attr_reader :autosave
+
     def initialize(type, name, source, options={})
       @type = type
       @name = name
@@ -49,6 +52,7 @@ module Tenacity
       @readonly = options[:readonly]
       @limit = options[:limit]
       @offset = options[:offset]
+      @autosave = options[:autosave]
 
       if @foreign_keys_property
         if @foreign_keys_property.to_s == ActiveSupport::Inflector.singularize(name) + "_ids"

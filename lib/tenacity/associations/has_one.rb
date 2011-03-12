@@ -26,7 +26,7 @@ module Tenacity
 
       def set_has_one_associate(association, associate)
         associate.send "#{association.foreign_key(self.class)}=", _t_serialize(self.id)
-        associate.save
+        associate.save unless association.autosave == false
       end
 
       module ClassMethods #:nodoc:

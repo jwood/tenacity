@@ -86,6 +86,10 @@ module Tenacity
   # You can manipulate objects and associations before they are saved to the database, but there is some special behavior you should be
   # aware of, mostly involving the saving of associated objects.
   #
+  # Unless you set the :autosave option on a <tt>t_has_one</tt>, <tt>t_belongs_to</tt>, or
+  # <tt>t_has_many</tt> association. Setting it to +true+ will _always_ save the members,
+  # whereas setting it to +false+ will _never_ save the members.
+  #
   # === One-to-one associations
   #
   # * Assigning an object to a +t_has_one+ association automatically saves that object and the object being replaced (if there is one), in
@@ -139,6 +143,7 @@ module Tenacity
   # can be used to override these defaults.
   #
   module ClassMethods
+    attr_reader :_tenacity_associations
 
     # Specifies a one-to-one association with another class. This method should only be used
     # if the other class contains the foreign key. If the current class contains the foreign key,
@@ -177,6 +182,8 @@ module Tenacity
     #   foreign key is set to +NULL+.
     # [:readonly]
     #   If true, the associated object is readonly through the association.
+    # [:autosave]
+    #   If true, always save the associated object or destroy it if marked for destruction, when saving the parent object. Off by default.
     #
     # Option examples:
     #   t_has_one :credit_card, :dependent => :destroy  # destroys the associated credit card
@@ -187,7 +194,7 @@ module Tenacity
     #
     def t_has_one(name, options={})
       extend(Associations::HasOne::ClassMethods)
-      association = Association.new(:t_has_one, name, self, options)
+      association = _t_create_association(:t_has_one, name, options)
       initialize_has_one_association(association)
 
       define_method(association.name) do |*params|
@@ -251,7 +258,7 @@ module Tenacity
     #
     def t_belongs_to(name, options={})
       extend(Associations::BelongsTo::ClassMethods)
-      association = Association.new(:t_belongs_to, name, self, options)
+      association = _t_create_association(:t_belongs_to, name, options)
       initialize_belongs_to_association(association)
 
       define_method(association.name) do |*params|
@@ -387,7 +394,7 @@ module Tenacity
     #
     def t_has_many(name, options={})
       extend(Associations::HasMany::ClassMethods)
-      association = Association.new(:t_has_many, name, self, options)
+      association = _t_create_association(:t_has_many, name, options)
       initialize_has_many_association(association)
 
       define_method(association.name) do |*params|
@@ -423,6 +430,15 @@ module Tenacity
       else
         object_id.to_s
       end
+    end
+
+    private
+
+    def _t_create_association(type, name, options) #:nococ:
+      association = Association.new(type, name, self, options)
+      @_tenacity_associations ||= []
+      @_tenacity_associations << association
+      association
     end
 
   end
