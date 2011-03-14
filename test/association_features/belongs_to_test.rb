@@ -45,6 +45,19 @@ class BelongsToTest < Test::Unit::TestCase
       engine.prop = "value"
       assert_raises(Tenacity::ReadOnlyError) { engine.save }
     end
+
+    should "save the associated object if autosave is true" do
+      source = MongoMapperAutosaveTrueHasOneTarget.create
+      target = ActiveRecordObject.create(:prop => 'abc')
+      source.active_record_object = target
+      source.save
+      assert_equal 'abc', source.active_record_object.prop
+
+      source.active_record_object.prop = 'xyz'
+      source.save
+      source.reload && source.active_record_object(true)
+      assert_equal 'xyz', source.active_record_object.prop
+    end
   end
 
 end

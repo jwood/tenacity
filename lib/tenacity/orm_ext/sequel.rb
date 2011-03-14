@@ -82,6 +82,9 @@ module Tenacity
           filter(property => _t_serialize(id)).to_a
         end
 
+        def _t_initialize_tenacity
+        end
+
         def _t_initialize_has_one_association(association)
           @_t_has_one_associations ||= []
           @_t_has_one_associations << association
@@ -109,13 +112,9 @@ module Tenacity
       module InstanceMethods #:nodoc:
         include Tenacity::OrmExt::Helpers
 
-        def before_save
-          associations = self.class._t_belongs_to_associations || []
-          associations.each { |association| self.class._t_stringify_belongs_to_value(self, association) }
-          super
-        end
-
         def after_save
+          _t_save_autosave_associations
+
           associations = self.class._t_has_many_associations || []
           associations.each { |association| self.class._t_save_associates(self, association) }
           super

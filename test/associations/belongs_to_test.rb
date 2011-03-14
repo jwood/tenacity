@@ -30,7 +30,7 @@ class BelongsToTest < Test::Unit::TestCase
       end
 
       should "be be able to load the associated object if all we have is the id" do
-        @target.send("#{@foreign_key_id}=", @source.id)
+        @target.send("#{@foreign_key_id}=", serialize_id(@source))
         @target.save
         assert_equal @source, @target_class._t_find(serialize_id(@target)).send(@foreign_key)
       end

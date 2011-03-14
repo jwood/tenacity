@@ -65,6 +65,10 @@ module Tenacity
           all(property => _t_serialize(id))
         end
 
+        def _t_initialize_tenacity
+          after_save { |record| record._t_save_autosave_associations }
+        end
+
         def _t_initialize_has_one_association(association)
           after_destroy { |record| record._t_cleanup_has_one_association(association) }
         end
@@ -80,7 +84,6 @@ module Tenacity
         def _t_initialize_belongs_to_association(association)
           unless self.respond_to?(association.foreign_key)
             key association.foreign_key, id_class_for(association)
-            before_save { |record| _t_stringify_belongs_to_value(record, association) }
             after_destroy { |record| record._t_cleanup_belongs_to_association(association) }
           end
         end

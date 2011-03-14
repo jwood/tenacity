@@ -30,10 +30,6 @@ module Tenacity
         def initialize_belongs_to_association(association)
           _t_initialize_belongs_to_association(association) if self.respond_to?(:_t_initialize_belongs_to_association)
         end
-
-        def _t_stringify_belongs_to_value(record, association)
-          record.send "#{association.foreign_key}=", _t_serialize(record.send(association.foreign_key))
-        end
       end
 
     end

@@ -77,6 +77,12 @@ module Tenacity
           all(property => _t_serialize(id))
         end
 
+        def _t_initialize_tenacity
+          after :save do |record|
+            record._t_save_autosave_associations
+          end
+        end
+
         def _t_initialize_has_one_association(association)
           after :destroy do |record|
             record._t_cleanup_has_one_association(association)
@@ -94,10 +100,6 @@ module Tenacity
         end
 
         def _t_initialize_belongs_to_association(association)
-          before :save do |record|
-            record.class._t_stringify_belongs_to_value(record, association)
-          end
-
           after :destroy do |record|
             record._t_cleanup_belongs_to_association(association)
           end

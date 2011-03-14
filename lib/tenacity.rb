@@ -34,6 +34,7 @@ module Tenacity #:nodoc:
 
     raise "Tenacity does not support the database client used by #{model}" unless model.respond_to?(:_t_find)
     model.extend(ClassMethods)
+    model._t_initialize_tenacity
   end
 end
 

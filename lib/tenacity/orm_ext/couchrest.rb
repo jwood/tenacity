@@ -96,6 +96,10 @@ module Tenacity
           self.send("by_#{property}", :key => _t_serialize(id))
         end
 
+        def _t_initialize_tenacity
+          after_save { |record| record._t_save_autosave_associations }
+        end
+
         def _t_initialize_has_one_association(association)
           before_destroy { |record| record._t_cleanup_has_one_association(association) }
         end
@@ -114,7 +118,6 @@ module Tenacity
           unless self.respond_to?(property_name)
             property property_name, :type => id_class_for(association)
             view_by property_name
-            before_save { |record| _t_stringify_belongs_to_value(record, association) if self.respond_to?(:_t_stringify_belongs_to_value) }
             after_destroy { |record| record._t_cleanup_belongs_to_association(association) }
           end
         end

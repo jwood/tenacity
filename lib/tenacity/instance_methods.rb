@@ -5,6 +5,20 @@ module Tenacity
       "@_t_" + association.name.to_s
     end
 
+    def _t_save_autosave_associations
+      self.class._tenacity_associations.each do |association|
+        if association.autosave == true
+          if association.type == :t_has_one || association.type == :t_belongs_to
+            associate = instance_variable_get(_t_ivar_name(association))
+            associate.save unless associate.nil?
+          elsif association.type == :t_has_many
+            associates = instance_variable_get(_t_ivar_name(association))
+            associates.each { |associate| associate.save } unless associates.nil?
+          end
+        end
+      end
+    end
+
     private
 
     def get_associate(association, params)

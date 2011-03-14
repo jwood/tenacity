@@ -42,6 +42,7 @@ ActiveRecord::Schema.define :version => 0 do
   end
 
   create_table :active_record_objects, :force => true do |t|
+    t.string :prop
   end
 
   create_table :active_record_has_one_targets, :force => true do |t|
@@ -90,5 +91,15 @@ ActiveRecord::Schema.define :version => 0 do
   create_table :active_record_objects_sequel_has_many_targets, :force => true do |t|
     t.integer :active_record_object_id
     t.integer :sequel_has_many_target_id
+  end
+
+  create_table :active_record_objects_mongo_mapper_autosave_true_has_many_targets, :force => true do |t|
+    t.integer :active_record_object_id
+    t.integer :mongo_mapper_autosave_true_has_many_target_id
+  end
+
+  create_table :active_record_objects_mongo_mapper_autosave_false_has_many_targets, :force => true do |t|
+    t.integer :active_record_object_id
+    t.integer :mongo_mapper_autosave_false_has_many_target_id
   end
 end
