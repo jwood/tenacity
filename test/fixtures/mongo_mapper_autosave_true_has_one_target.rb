@@ -4,5 +4,5 @@ class MongoMapperAutosaveTrueHasOneTarget
 
   key :prop, String
 
-  t_belongs_to :active_record_object
+  t_belongs_to :active_record_object, :autosave => true
 end

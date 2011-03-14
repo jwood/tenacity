@@ -42,6 +42,7 @@ ActiveRecord::Schema.define :version => 0 do
   end
 
   create_table :active_record_objects, :force => true do |t|
+    t.string :prop
   end
 
   create_table :active_record_has_one_targets, :force => true do |t|

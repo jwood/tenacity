@@ -250,6 +250,8 @@ module Tenacity
     #   to leave orphaned records behind.
     # [:readonly]
     #   If true, the associated object is readonly through the association.
+    # [:autosave]
+    #   If true, always save the associated object or destroy it if marked for destruction, when saving the parent object. Off by default.
     #
     # Option examples:
     #   t_belongs_to :project_manager, :class_name => "Person"

@@ -8,7 +8,7 @@ module Tenacity
     def _t_save_autosave_associations
       self.class._tenacity_associations.each do |association|
         if association.autosave == true
-          if association.type == :t_has_one
+          if association.type == :t_has_one || association.type == :t_belongs_to
             associate = instance_variable_get(_t_ivar_name(association))
             associate.save unless associate.nil?
           elsif association.type == :t_has_many
