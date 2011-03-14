@@ -10,7 +10,10 @@ module Tenacity
         if association.autosave == true
           if association.type == :t_has_one
             associate = instance_variable_get(_t_ivar_name(association))
-            associate.save if associate
+            associate.save unless associate.nil?
+          elsif association.type == :t_has_many
+            associates = instance_variable_get(_t_ivar_name(association))
+            associates.each { |associate| associate.save } unless associates.nil?
           end
         end
       end

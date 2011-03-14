@@ -92,12 +92,12 @@ ActiveRecord::Schema.define :version => 0 do
     t.integer :sequel_has_many_target_id
   end
 
-  create_table :active_record_objects_mongo_mapper_autosave_true_has_many_target, :force => true do |t|
+  create_table :active_record_objects_mongo_mapper_autosave_true_has_many_targets, :force => true do |t|
     t.integer :active_record_object_id
     t.integer :mongo_mapper_autosave_true_has_many_target_id
   end
 
-  create_table :active_record_objects_mongo_mapper_autosave_false_has_many_target, :force => true do |t|
+  create_table :active_record_objects_mongo_mapper_autosave_false_has_many_targets, :force => true do |t|
     t.integer :active_record_object_id
     t.integer :mongo_mapper_autosave_false_has_many_target_id
   end

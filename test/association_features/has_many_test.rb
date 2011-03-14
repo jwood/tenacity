@@ -137,6 +137,19 @@ class HasManyTest < Test::Unit::TestCase
         ActiveRecordCar.find(car.id).mongo_mapper_window_ids
     end
 
+    should "save the associated object if autosave is true" do
+      source = ActiveRecordObject.create
+      targets = [MongoMapperAutosaveTrueHasManyTarget.create(:prop => 'abc'), MongoMapperAutosaveTrueHasManyTarget.create(:prop => 'def')]
+      source.mongo_mapper_autosave_true_has_many_targets = targets
+      source.save
+      assert_equal 'abc', source.mongo_mapper_autosave_true_has_many_targets.first.prop
+
+      source.mongo_mapper_autosave_true_has_many_targets.first.prop = 'xyz'
+      source.save
+      source.reload && source.mongo_mapper_autosave_true_has_many_targets(true)
+      assert_equal 'xyz', source.mongo_mapper_autosave_true_has_many_targets.first.prop
+    end
+
     context "with a set of associates that need to be deleted" do
       setup do
         @new_car = ActiveRecordCar.create
