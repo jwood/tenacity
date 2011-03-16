@@ -21,7 +21,7 @@ module Tenacity
       def has_one_associate(association)
         clazz = association.associate_class
         associate = clazz._t_find_first_by_associate(association.foreign_key(self.class), _t_serialize(self.id))
-        associate.nil? ? nil : AssociateProxy.new(associate, association)
+        associate
       end
 
       def set_has_one_associate(association, associate)
