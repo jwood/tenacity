@@ -20,17 +20,19 @@ module Tenacity
 
     def <<(object)
       object.save unless @parent.id.nil?
-      @target << object
+      @target << AssociateProxy.new(object, @association)
     end
 
     def push(*objects)
       objects.each { |object| object.save } unless @parent.id.nil?
-      @target.push(*objects)
+      proxies = objects.map { |object| AssociateProxy.new(object, @association) }
+      @target.push(*proxies)
     end
 
     def concat(objects)
       objects.each { |object| object.save } unless @parent.id.nil?
-      @target.concat(objects)
+      proxies = objects.map { |object| AssociateProxy.new(object, @association) }
+      @target.concat(proxies)
     end
 
     def destroy_all
