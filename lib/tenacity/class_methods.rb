@@ -408,7 +408,9 @@ module Tenacity
       end
 
       define_method("#{association.name}=") do |associates|
-        set_associate(association, associates)
+        set_associate(association, associates) do
+          set_has_many_associates(association, associates)
+        end
       end
 
       define_method("#{ActiveSupport::Inflector.singularize(association.name)}_ids") do

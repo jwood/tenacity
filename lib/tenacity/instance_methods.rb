@@ -10,16 +10,20 @@ module Tenacity
         if association.autosave == true
           if association.type == :t_has_one || association.type == :t_belongs_to
             associate = instance_variable_get(_t_ivar_name(association))
-            associate.save unless associate.nil?
+            autosave_save_or_destroy(associate) unless associate.nil?
           elsif association.type == :t_has_many
             associates = instance_variable_get(_t_ivar_name(association))
-            associates.each { |associate| associate.save } unless associates.nil?
+            associates.each { |associate| autosave_save_or_destroy(associate) } unless associates.nil?
           end
         end
       end
     end
 
     private
+
+    def autosave_save_or_destroy(associate)
+      associate.marked_for_destruction? ? associate.destroy : associate.save
+    end
 
     def get_associate(association, params)
       _t_reload unless id.nil?
@@ -33,11 +37,13 @@ module Tenacity
     end
 
     def set_associate(association, associate)
-      yield if block_given?
-      instance_variable_set _t_ivar_name(association), get_association_target(association, associate)
+      associate = yield if block_given?
+      instance_variable_set _t_ivar_name(association), create_proxy(associate, association)
     end
 
     def create_proxy(value, association)
+      return value if value.respond_to?(:proxy_respond_to?)
+
       if multiple_associates?(association, value)
         value.map! { |v| create_associate_proxy_for(v, association) }
         AssociatesProxy.new(self, value, association)

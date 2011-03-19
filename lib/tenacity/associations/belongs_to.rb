@@ -19,11 +19,12 @@ module Tenacity
         associate_id = self.send(association.foreign_key)
         clazz = association.associate_class
         associate = clazz._t_find(associate_id)
-        associate.nil? ? nil : AssociateProxy.new(associate, association)
+        associate
       end
 
       def set_belongs_to_associate(association, associate)
         self.send "#{association.foreign_key}=", _t_serialize(associate.id)
+        associate
       end
 
       module ClassMethods #:nodoc:

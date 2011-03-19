@@ -58,6 +58,20 @@ class BelongsToTest < Test::Unit::TestCase
       source.reload && source.active_record_object(true)
       assert_equal 'xyz', source.active_record_object.prop
     end
+
+    should "destroy the associated object if autosave is true and object is marked for destruction" do
+      source = MongoMapperAutosaveTrueHasOneTarget.create
+      target = ActiveRecordObject.create
+      source.active_record_object = target
+      source.save
+      assert_not_nil source.active_record_object(true)
+
+      source.active_record_object.mark_for_destruction
+      assert source.active_record_object.marked_for_destruction?
+      source.save
+      source.reload
+      assert_nil source.active_record_object(true)
+    end
   end
 
 end

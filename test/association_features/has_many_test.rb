@@ -137,17 +137,40 @@ class HasManyTest < Test::Unit::TestCase
         ActiveRecordCar.find(car.id).mongo_mapper_window_ids
     end
 
-    should "save the associated object if autosave is true" do
-      source = ActiveRecordObject.create
-      targets = [MongoMapperAutosaveTrueHasManyTarget.create(:prop => 'abc'), MongoMapperAutosaveTrueHasManyTarget.create(:prop => 'def')]
-      source.mongo_mapper_autosave_true_has_many_targets = targets
-      source.save
-      assert_equal 'abc', source.mongo_mapper_autosave_true_has_many_targets.first.prop
+    context "with an autosave association" do
+      setup do
+        @source = ActiveRecordObject.create
+        @targets = [MongoMapperAutosaveTrueHasManyTarget.create(:prop => 'abc'), MongoMapperAutosaveTrueHasManyTarget.create(:prop => 'def')]
+        @source.mongo_mapper_autosave_true_has_many_targets = @targets
+        @source.save
+        assert_equal 'abc', @source.mongo_mapper_autosave_true_has_many_targets(true).first.prop
+      end
 
-      source.mongo_mapper_autosave_true_has_many_targets.first.prop = 'xyz'
-      source.save
-      source.reload && source.mongo_mapper_autosave_true_has_many_targets(true)
-      assert_equal 'xyz', source.mongo_mapper_autosave_true_has_many_targets.first.prop
+      should "save the associated object if autosave is true" do
+        @source.mongo_mapper_autosave_true_has_many_targets.first.prop = 'xyz'
+        @source.save
+        @source.reload && @source.mongo_mapper_autosave_true_has_many_targets(true)
+        assert_equal 'xyz', @source.mongo_mapper_autosave_true_has_many_targets.first.prop
+      end
+
+      should "destroy the associated object stored in a local variable if autosave is true and object is marked for destruction" do
+        object = @source.mongo_mapper_autosave_true_has_many_targets.first
+        object.mark_for_destruction
+        assert object.marked_for_destruction?
+        @source.save
+        @source.reload && @source.mongo_mapper_autosave_true_has_many_targets(true)
+        assert_equal 1, @source.mongo_mapper_autosave_true_has_many_targets.size
+        assert_equal 'def', @source.mongo_mapper_autosave_true_has_many_targets.first.prop
+      end
+
+      should "destroy the associated object if autosave is true and object is marked for destruction" do
+        @source.mongo_mapper_autosave_true_has_many_targets.first.mark_for_destruction
+        assert @source.mongo_mapper_autosave_true_has_many_targets.first.marked_for_destruction?
+        @source.save
+        @source.reload && @source.mongo_mapper_autosave_true_has_many_targets(true)
+        assert_equal 1, @source.mongo_mapper_autosave_true_has_many_targets.size
+        assert_equal 'def', @source.mongo_mapper_autosave_true_has_many_targets.first.prop
+      end
     end
 
     context "with a set of associates that need to be deleted" do

@@ -7,6 +7,7 @@ module Tenacity
       raise "Cannot create a Tenacity::AssociateProxy with a nil target" if target.nil?
       @target = target
       @association = association
+      @marked_for_destruction = false
     end
 
     def respond_to?(*args)
@@ -32,6 +33,14 @@ module Tenacity
 
     def association_target
       @target
+    end
+
+    def mark_for_destruction
+      @marked_for_destruction = true
+    end
+
+    def marked_for_destruction?
+      @marked_for_destruction
     end
 
     private
