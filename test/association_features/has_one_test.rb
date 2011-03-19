@@ -66,6 +66,20 @@ class HasOneTest < Test::Unit::TestCase
       source.save
       assert_nil MongoMapperAutosaveFalseHasOneTarget.first(:active_record_object_id => source.id)
     end
+
+    should "destroy the associated object if autosave is true and object is marked for destruction" do
+      source = ActiveRecordObject.create
+      target = MongoMapperAutosaveTrueHasOneTarget.new
+      source.mongo_mapper_autosave_true_has_one_target = target
+      source.save
+      assert_not_nil source.mongo_mapper_autosave_true_has_one_target(true)
+
+      source.mongo_mapper_autosave_true_has_one_target.mark_for_destruction
+      assert source.mongo_mapper_autosave_true_has_one_target.marked_for_destruction?
+      source.save
+      source.reload
+      assert_nil source.mongo_mapper_autosave_true_has_one_target(true)
+    end
   end
 
 end

@@ -24,6 +24,7 @@ module Tenacity
 
       def set_belongs_to_associate(association, associate)
         self.send "#{association.foreign_key}=", _t_serialize(associate.id)
+        associate
       end
 
       module ClassMethods #:nodoc:

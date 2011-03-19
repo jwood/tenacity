@@ -32,6 +32,10 @@ module Tenacity
         clazz._t_find_bulk(pruned_ids)
       end
 
+      def set_has_many_associates(association, associates)
+        associates.map { |associate| AssociateProxy.new(associate, association) }
+      end
+
       def has_many_associate_ids(association)
         ids = _t_get_associate_ids(association)
         prune_associate_ids(association, ids)
