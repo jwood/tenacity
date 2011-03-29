@@ -22,6 +22,11 @@ ActiveRecord::Schema.define :version => 0 do
     t.string :mongo_mapper_wheel_id
   end
 
+  create_table :active_record_engines_diagnosables, :force => true do |t|
+    t.integer :active_record_engine_id
+    t.string :diagnosable_id
+  end
+
   create_table :active_record_cars_mongo_mapper_windows, :force => true do |t|
     t.integer :active_record_car_id
     t.string :mongo_mapper_window_id

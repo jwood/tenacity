@@ -20,12 +20,13 @@ module Tenacity
 
       def has_one_associate(association)
         clazz = association.associate_class
-        associate = clazz._t_find_first_by_associate(association.foreign_key(self.class), _t_serialize(self.id))
+        associate = clazz._t_find_first_by_associate(association.foreign_key(self.class), _t_serialize(self.id, association))
         associate
       end
 
       def set_has_one_associate(association, associate)
-        associate.send "#{association.foreign_key(self.class)}=", _t_serialize(self.id)
+        associate.send "#{association.foreign_key(self.class)}=", _t_serialize(self.id, association)
+        associate.send "#{association.polymorphic_type}=", self.class if association.polymorphic?
         associate.save unless association.autosave == false
         associate
       end

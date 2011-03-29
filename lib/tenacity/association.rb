@@ -8,9 +8,6 @@ module Tenacity
     # Type type of the association (<tt>:t_has_one</tt>, <tt>:t_has_many</tt>, or <tt>:t_belongs_to</tt>)
     attr_reader :type
 
-    # The name of the association
-    attr_reader :name
-
     # The class defining the association
     attr_reader :source
 
@@ -31,6 +28,12 @@ module Tenacity
 
     # Should the associated object be saved when the parent object is saved?
     attr_reader :autosave
+
+    # The interface this association is reffered to as
+    attr_reader :as
+
+    # Is this association a polymorphic association?
+    attr_reader :polymorphic
 
     def initialize(type, name, source, options={})
       @type = type
@@ -53,12 +56,19 @@ module Tenacity
       @limit = options[:limit]
       @offset = options[:offset]
       @autosave = options[:autosave]
+      @polymorphic = options[:polymorphic]
+      @as = options[:as]
 
       if @foreign_keys_property
         if @foreign_keys_property.to_s == ActiveSupport::Inflector.singularize(name) + "_ids"
           raise "#{ActiveSupport::Inflector.singularize(name) + "_ids"} is an invalid foreign keys property name"
         end
       end
+    end
+
+    # The name of the association
+    def name
+      @as.nil? ? @name : @as
     end
 
     # Get the associated class
@@ -72,10 +82,9 @@ module Tenacity
     def foreign_key(clazz=nil)
       @foreign_key || begin
         if @type == :t_belongs_to
-          @class_name.underscore + "_id"
+          belongs_to_foreign_key
         elsif @type == :t_has_one || @type == :t_has_many
-          raise "The class of the associate must be provided in order to determine the name of the foreign key" if clazz.nil?
-          "#{ActiveSupport::Inflector.underscore(clazz)}_id"
+          has_x_foreign_key(clazz)
         end
       end
     end
@@ -88,7 +97,14 @@ module Tenacity
     # Get the name of the join table used by this association
     def join_table
       table_name = fetch_table_name
-      @join_table || (name.to_s < table_name ? "#{name}_#{table_name}" : "#{table_name}_#{name}")
+
+      if @type == :t_has_many && polymorphic?
+        association_name_for_join_table = name.to_s.pluralize
+      else
+        association_name_for_join_table = name
+      end
+
+      @join_table || (name.to_s < table_name ? "#{association_name_for_join_table}_#{table_name}" : "#{table_name}_#{association_name_for_join_table}")
     end
 
     # Get the name of the column in the join table that represents this object
@@ -107,6 +123,16 @@ module Tenacity
       @readonly == true
     end
 
+    # Is this association a polymorphic association?
+    def polymorphic?
+      @polymorphic == true || !@as.nil?
+    end
+
+    # The name of the property that stores the polymorphic type (for polymorphic associations)
+    def polymorphic_type
+      (name.to_s + "_type").to_sym
+    end
+
     private
 
     def fetch_table_name
@@ -114,6 +140,23 @@ module Tenacity
         @source.table_name.to_s
       else
         "#{ActiveSupport::Inflector.underscore(@source)}s"
+      end
+    end
+
+    def belongs_to_foreign_key
+      if polymorphic?
+        (name.to_s + "_id").to_sym
+      else
+        @class_name.underscore + "_id"
+      end
+    end
+
+    def has_x_foreign_key(clazz)
+      raise "The class of the associate must be provided in order to determine the name of the foreign key" if clazz.nil?
+      if polymorphic?
+        (@as.to_s + "_id").to_sym
+      else
+        "#{ActiveSupport::Inflector.underscore(clazz)}_id"
       end
     end
   end
