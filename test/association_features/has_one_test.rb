@@ -80,6 +80,17 @@ class HasOneTest < Test::Unit::TestCase
       source.reload
       assert_nil source.mongo_mapper_autosave_true_has_one_target(true)
     end
+
+    should "be able to store an object via its polymorphic interface" do
+      circuit_board = MongoMapperCircuitBoard.create
+      alternator = MongoMapperAlternator.create
+      alternator.diagnosable = circuit_board
+      alternator.save
+
+      component = MongoMapperAlternator.find(alternator.id).diagnosable
+      assert_equal circuit_board, component
+      assert_equal 'MongoMapperAlternator', component.diagnosable_type
+    end
   end
 
 end

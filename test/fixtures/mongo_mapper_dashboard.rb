@@ -9,4 +9,6 @@ class MongoMapperDashboard
 
   t_has_many :vents, :class_name => 'MongoMapperVent', :foreign_keys_property => 'dashboard_vent_ids'
   t_has_one :ash_tray, :class_name => 'MongoMapperAshTray', :dependent => :destroy
+
+  t_has_many :mongo_mapper_circuit_boards, :as => :diagnosable
 end

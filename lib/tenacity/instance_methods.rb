@@ -72,8 +72,8 @@ module Tenacity
       association.type == :t_has_many && value.is_a?(Enumerable)
     end
 
-    def _t_serialize(object)
-      self.class._t_serialize(object)
+    def _t_serialize(object, association=nil)
+      self.class._t_serialize(object, association)
     end
 
   end
