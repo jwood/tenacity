@@ -57,6 +57,19 @@ ActiveRecord::Schema.define :version => 0 do
     t.string :mongo_mapper_object_id
     t.string :mongoid_object_id
     t.integer :sequel_object_id
+
+    t.string :active_record_has_one_target_testable_id
+    t.string :active_record_has_one_target_testable_type
+    t.string :couch_rest_has_one_target_testable_id
+    t.string :couch_rest_has_one_target_testable_type
+    t.string :data_mapper_has_one_target_testable_id
+    t.string :data_mapper_has_one_target_testable_type
+    t.string :mongo_mapper_has_one_target_testable_id
+    t.string :mongo_mapper_has_one_target_testable_type
+    t.string :mongoid_has_one_target_testable_id
+    t.string :mongoid_has_one_target_testable_type
+    t.string :sequel_has_one_target_testable_id
+    t.string :sequel_has_one_target_testable_type
   end
 
   create_table :active_record_has_many_targets, :force => true do |t|

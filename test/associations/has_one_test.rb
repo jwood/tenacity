@@ -63,6 +63,22 @@ class HasOneTest < Test::Unit::TestCase
         assert_not_nil @target_class._t_find(serialize_id(@target))
         assert_nil @target_class._t_find(serialize_id(@target)).send(foreign_key_id_for(target, :belongs_to))
       end
+
+      context "with a polymorphic association" do
+        setup do
+          @foreign_key = "#{target}_has_one_target_testable"
+          @polymorphic_type = "#{target}_has_one_target_testable_type"
+        end
+
+        should "be able to store an object via its polymorphic interface" do
+          @source.send("#{@foreign_key}=", @target)
+          @source.save
+
+          reloaded_target = @source_class._t_find(serialize_id(@source)).send(@foreign_key)
+          assert_equal @target, reloaded_target
+          assert_equal @source_class.to_s, reloaded_target.send(@polymorphic_type)
+        end
+      end
     end
   end
 
