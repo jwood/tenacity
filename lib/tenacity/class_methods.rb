@@ -184,6 +184,8 @@ module Tenacity
     #   If true, the associated object is readonly through the association.
     # [:autosave]
     #   If true, always save the associated object or destroy it if marked for destruction, when saving the parent object. Off by default.
+    # [:as]
+    #   Specifies a polymorphic interface (See <tt>t_belongs_to</tt>).
     #
     # Option examples:
     #   t_has_one :credit_card, :dependent => :destroy  # destroys the associated credit card
@@ -191,6 +193,7 @@ module Tenacity
     #   t_has_one :project_manager, :class_name => "Person"
     #   t_has_one :project_manager, :foreign_key => "project_id"  # within class named SecretProject
     #   t_has_one :boss, :readonly => :true
+    #   t_has_one :attachment, :as => :attachable
     #
     def t_has_one(name, options={})
       extend(Associations::HasOne::ClassMethods)
@@ -252,11 +255,15 @@ module Tenacity
     #   If true, the associated object is readonly through the association.
     # [:autosave]
     #   If true, always save the associated object or destroy it if marked for destruction, when saving the parent object. Off by default.
+    # [:polymorphic]
+    #   Specify this association is a polymorphic association by passing +true+. (*Note*: IDs for polymorphic associations are always
+    #   stored as strings in the database.)
     #
     # Option examples:
     #   t_belongs_to :project_manager, :class_name => "Person"
     #   t_belongs_to :valid_coupon, :class_name => "Coupon", :foreign_key => "coupon_id"
     #   t_belongs_to :project, :readonly => true
+    #   t_belongs_to :attachable, :polymorphic => true
     #
     def t_belongs_to(name, options={})
       extend(Associations::BelongsTo::ClassMethods)
