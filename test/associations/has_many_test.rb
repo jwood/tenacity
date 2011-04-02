@@ -77,8 +77,8 @@ class HasManyTest < Test::Unit::TestCase
         end
 
         should "return an empty array if the association is not set" do
-          source = @source_class.create({})
-          assert_set_equal [], @source_class._t_find(serialize_id(source)).send(@foreign_key)
+          s = @source_class.create({})
+          assert_set_equal [], @source_class._t_find(serialize_id(s)).send(@foreign_key)
         end
 
         should "be able to destroy the associated object when an object is destroyed" do
@@ -112,6 +112,22 @@ class HasManyTest < Test::Unit::TestCase
           assert_nil @target_class._t_find(serialize_id(@target_1)).send(foreign_key_id_for(target, :belongs_to))
           assert_nil @target_class._t_find(serialize_id(@target_2)).send(foreign_key_id_for(target, :belongs_to))
           assert_nil @target_class._t_find(serialize_id(@target_3)).send(foreign_key_id_for(target, :belongs_to))
+        end
+      end
+
+      context "with polymorphic associations" do
+        setup do
+          @foreign_key = "#{target}_has_many_target_testable"
+          @polymorphic_type = "#{target}_has_many_target_testable_type"
+        end
+
+        should "be able to store an object via its polymorphic interface" do
+          @source.send("#{@foreign_key}=", [@target_1, @target_2, @target_3])
+          @source.save
+
+          [@target_1, @target_2, @target_3].each { |t| t._t_reload }
+          assert_set_equal [@target_1, @target_2, @target_3], @source_class._t_find(serialize_id(@source)).send(@foreign_key)
+          [@target_1, @target_2, @target_3].each { |t| assert_equal @source_class.to_s, t.send(@polymorphic_type) }
         end
       end
     end
