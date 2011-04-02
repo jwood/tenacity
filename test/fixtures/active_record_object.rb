@@ -22,6 +22,13 @@ class ActiveRecordObject < ActiveRecord::Base
   require_mongoid { t_has_many :mongoid_has_many_targets }
   t_has_many :sequel_has_many_targets
 
+  t_has_many :active_record_has_many_targets, :as => :active_record_has_many_target_testable
+  t_has_many :couch_rest_has_many_targets, :as => :couch_rest_has_many_target_testable
+  t_has_many :data_mapper_has_many_targets, :as => :data_mapper_has_many_target_testable
+  t_has_many :mongo_mapper_has_many_targets, :as => :mongo_mapper_has_many_target_testable
+  require_mongoid { t_has_many :mongoid_has_many_targets, :as => :mongoid_has_many_target_testable }
+  t_has_many :sequel_has_many_targets, :as => :sequel_has_many_target_testable
+
   t_has_one :mongo_mapper_autosave_true_has_one_target, :autosave => true
   t_has_one :mongo_mapper_autosave_false_has_one_target, :autosave => false
   t_has_many :mongo_mapper_autosave_true_has_many_targets, :autosave => true

@@ -13,6 +13,7 @@
   * Added support for the :limit option to the t_has_many association
   * Added support for the :offset option to the t_has_many association
   * Added support for the :autosave option to all associations
+  * Added support for polymorphic associations
 
 == 0.3.0
 

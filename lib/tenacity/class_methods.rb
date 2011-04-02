@@ -103,6 +103,30 @@ module Tenacity
   #   (the owner of the collection) is not yet stored in the database.
   # * All unsaved members of the collection are automatically saved when the parent is saved.
   #
+  # === Polymorphic Associations
+  #
+  # Polymorphic associations on models are not restricted on what types of models they can be associated with.  Rather, they
+  # specify an interface that a +t_has_many+ association must adhere to.
+  #
+  #   class Asset < ActiveRecord::Base
+  #     include Tenacity
+  #     t_belongs_to :attachable, :polymorphic => true
+  #   end
+  #
+  #   class Post
+  #     include MongoMapper::Document
+  #     include Tenacity
+  #     t_has_many :assets, :as => :attachable         # The :as option specifies the polymorphic interface to use.
+  #   end
+  #
+  #   @asset.attachable = @post
+  #
+  # This works by using a type field/column in addition to a foreign key to specify the associated record.  In the Asset example, you'd need
+  # an +attachable_id+ field and an +attachable_type+ string field on your model.
+  #
+  # IDs for polymorphic associations are always stored as strings in the database, since we cannot determine the true type of the
+  # id when the association is defined.
+  #
   # == Caching
   #
   # All of the methods are built on a simple caching principle that will keep the result
@@ -392,6 +416,8 @@ module Tenacity
     #   Results are ordered by a string representation of the id.
     # [:autosave]
     #   If true, always save any loaded members and destroy members marked for destruction, when saving the parent object. Off by default.
+    # [:as]
+    #   Specifies a polymorphic interface (See <tt>t_belongs_to</tt>).
     #
     # Option examples:
     #   t_has_many :products, :class_name => "SpecialProduct"
@@ -402,6 +428,7 @@ module Tenacity
     #       :association_foreign_key => "mgr_id", :association_key => "proj_id"
     #   t_has_many :tasks, :dependent => :destroy
     #   t_has_many :reports, :readonly => true
+    #   t_has_many :tags, :as => :taggable
     #
     def t_has_many(name, options={})
       extend(Associations::HasMany::ClassMethods)

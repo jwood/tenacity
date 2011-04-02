@@ -88,7 +88,8 @@ module Tenacity
           associates = (record.instance_variable_get record._t_ivar_name(association)) || []
           associates.each do |associate|
             associate._t_reload
-            associate.send("#{association.foreign_key(record.class)}=", _t_serialize(record.id))
+            associate.send("#{association.foreign_key(record.class)}=", _t_serialize(record.id, association))
+            associate.send "#{association.polymorphic_type}=", self.to_s if association.polymorphic?
             save_associate(associate)
           end
 
@@ -120,7 +121,7 @@ module Tenacity
         def get_current_associates(record, association)
           clazz = association.associate_class
           property_name = association.foreign_key(record.class)
-          clazz._t_find_all_by_associate(property_name, _t_serialize(record.id))
+          clazz._t_find_all_by_associate(property_name, _t_serialize(record.id, association))
         end
 
         def destroy_orphaned_associates(association, old_associates, associates)
