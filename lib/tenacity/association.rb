@@ -72,8 +72,12 @@ module Tenacity
     end
 
     # Get the associated class
-    def associate_class
-      @clazz ||= Kernel.const_get(@class_name)
+    def associate_class(object=nil)
+      if @type == :t_belongs_to && polymorphic?
+        Kernel.const_get(object.send(polymorphic_type))
+      else
+        @clazz ||= Kernel.const_get(@class_name)
+      end
     end
 
     # Get the foreign key used by this association. <tt>t_has_one</tt> and
