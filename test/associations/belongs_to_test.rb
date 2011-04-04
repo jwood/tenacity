@@ -56,6 +56,22 @@ class BelongsToTest < Test::Unit::TestCase
         assert_nil @source_class._t_find(serialize_id(@source))
         assert_nil @target_class._t_find(serialize_id(@target))
       end
+
+      context "with a polymorphic association" do
+        setup do
+          @foreign_key = "#{source}_has_one_target_testable"
+          @polymorphic_type = "#{source}_has_one_target_testable_type"
+        end
+
+        should "be able to create a polymorphic association" do
+          @target.send("#{@foreign_key}=", @source)
+          @target.save
+
+          reloaded_source = @target_class._t_find(serialize_id(@target)).send(@foreign_key)
+          assert_equal @source, reloaded_source
+          assert_equal @source_class.to_s, @target.send(@polymorphic_type)
+        end
+      end
     end
   end
 
