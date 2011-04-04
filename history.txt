@@ -1,10 +1,10 @@
-== Next version
+== 0.4.0
 
 * Major enhancements
 
   * Tenacity will no longer convert foreign keys to strings before storing them
     in the database.  Instead, the ID will be stored without any modification
-    (if at all possible).
+    (when possible).
 
 * Minor enhancements
 
@@ -13,7 +13,7 @@
   * Added support for the :limit option to the t_has_many association
   * Added support for the :offset option to the t_has_many association
   * Added support for the :autosave option to all associations
-  * Added support for polymorphic associations
+  * Added support for polymorphic associations to all associations
 
 == 0.3.0
 
