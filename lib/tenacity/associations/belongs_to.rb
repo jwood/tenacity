@@ -17,13 +17,14 @@ module Tenacity
 
       def belongs_to_associate(association)
         associate_id = self.send(association.foreign_key)
-        clazz = association.associate_class
+        clazz = association.associate_class(self)
         associate = clazz._t_find(associate_id)
         associate
       end
 
       def set_belongs_to_associate(association, associate)
         self.send "#{association.foreign_key}=", _t_serialize(associate.id)
+        self.send "#{association.polymorphic_type}=", associate.class.to_s if association.polymorphic?
         associate
       end
 

@@ -137,6 +137,19 @@ class HasManyTest < Test::Unit::TestCase
         ActiveRecordCar.find(car.id).mongo_mapper_window_ids
     end
 
+    should "be able to store objects via their polymorphic interface" do
+      circuit_board_1 = MongoMapperCircuitBoard.create
+      circuit_board_2 = MongoMapperCircuitBoard.create
+      circuit_board_3 = MongoMapperCircuitBoard.create
+      engine = ActiveRecordEngine.create
+      engine.diagnosable = [circuit_board_1, circuit_board_2, circuit_board_3]
+      engine.save
+
+      components = ActiveRecordEngine.find(engine.id).diagnosable
+      assert_set_equal [circuit_board_1, circuit_board_2, circuit_board_3], components
+      assert_set_equal ['ActiveRecordEngine', 'ActiveRecordEngine', 'ActiveRecordEngine'], components.map {|c| c.diagnosable_type}
+    end
+
     context "with an autosave association" do
       setup do
         @source = ActiveRecordObject.create

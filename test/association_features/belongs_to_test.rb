@@ -72,6 +72,16 @@ class BelongsToTest < Test::Unit::TestCase
       source.reload
       assert_nil source.active_record_object(true)
     end
+
+    should "be able to create a polymorphic association" do
+      circuit_board = MongoMapperCircuitBoard.create
+      alternator = MongoMapperAlternator.create
+      circuit_board.diagnosable = alternator
+      circuit_board.save
+
+      assert_equal alternator, MongoMapperCircuitBoard.find(circuit_board.id).diagnosable
+      assert_equal 'MongoMapperAlternator', circuit_board.diagnosable_type
+    end
   end
 
 end
