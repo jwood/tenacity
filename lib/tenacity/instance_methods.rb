@@ -13,7 +13,10 @@ module Tenacity
             autosave_save_or_destroy(associate) unless associate.nil?
           elsif association.type == :t_has_many
             associates = instance_variable_get(_t_ivar_name(association))
-            associates.each { |associate| autosave_save_or_destroy(associate) } unless associates.nil?
+            unless associates.nil?
+              associates.each { |associate| autosave_save_or_destroy(associate) }
+              instance_variable_set(_t_ivar_name(association), associates.reject { |associate| associate.marked_for_destruction? })
+            end
           end
         end
       end
