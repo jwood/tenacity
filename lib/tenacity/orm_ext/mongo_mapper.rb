@@ -76,7 +76,7 @@ module Tenacity
         def _t_initialize_has_many_association(association)
           unless self.respond_to?(association.foreign_keys_property)
             key association.foreign_keys_property, Array
-            after_save { |record| _t_save_associates(record, association) }
+            after_save { |record| record.class._t_save_associates(record, association) }
             after_destroy { |record| record._t_cleanup_has_many_association(association) }
           end
         end
