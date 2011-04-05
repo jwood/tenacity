@@ -34,7 +34,7 @@ Gem::Specification.new do |s|
 
   # MongoDB
   # mongo_mapper dependency defined in Gemfile
-  s.add_development_dependency "bson_ext", "~> 1.2.4"
+  s.add_development_dependency "bson_ext", "~> 1.3.0"
   s.add_development_dependency "mongoid", "~> 2.0.0.beta"
 
   # CouchDB
