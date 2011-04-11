@@ -36,13 +36,13 @@ module Tenacity
     end
 
     def destroy_all
-      ids = prepare_for_delete
-      @association.associate_class._t_delete(ids)
+      remove_associates_from_parent
+      @association.associate_class._t_delete(@parent._t_get_associate_ids(@association))
     end
 
     def delete_all
-      ids = prepare_for_delete
-      @association.associate_class._t_delete(ids, false)
+      remove_associates_from_parent
+      @association.associate_class._t_delete(@parent._t_get_associate_ids(@association), false)
     end
 
     def inspect
@@ -51,11 +51,9 @@ module Tenacity
 
     private
 
-    def prepare_for_delete
-      ids = @parent._t_get_associate_ids(@association)
+    def remove_associates_from_parent
       @parent._t_remove_associates(@association)
       @parent.save
-      ids
     end
 
     def method_missing(method, *args)
