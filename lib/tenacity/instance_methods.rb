@@ -6,17 +6,15 @@ module Tenacity
     end
 
     def _t_save_autosave_associations
-      self.class._tenacity_associations.each do |association|
-        if association.autosave == true
-          if association.type == :t_has_one || association.type == :t_belongs_to
-            associate = instance_variable_get(_t_ivar_name(association))
-            autosave_save_or_destroy(associate) unless associate.nil?
-          elsif association.type == :t_has_many
-            associates = instance_variable_get(_t_ivar_name(association))
-            unless associates.nil?
-              associates.each { |associate| autosave_save_or_destroy(associate) }
-              instance_variable_set(_t_ivar_name(association), associates.reject { |associate| associate.marked_for_destruction? })
-            end
+      self.class._tenacity_associations.select { |a| a.autosave == true }.each do |association|
+        if association.type == :t_has_one || association.type == :t_belongs_to
+          associate = instance_variable_get(_t_ivar_name(association))
+          autosave_save_or_destroy(associate) unless associate.nil?
+        elsif association.type == :t_has_many
+          associates = instance_variable_get(_t_ivar_name(association))
+          unless associates.nil?
+            associates.each { |associate| autosave_save_or_destroy(associate) }
+            instance_variable_set(_t_ivar_name(association), associates.reject { |associate| associate.marked_for_destruction? })
           end
         end
       end
