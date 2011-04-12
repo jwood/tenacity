@@ -35,11 +35,11 @@ Gem::Specification.new do |s|
   # MongoDB
   # mongo_mapper dependency defined in Gemfile
   s.add_development_dependency "bson_ext", "~> 1.3.0"
-  s.add_development_dependency "mongoid", "~> 2.0.0.beta"
+  s.add_development_dependency "mongoid", "~> 2.0.0"
 
   # CouchDB
   s.add_development_dependency "couchrest", "~> 1.0.0"
-  s.add_development_dependency "couchrest_model", "~> 1.0.0.beta"
+  s.add_development_dependency "couchrest_model", "~> 1.0.0"
 
   s.files        = `git ls-files`.split("\n")
   s.executables  = `git ls-files`.split("\n").map{|f| f =~ /^bin\/(.*)/ ? $1 : nil}.compact
