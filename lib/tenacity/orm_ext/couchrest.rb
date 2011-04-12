@@ -108,7 +108,7 @@ module Tenacity
           unless self.respond_to?(association.foreign_keys_property)
             property association.foreign_keys_property, :type => [id_class_for(association)]
             view_by association.foreign_keys_property
-            after_save { |record| record.class._t_save_associates(record, association) if record.class.respond_to?(:_t_save_associates) }
+            after_save { |record| record.class._t_save_associates(record, association) }
             after_destroy { |record| record._t_cleanup_has_many_association(association) }
           end
         end
