@@ -33,7 +33,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "sequel", "~> 3.19.0"
 
   # MongoDB
-  # mongo_mapper dependency defined in Gemfile
+  s.add_development_dependency "mongo_mapper", "~> 0.9.0"
   s.add_development_dependency "bson_ext", "~> 1.3.0"
   s.add_development_dependency "mongoid", "~> 2.0.0"
 
