@@ -41,6 +41,9 @@ Gem::Specification.new do |s|
   s.add_development_dependency "couchrest", "~> 1.0.0"
   s.add_development_dependency "couchrest_model", "~> 1.0.0"
 
+  # Riak
+  s.add_development_dependency "ripple", "~> 0.9.2"
+
   s.files        = `git ls-files`.split("\n")
   s.executables  = `git ls-files`.split("\n").map{|f| f =~ /^bin\/(.*)/ ? $1 : nil}.compact
   s.require_path = 'lib'

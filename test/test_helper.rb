@@ -21,6 +21,7 @@ require File.join(File.dirname(__FILE__), 'helpers', 'couch_rest_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'data_mapper_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'mongo_mapper_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'mongoid_test_helper')
+require File.join(File.dirname(__FILE__), 'helpers', 'ripple_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'sequel_test_helper')
 
 Dir[File.join(File.dirname(__FILE__), 'fixtures', '*.rb')].each { |file| autoload(file[file.rindex('/') + 1..-4].camelcase, file) }
@@ -40,8 +41,10 @@ def setup_fixtures
         clazz.destroy
       elsif filename =~ /\/couch_rest/
         # CouchDB fixtures are destroyed with the database
+      elsif filename =~ /\/ripple/
+        Riak.client.bucket.keys { |keys| keys.each { |k| Riak.client.bucket.delete(k) } }
       else
-        puts "WARN: Don't know how to clear fixtures for #{clazz}"
+        puts "WARNING: Don't know how to clear fixtures for #{clazz}"
       end
     rescue NameError
     end
