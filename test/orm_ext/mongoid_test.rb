@@ -52,7 +52,7 @@ require_mongoid do
         target = MongoidHasOneTarget.create
         target.mongoid_object_id = '101'
         assert_equal '101', target.mongoid_object_id
-        target.reload
+        target._t_reload
         assert_nil target.mongoid_object_id
       end
 

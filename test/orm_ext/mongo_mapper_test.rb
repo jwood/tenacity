@@ -51,7 +51,7 @@ class MongoMapperTest < Test::Unit::TestCase
       target = MongoMapperHasOneTarget.create
       target.mongo_mapper_object_id = '101'
       assert_equal '101', target.mongo_mapper_object_id
-      target.reload
+      target._t_reload
       assert_nil target.mongo_mapper_object_id
     end
 

@@ -53,7 +53,7 @@ class DataMapperTest < Test::Unit::TestCase
       other_object = MongoMapperObject.create
       object.mongo_mapper_object_id = other_object.id
       assert_equal other_object.id.to_s, object.mongo_mapper_object_id
-      object.reload
+      object._t_reload
       assert_nil object.mongo_mapper_object_id
     end
 
