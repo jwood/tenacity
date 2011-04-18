@@ -4,7 +4,7 @@ module Tenacity
     # defined on the object.  Tenacity will define the keys that it needs
     # to support the relationships.  Take the following class for example:
     #
-    #   class Car < ActiveRecord::Base
+    #   class Car
     #     include MongoMapper::Document
     #     include Tenacity
     #

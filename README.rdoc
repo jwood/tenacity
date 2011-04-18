@@ -111,7 +111,7 @@ See EXTEND.rdoc for information on extending Tenacity to work with other databas
 
 == Development
 
-* SQLite, MongoDB, Riak, and CouchDB must be installed and configured.
+* SQLite, MongoDB, Riak, and CouchDB must be installed, configured, and running.
 * Install the dependencies
 
   bundle install

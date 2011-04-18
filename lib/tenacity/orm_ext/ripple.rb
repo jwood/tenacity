@@ -1,5 +1,39 @@
 module Tenacity
   module OrmExt
+    # Tenacity relationships on Ripple objects require no special properties
+    # defined on the object.  Tenacity will define the properties that it needs
+    # to support the relationships.  Take the following class for example:
+    #
+    #   class Car
+    #     include Ripple::Document
+    #     include Tenacity
+    #
+    #     t_has_many    :wheels
+    #     t_has_one     :dashboard
+    #     t_belongs_to  :driver
+    #   end
+    #
+    # == t_belongs_to
+    #
+    # The +t_belongs_to+ association will define a property named after the association.
+    # The example above will create a property named <tt>:driver_id</tt>  The +t_belongs_to+
+    # relationship will also create a bucket in Riak that acts as an index to find
+    # objects by their foreign key.  The bucket will be named after the Ripple class
+    # and the name of the property used to store the foreign key.  In the above example,
+    # the bucket will be named car_driver_id.
+    #
+    #
+    # == t_has_one
+    #
+    # The +t_has_one+ association will not define any new properties on the object, since
+    # the associated object holds the foreign key.
+    #
+    #
+    # == t_has_many
+    #
+    # The +t_has_many+ association will define a property named after the association.
+    # The example above will create a property named <tt>:wheels_ids</tt>
+    #
     module Ripple
 
       def self.setup(model) #:nodoc:
