@@ -42,7 +42,11 @@ def setup_fixtures
       elsif filename =~ /\/couch_rest/
         # CouchDB fixtures are destroyed with the database
       elsif filename =~ /\/ripple/
-        Riak.client.bucket.keys { |keys| keys.each { |k| Riak.client.bucket.delete(k) } }
+        Ripple.client.buckets.each do |bucket|
+          if bucket.name == clazz.bucket.name || bucket.name =~ /^tenacity_test_/
+            bucket.keys { |keys| keys.each { |k| bucket.delete(k) } }
+          end
+        end
       else
         puts "WARNING: Don't know how to clear fixtures for #{clazz}"
       end
@@ -129,7 +133,8 @@ def foreign_key_id_for(extension, type)
 end
 
 def assert_set_equal(expecteds, actuals, message = nil)
-  assert_equal expecteds && Set.new(expecteds), actuals && Set.new(actuals), message
+  assert ((expecteds && Set.new(expecteds)) == (actuals && Set.new(actuals))) || (expecteds == actuals),
+    "#{expecteds.inspect} expected but was #{actuals.inspect}"
 end
 
 def serialize_id(object)
