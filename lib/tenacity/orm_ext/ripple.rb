@@ -28,7 +28,9 @@ module Tenacity
         end
 
         def _t_find_bulk(ids)
-          (find(_t_serialize_ids(ids)) || []).reject(&:nil?)
+          objects = find(_t_serialize_ids(ids)) || []
+          objects = [objects] unless objects.respond_to?(:each)
+          objects.reject(&:nil?)
         end
 
         def _t_find_first_by_associate(property, id)
