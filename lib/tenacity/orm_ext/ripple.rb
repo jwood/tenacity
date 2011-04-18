@@ -20,7 +20,7 @@ module Tenacity
     # relationship will also create a bucket in Riak that acts as an index to find
     # objects by their foreign key.  The bucket will be named after the Ripple class
     # and the name of the property used to store the foreign key.  In the above example,
-    # the bucket will be named car_driver_id.
+    # the bucket will be named tenacity_car_driver_id.
     #
     #
     # == t_has_one
