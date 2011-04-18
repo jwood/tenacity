@@ -4,7 +4,9 @@ class HasOneTest < Test::Unit::TestCase
 
   context "A class with a has_one association to another class" do
     setup do
-      setup_all_fixtures
+      setup_fixtures
+      setup_couchdb_fixtures
+
       @climate_control_unit = ActiveRecordClimateControlUnit.create
       @dashboard = MongoMapperDashboard.create(:active_record_climate_control_unit => @climate_control_unit)
     end

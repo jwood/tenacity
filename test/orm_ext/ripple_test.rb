@@ -5,7 +5,7 @@ require_ripple do
 
     context "The Ripple extension" do
       setup do
-        setup_fixtures
+        setup_ripple_fixtures
       end
 
       should "be able to find the object in the database" do
