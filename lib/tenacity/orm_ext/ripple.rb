@@ -186,10 +186,24 @@ module Tenacity
         end
 
         def create_associate_indexes
+          manage_associate_indexes(:create)
+        end
+
+        def delete_associate_indexes
+          manage_associate_indexes(:delete)
+        end
+
+        def manage_associate_indexes(operation)
           associations = self.class._t_belongs_to_associations || []
           associations.each do |association|
             associate_id = self.send(association.foreign_key)
-            create_associate_index(association, associate_id) unless associate_id.nil?
+            unless associate_id.nil?
+              if operation == :create
+                create_associate_index(association, associate_id)
+              else
+                delete_associate_index(association, associate_id)
+              end
+            end
           end
         end
 
@@ -203,14 +217,6 @@ module Tenacity
             object.data = [self.id]
           end
           object.store
-        end
-
-        def delete_associate_indexes
-          associations = self.class._t_belongs_to_associations || []
-          associations.each do |association|
-            associate_id = self.send(association.foreign_key)
-            delete_associate_index(association, associate_id) unless associate_id.nil?
-          end
         end
 
         def delete_associate_index(association, associate_id)
