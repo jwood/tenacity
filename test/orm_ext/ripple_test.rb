@@ -119,10 +119,10 @@ require_ripple do
         assert !RippleObject.bucket.exist?(object_2.id)
         assert !RippleObject.bucket.exist?(object_3.id)
       end
+    end
 
-      def association
-        Tenacity::Association.new(:t_has_many, :ripple_has_many_targets, RippleObject)
-      end
+    def association
+      Tenacity::Association.new(:t_has_many, :ripple_has_many_targets, RippleObject)
     end
   end
 end
