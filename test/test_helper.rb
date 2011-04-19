@@ -21,6 +21,7 @@ require File.join(File.dirname(__FILE__), 'helpers', 'couch_rest_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'data_mapper_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'mongo_mapper_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'mongoid_test_helper')
+require File.join(File.dirname(__FILE__), 'helpers', 'ripple_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'sequel_test_helper')
 
 Dir[File.join(File.dirname(__FILE__), 'fixtures', '*.rb')].each { |file| autoload(file[file.rindex('/') + 1..-4].camelcase, file) }
@@ -40,8 +41,10 @@ def setup_fixtures
         clazz.destroy
       elsif filename =~ /\/couch_rest/
         # CouchDB fixtures are destroyed with the database
+      elsif filename =~ /\/ripple/
+        # Ripple fixtures are destroyed explicitly in setup_ripple_fixtures
       else
-        puts "WARN: Don't know how to clear fixtures for #{clazz}"
+        puts "WARNING: Don't know how to clear fixtures for #{clazz}"
       end
     rescue NameError
     end
@@ -63,24 +66,28 @@ def setup_couchdb_fixtures
   COUCH_DB.recreate! rescue nil
 end
 
-def setup_all_fixtures
-  setup_fixtures
-  setup_couchdb_fixtures
+def setup_ripple_fixtures
+  bucket_names = ripple_classes.map { |clazz| clazz.bucket.name }
+
+  # XXX: This is --INCREDIBLY-- slow, but I cannot find a better/faster way of doing it
+  Ripple.client.buckets.each do |bucket|
+    if bucket_names.include?(bucket.name) || bucket.name =~ /^tenacity_test_/
+      bucket.keys { |keys| keys.each { |k| bucket.delete(k) } }
+    end
+  end
 end
 
 def setup_fixtures_for(source, target)
-  if source == :couch_rest || target == :couch_rest
-    setup_all_fixtures
-  else
-    setup_fixtures
-  end
+  setup_fixtures
+  setup_couchdb_fixtures if source == :couch_rest || target == :couch_rest
+  setup_ripple_fixtures if source == :ripple || target == :ripple
 end
 
 def orm_extensions
   if ENV['QUICK'] == 'true'
     extensions = [:active_record, :mongo_mapper]
   else
-    extensions = [:active_record, :couch_rest, :data_mapper, :mongo_mapper, :sequel]
+    extensions = [:active_record, :couch_rest, :data_mapper, :mongo_mapper, :ripple, :sequel]
     require_mongoid { extensions << :mongoid }
     extensions
   end
@@ -126,10 +133,18 @@ def foreign_key_id_for(extension, type)
 end
 
 def assert_set_equal(expecteds, actuals, message = nil)
-  assert_equal expecteds && Set.new(expecteds), actuals && Set.new(actuals), message
+  assert ((expecteds && Set.new(expecteds)) == (actuals && Set.new(actuals))) || (expecteds == actuals),
+    "#{expecteds.inspect} expected but was #{actuals.inspect}"
 end
 
 def serialize_id(object)
   object.class._t_serialize(object.id)
+end
+
+def ripple_classes
+  Dir.glob(File.join(File.dirname(__FILE__), 'fixtures', 'ripple_*.rb')).map do |filename|
+    filename =~ /.*\/(.*)\.rb/
+    Kernel.const_get($1.camelcase)
+  end
 end
 

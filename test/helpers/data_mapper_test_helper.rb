@@ -33,6 +33,11 @@ migration 1, :create_join_tables do
       column :mongoid_has_many_target_id, String
     end
 
+    create_table :data_mapper_objects_ripple_has_many_targets do
+      column :data_mapper_object_id, Integer
+      column :ripple_has_many_target_id, String
+    end
+
     create_table :data_mapper_objects_sequel_has_many_targets do
       column :data_mapper_object_id, Integer
       column :sequel_has_many_target_id, Integer
@@ -61,6 +66,11 @@ migration 1, :create_join_tables do
     create_table :data_mapper_objects_mongoid_has_many_target_testables do
       column :data_mapper_object_id, Integer
       column :mongoid_has_many_target_testable_id, String
+    end
+
+    create_table :data_mapper_objects_ripple_has_many_target_testables do
+      column :data_mapper_object_id, Integer
+      column :ripple_has_many_target_testable_id, String
     end
 
     create_table :data_mapper_objects_sequel_has_many_target_testables do

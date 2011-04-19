@@ -87,6 +87,7 @@ much the same way, supporting many of the same options.
 * DataMapper
 * MongoMapper
 * Mongoid
+* Ripple
 * Sequel
 
 See EXTEND.rdoc for information on extending Tenacity to work with other database clients.
@@ -110,7 +111,7 @@ See EXTEND.rdoc for information on extending Tenacity to work with other databas
 
 == Development
 
-* SQLite, MongoDB, and CouchDB must be installed and configured.
+* SQLite, MongoDB, Riak, and CouchDB must be installed, configured, and running.
 * Install the dependencies
 
   bundle install

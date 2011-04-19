@@ -1,3 +1,9 @@
+== Next version
+
+* Major enhancements
+
+  * Added support for Ripple
+
 == 0.4.1
 
 * Bug fixes

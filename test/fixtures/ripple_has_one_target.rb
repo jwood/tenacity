@@ -1,6 +1,6 @@
-require_mongoid do
-  class MongoidHasOneTarget
-    include Mongoid::Document
+require_ripple do
+  class RippleHasOneTarget
+    include Ripple::Document
     include Tenacity
 
     t_belongs_to :active_record_object

@@ -14,6 +14,7 @@ DB.create_table :sequel_has_one_targets do
   Integer :data_mapper_object_id
   String :mongo_mapper_object_id
   String :mongoid_object_id
+  String :ripple_object_id
   Integer :sequel_object_id
 
   String :active_record_has_one_target_testable_id
@@ -26,6 +27,8 @@ DB.create_table :sequel_has_one_targets do
   String :mongo_mapper_has_one_target_testable_type
   String :mongoid_has_one_target_testable_id
   String :mongoid_has_one_target_testable_type
+  String :ripple_has_one_target_testable_id
+  String :ripple_has_one_target_testable_type
   String :sequel_has_one_target_testable_id
   String :sequel_has_one_target_testable_type
 end
@@ -38,6 +41,7 @@ DB.create_table :sequel_has_many_targets do
   Integer :data_mapper_object_id
   String :mongo_mapper_object_id
   String :mongoid_object_id
+  String :ripple_object_id
   Integer :sequel_object_id
 
   String :active_record_has_many_target_testable_id
@@ -50,6 +54,8 @@ DB.create_table :sequel_has_many_targets do
   String :mongo_mapper_has_many_target_testable_type
   String :mongoid_has_many_target_testable_id
   String :mongoid_has_many_target_testable_type
+  String :ripple_has_many_target_testable_id
+  String :ripple_has_many_target_testable_type
   String :sequel_has_many_target_testable_id
   String :sequel_has_many_target_testable_type
 end
@@ -77,6 +83,11 @@ end
 DB.create_table :mongoid_has_many_targets_sequel_objects do
   Integer :sequel_object_id
   String :mongoid_has_many_target_id
+end
+
+DB.create_table :ripple_has_many_targets_sequel_objects do
+  Integer :sequel_object_id
+  String :ripple_has_many_target_id
 end
 
 DB.create_table :sequel_has_many_targets_sequel_objects do
@@ -107,6 +118,11 @@ end
 DB.create_table :mongoid_has_many_target_testables_sequel_objects do
   Integer :sequel_object_id
   String :mongoid_has_many_target_testable_id
+end
+
+DB.create_table :ripple_has_many_target_testables_sequel_objects do
+  Integer :sequel_object_id
+  String :ripple_has_many_target_testable_id
 end
 
 DB.create_table :sequel_has_many_target_testables_sequel_objects do

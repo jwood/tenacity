@@ -20,6 +20,7 @@ require 'yard'
 task :default => :test
 
 Rake::TestTask.new(:test) do |test|
+  ENV['TENACITY_TEST'] = 'true'
   test.libs << 'lib' << 'test' << 'test/fixtures'
   test.pattern = ENV['TEST'] || "test/**/*_test.rb"
   test.verbose = true

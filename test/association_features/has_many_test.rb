@@ -4,7 +4,9 @@ class HasManyTest < Test::Unit::TestCase
 
   context "A class with a belongs_to association to another class" do
     setup do
-      setup_all_fixtures
+      setup_fixtures
+      setup_couchdb_fixtures
+
       @car = ActiveRecordCar.create
       @wheels = [MongoMapperWheel.create, MongoMapperWheel.create, MongoMapperWheel.create]
 

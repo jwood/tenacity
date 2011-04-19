@@ -51,7 +51,7 @@ class ActiveRecordTest < Test::Unit::TestCase
     should "be able to reload an object from the database" do
       object = ActiveRecordHasOneTarget.create
       object.mongo_mapper_object_id = 'abc123'
-      object.reload
+      object._t_reload
       assert_nil object.mongo_mapper_object_id
     end
 

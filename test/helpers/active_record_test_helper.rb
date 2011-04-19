@@ -56,6 +56,7 @@ ActiveRecord::Schema.define :version => 0 do
     t.integer :data_mapper_object_id
     t.string :mongo_mapper_object_id
     t.string :mongoid_object_id
+    t.string :ripple_object_id
     t.integer :sequel_object_id
 
     t.string :active_record_has_one_target_testable_id
@@ -68,6 +69,8 @@ ActiveRecord::Schema.define :version => 0 do
     t.string :mongo_mapper_has_one_target_testable_type
     t.string :mongoid_has_one_target_testable_id
     t.string :mongoid_has_one_target_testable_type
+    t.string :ripple_has_one_target_testable_id
+    t.string :ripple_has_one_target_testable_type
     t.string :sequel_has_one_target_testable_id
     t.string :sequel_has_one_target_testable_type
   end
@@ -78,6 +81,7 @@ ActiveRecord::Schema.define :version => 0 do
     t.integer :data_mapper_object_id
     t.string :mongo_mapper_object_id
     t.string :mongoid_object_id
+    t.string :ripple_object_id
     t.integer :sequel_object_id
 
     t.string :active_record_has_many_target_testable_id
@@ -90,6 +94,8 @@ ActiveRecord::Schema.define :version => 0 do
     t.string :mongo_mapper_has_many_target_testable_type
     t.string :mongoid_has_many_target_testable_id
     t.string :mongoid_has_many_target_testable_type
+    t.string :ripple_has_many_target_testable_id
+    t.string :ripple_has_many_target_testable_type
     t.string :sequel_has_many_target_testable_id
     t.string :sequel_has_many_target_testable_type
   end
@@ -117,6 +123,11 @@ ActiveRecord::Schema.define :version => 0 do
   create_table :active_record_objects_mongoid_has_many_targets, :force => true do |t|
     t.integer :active_record_object_id
     t.string :mongoid_has_many_target_id
+  end
+
+  create_table :active_record_objects_ripple_has_many_targets, :force => true do |t|
+    t.integer :active_record_object_id
+    t.string :ripple_has_many_target_id
   end
 
   create_table :active_record_objects_sequel_has_many_targets, :force => true do |t|
@@ -162,6 +173,11 @@ ActiveRecord::Schema.define :version => 0 do
   create_table :active_record_objects_mongoid_has_many_target_testables, :force => true do |t|
     t.integer :active_record_object_id
     t.string :mongoid_has_many_target_testable_id
+  end
+
+  create_table :active_record_objects_ripple_has_many_target_testables, :force => true do |t|
+    t.integer :active_record_object_id
+    t.string :ripple_has_many_target_testable_id
   end
 
 end

@@ -52,7 +52,7 @@ class SequelTest < Test::Unit::TestCase
       object = SequelHasOneTarget.create
       object.mongo_mapper_object_id = 'abc123'
       assert_equal 'abc123', object.mongo_mapper_object_id
-      object.reload
+      object._t_reload
       assert_nil object.mongo_mapper_object_id
     end
 
