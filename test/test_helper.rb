@@ -67,12 +67,14 @@ def setup_couchdb_fixtures
 end
 
 def setup_ripple_fixtures
-  bucket_names = ripple_classes.map { |clazz| clazz.bucket.name }
+  require_ripple do
+    bucket_names = ripple_classes.map { |clazz| clazz.bucket.name }
 
-  # XXX: This is --INCREDIBLY-- slow, but I cannot find a better/faster way of doing it
-  Ripple.client.buckets.each do |bucket|
-    if bucket_names.include?(bucket.name) || bucket.name =~ /^tenacity_test_/
-      bucket.keys { |keys| keys.each { |k| bucket.delete(k) } }
+    # XXX: This is --INCREDIBLY-- slow, but I cannot find a better/faster way of doing it
+    Ripple.client.buckets.each do |bucket|
+      if bucket_names.include?(bucket.name) || bucket.name =~ /^tenacity_test_/
+        bucket.keys { |keys| keys.each { |k| bucket.delete(k) } }
+      end
     end
   end
 end
@@ -87,8 +89,9 @@ def orm_extensions
   if ENV['QUICK'] == 'true'
     extensions = [:active_record, :mongo_mapper]
   else
-    extensions = [:active_record, :couch_rest, :data_mapper, :mongo_mapper, :ripple, :sequel]
+    extensions = [:active_record, :couch_rest, :data_mapper, :mongo_mapper, :sequel]
     require_mongoid { extensions << :mongoid }
+    require_ripple { extensions << :ripple }
     extensions
   end
 end
