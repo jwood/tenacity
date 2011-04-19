@@ -119,6 +119,36 @@ require_ripple do
         assert !RippleObject.bucket.exist?(object_2.id)
         assert !RippleObject.bucket.exist?(object_3.id)
       end
+
+      should "create associate indexes when source object is saved" do
+        target_1 = RippleHasManyTarget.create
+        target_2 = RippleHasManyTarget.create
+        target_3 = RippleHasManyTarget.create
+        object = RippleObject.create
+        object.ripple_has_many_targets = [target_1, target_2, target_3]
+        object.save
+
+        bucket = ::Ripple.client.bucket('tenacity_test_ripple_has_many_target_ripple_object_id')
+        assert_set_equal [target_1.id, target_2.id, target_3.id], bucket.get(object.id).data
+      end
+
+      should "destroy associate indexes when source object is saved" do
+        target_1 = RippleHasManyTarget.create
+        target_2 = RippleHasManyTarget.create
+        target_3 = RippleHasManyTarget.create
+        object = RippleObject.create
+        object.ripple_has_many_targets = [target_1, target_2, target_3]
+        object.save
+
+        bucket = ::Ripple.client.bucket('tenacity_test_ripple_has_many_target_ripple_object_id')
+        assert_set_equal [target_1.id, target_2.id, target_3.id], bucket.get(object.id).data
+        target_2.destroy
+        assert_set_equal [target_1.id, target_3.id], bucket.get(object.id).data
+
+        target_1.destroy
+        target_3.destroy
+        assert_set_equal [], bucket.get(object.id).data
+      end
     end
 
     def association
