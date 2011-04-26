@@ -38,10 +38,12 @@ require_ripple do
       end
 
       should "be able to find the associates of an object" do
-        target_1 = RippleHasOneTarget.create(:ripple_object_id => '101')
-        target_2 = RippleHasOneTarget.create(:ripple_object_id => '101')
-        target_3 = RippleHasOneTarget.create(:ripple_object_id => '102')
-        assert_set_equal [target_1, target_2], RippleHasOneTarget._t_find_all_by_associate(:ripple_object_id, '101')
+        object_1 = RippleObject.create
+        object_2 = RippleObject.create
+        target_1 = RippleHasOneTarget.create(:ripple_object => object_1)
+        target_2 = RippleHasOneTarget.create(:ripple_object => object_1)
+        target_3 = RippleHasOneTarget.create(:ripple_object => object_2)
+        assert_set_equal [target_1, target_2], RippleHasOneTarget._t_find_all_by_associate(:ripple_object_id, object_1.id)
       end
 
       should "return an empty array if the object has no associates" do

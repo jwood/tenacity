@@ -82,6 +82,11 @@ class BelongsToTest < Test::Unit::TestCase
       assert_equal alternator, MongoMapperCircuitBoard.find(circuit_board.id).diagnosable
       assert_equal 'MongoMapperAlternator', circuit_board.diagnosable_type
     end
+
+    should "not be able to create the relationship if the target object does not exist" do
+      ash_tray = MongoMapperAshTray.new(:mongo_mapper_dashboard_id => 'abc123')
+      assert_raises(Tenacity::ObjectDoesNotExistError) { ash_tray.save }
+    end
   end
 
 end

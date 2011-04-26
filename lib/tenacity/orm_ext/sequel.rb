@@ -112,6 +112,11 @@ module Tenacity
       module InstanceMethods #:nodoc:
         include Tenacity::OrmExt::Helpers
 
+        def before_save
+          _t_verify_associates_exist
+          super
+        end
+
         def after_save
           _t_save_autosave_associations
 

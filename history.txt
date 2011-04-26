@@ -2,6 +2,8 @@
 
 * Major enhancements
 
+  * Added code to verify target object in a t_belongs_to association exists when
+    saving the source object
   * Added support for Ripple
 
 == 0.4.1

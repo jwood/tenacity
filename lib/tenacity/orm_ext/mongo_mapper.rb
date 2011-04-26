@@ -66,6 +66,7 @@ module Tenacity
         end
 
         def _t_initialize_tenacity
+          before_save { |record| record._t_verify_associates_exist }
           after_save { |record| record._t_save_autosave_associations }
         end
 

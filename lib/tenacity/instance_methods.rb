@@ -20,6 +20,17 @@ module Tenacity
       end
     end
 
+    def _t_verify_associates_exist
+      self.class._tenacity_associations.select { |a| a.type == :t_belongs_to }.each do |association|
+        associate_id = self.send(association.foreign_key)
+        unless associate_id.nil?
+          associate_class = association.associate_class(self)
+          associate = associate_class._t_find(_t_serialize(associate_id, association))
+          raise ObjectDoesNotExistError.new("#{associate_class} object with an id of #{associate_id} does not exist!") if associate.nil?
+        end
+      end
+    end
+
     private
 
     def autosave_save_or_destroy(associate)

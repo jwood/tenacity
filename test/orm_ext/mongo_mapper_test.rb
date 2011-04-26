@@ -37,10 +37,12 @@ class MongoMapperTest < Test::Unit::TestCase
     end
 
     should "be able to find the associates of an object" do
-      target_1 = MongoMapperHasOneTarget.create(:mongo_mapper_object_id => '101')
-      target_2 = MongoMapperHasOneTarget.create(:mongo_mapper_object_id => '101')
-      target_3 = MongoMapperHasOneTarget.create(:mongo_mapper_object_id => '102')
-      assert_set_equal [target_1, target_2], MongoMapperHasOneTarget._t_find_all_by_associate(:mongo_mapper_object_id, '101')
+      object_1 = MongoMapperObject.create
+      object_2 = MongoMapperObject.create
+      target_1 = MongoMapperHasOneTarget.create(:mongo_mapper_object_id => object_1.id)
+      target_2 = MongoMapperHasOneTarget.create(:mongo_mapper_object_id => object_1.id)
+      target_3 = MongoMapperHasOneTarget.create(:mongo_mapper_object_id => object_2.id)
+      assert_set_equal [target_1, target_2], MongoMapperHasOneTarget._t_find_all_by_associate(:mongo_mapper_object_id, object_1.id)
     end
 
     should "return an empty array if the object has no associates" do
