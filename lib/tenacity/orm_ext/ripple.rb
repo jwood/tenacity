@@ -149,6 +149,7 @@ module Tenacity
         end
 
         def save
+          before_save
           super
           after_save
         end
@@ -163,6 +164,10 @@ module Tenacity
         end
 
         private
+
+        def before_save
+          _t_verify_associates_exist
+        end
 
         def after_save
           create_associate_indexes

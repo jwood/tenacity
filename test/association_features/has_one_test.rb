@@ -7,8 +7,8 @@ class HasOneTest < Test::Unit::TestCase
       setup_fixtures
       setup_couchdb_fixtures
 
-      @climate_control_unit = ActiveRecordClimateControlUnit.create
-      @dashboard = MongoMapperDashboard.create(:active_record_climate_control_unit => @climate_control_unit)
+      @dashboard = MongoMapperDashboard.create
+      @climate_control_unit = ActiveRecordClimateControlUnit.create(:mongo_mapper_dashboard => @dashboard)
     end
 
     should "memoize the association" do
@@ -25,8 +25,9 @@ class HasOneTest < Test::Unit::TestCase
     end
 
     should "be able to specify the class name of the associated class" do
+      dashboard = MongoMapperDashboard.create
       ash_tray = MongoMapperAshTray.create
-      dashboard = MongoMapperDashboard.create(:ash_tray => ash_tray)
+      dashboard.ash_tray = ash_tray
       assert_equal ash_tray, dashboard.ash_tray
     end
 

@@ -37,11 +37,12 @@ class CouchRestTest < Test::Unit::TestCase
     end
 
     should "be able to find all associates of an object" do
-      object = CouchRestObject.create({})
-      target_1 = CouchRestHasManyTarget.create(:couch_rest_object_id => object.id)
-      target_2 = CouchRestHasManyTarget.create(:couch_rest_object_id => object.id)
-      target_3 = CouchRestHasManyTarget.create(:couch_rest_object_id => 'abc123')
-      assert_set_equal [target_1, target_2], CouchRestHasManyTarget._t_find_all_by_associate(:couch_rest_object_id, object.id)
+      object_1 = CouchRestObject.create({})
+      object_2 = CouchRestObject.create({})
+      target_1 = CouchRestHasManyTarget.create(:couch_rest_object_id => object_1.id)
+      target_2 = CouchRestHasManyTarget.create(:couch_rest_object_id => object_1.id)
+      target_3 = CouchRestHasManyTarget.create(:couch_rest_object_id => object_2.id)
+      assert_set_equal [target_1, target_2], CouchRestHasManyTarget._t_find_all_by_associate(:couch_rest_object_id, object_1.id)
     end
 
     should "return an empty array if unable to find the associates of an object" do

@@ -38,10 +38,12 @@ require_mongoid do
       end
 
       should "be able to find the associates of an object" do
-        target_1 = MongoidHasOneTarget.create(:mongoid_object_id => '101')
-        target_2 = MongoidHasOneTarget.create(:mongoid_object_id => '101')
-        target_3 = MongoidHasOneTarget.create(:mongoid_object_id => '102')
-        assert_set_equal [target_1, target_2], MongoidHasOneTarget._t_find_all_by_associate(:mongoid_object_id, '101')
+        object_1 = MongoidObject.create
+        object_2 = MongoidObject.create
+        target_1 = MongoidHasOneTarget.create(:mongoid_object_id => object_1.id)
+        target_2 = MongoidHasOneTarget.create(:mongoid_object_id => object_1.id)
+        target_3 = MongoidHasOneTarget.create(:mongoid_object_id => object_2.id)
+        assert_set_equal [target_1, target_2], MongoidHasOneTarget._t_find_all_by_associate(:mongoid_object_id, object_1.id)
       end
 
       should "return an empty array if the object has no associates" do

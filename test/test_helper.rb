@@ -91,7 +91,7 @@ def orm_extensions
   else
     extensions = [:active_record, :couch_rest, :data_mapper, :mongo_mapper, :sequel]
     require_mongoid { extensions << :mongoid }
-    require_ripple { extensions << :ripple }
+    require_ripple { extensions << :ripple } if ENV['LONG'] == 'true'
     extensions
   end
 end

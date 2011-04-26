@@ -38,10 +38,12 @@ require_ripple do
       end
 
       should "be able to find the associates of an object" do
-        target_1 = RippleHasOneTarget.create(:ripple_object_id => '101')
-        target_2 = RippleHasOneTarget.create(:ripple_object_id => '101')
-        target_3 = RippleHasOneTarget.create(:ripple_object_id => '102')
-        assert_set_equal [target_1, target_2], RippleHasOneTarget._t_find_all_by_associate(:ripple_object_id, '101')
+        object_1 = RippleObject.create
+        object_2 = RippleObject.create
+        target_1 = RippleHasOneTarget.create(:ripple_object => object_1)
+        target_2 = RippleHasOneTarget.create(:ripple_object => object_1)
+        target_3 = RippleHasOneTarget.create(:ripple_object => object_2)
+        assert_set_equal [target_1, target_2], RippleHasOneTarget._t_find_all_by_associate(:ripple_object_id, object_1.id)
       end
 
       should "return an empty array if the object has no associates" do
@@ -118,6 +120,36 @@ require_ripple do
         assert !RippleObject.bucket.exist?(object_1.id)
         assert !RippleObject.bucket.exist?(object_2.id)
         assert !RippleObject.bucket.exist?(object_3.id)
+      end
+
+      should "create associate indexes when source object is saved" do
+        target_1 = RippleHasManyTarget.create
+        target_2 = RippleHasManyTarget.create
+        target_3 = RippleHasManyTarget.create
+        object = RippleObject.create
+        object.ripple_has_many_targets = [target_1, target_2, target_3]
+        object.save
+
+        bucket = ::Ripple.client.bucket('tenacity_test_ripple_has_many_target_ripple_object_id')
+        assert_set_equal [target_1.id, target_2.id, target_3.id], bucket.get(object.id).data
+      end
+
+      should "destroy associate indexes when source object is saved" do
+        target_1 = RippleHasManyTarget.create
+        target_2 = RippleHasManyTarget.create
+        target_3 = RippleHasManyTarget.create
+        object = RippleObject.create
+        object.ripple_has_many_targets = [target_1, target_2, target_3]
+        object.save
+
+        bucket = ::Ripple.client.bucket('tenacity_test_ripple_has_many_target_ripple_object_id')
+        assert_set_equal [target_1.id, target_2.id, target_3.id], bucket.get(object.id).data
+        target_2.destroy
+        assert_set_equal [target_1.id, target_3.id], bucket.get(object.id).data
+
+        target_1.destroy
+        target_3.destroy
+        assert_set_equal [], bucket.get(object.id).data
       end
     end
 

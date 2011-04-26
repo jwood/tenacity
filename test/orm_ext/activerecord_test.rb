@@ -37,11 +37,12 @@ class ActiveRecordTest < Test::Unit::TestCase
     end
 
     should "be able to find all associates of an object" do
-      object = ActiveRecordObject.create
-      has_many_target_1 = ActiveRecordHasManyTarget.create(:active_record_object_id => object.id)
-      has_many_target_2 = ActiveRecordHasManyTarget.create(:active_record_object_id => object.id)
-      has_many_target_3 = ActiveRecordHasManyTarget.create(:active_record_object_id => '9999999')
-      assert_set_equal [has_many_target_1, has_many_target_2], ActiveRecordHasManyTarget._t_find_all_by_associate(:active_record_object_id, object.id)
+      object_1 = ActiveRecordObject.create
+      object_2 = ActiveRecordObject.create
+      has_many_target_1 = ActiveRecordHasManyTarget.create(:active_record_object_id => object_1.id)
+      has_many_target_2 = ActiveRecordHasManyTarget.create(:active_record_object_id => object_1.id)
+      has_many_target_3 = ActiveRecordHasManyTarget.create(:active_record_object_id => object_2.id)
+      assert_set_equal [has_many_target_1, has_many_target_2], ActiveRecordHasManyTarget._t_find_all_by_associate(:active_record_object_id, object_1.id)
     end
 
     should "return an empty array able to find the associates of an object" do
