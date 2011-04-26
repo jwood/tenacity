@@ -32,6 +32,12 @@ task :quick_test do
   Rake::Task["test"].invoke
 end
 
+desc 'Run the full test suite, testing all ORM/ODMs against each other'
+task :long_test do
+  ENV['LONG'] = 'true'
+  Rake::Task["test"].invoke
+end
+
 Rcov::RcovTask.new do |test|
   test.libs << 'test' << 'test/fixtures'
   test.pattern = 'test/**/*_test.rb'
