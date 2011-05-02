@@ -87,6 +87,13 @@ class BelongsToTest < Test::Unit::TestCase
       ash_tray = MongoMapperAshTray.new(:mongo_mapper_dashboard_id => 'abc123')
       assert_raises(Tenacity::ObjectDoesNotExistError) { ash_tray.save }
     end
+
+    should "be able to create the relationship if the target object does not exist and foreign key constraints are disabled" do
+      Tenacity::Association.any_instance.stubs(:disable_foreign_key_constraints?).returns(:true)
+      ash_tray = MongoMapperAshTray.new(:mongo_mapper_dashboard_id => 'abc123')
+      ash_tray.save
+      assert_equal 'abc123', MongoMapperAshTray.find(ash_tray.id).mongo_mapper_dashboard_id
+    end
   end
 
 end

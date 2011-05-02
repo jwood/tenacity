@@ -35,6 +35,9 @@ module Tenacity
     # Is this association a polymorphic association?
     attr_reader :polymorphic
 
+    # Should this association disable foreign key like constraints
+    attr_reader :disable_foreign_key_constraints
+
     def initialize(type, name, source, options={})
       @type = type
       @name = name
@@ -58,6 +61,7 @@ module Tenacity
       @autosave = options[:autosave]
       @polymorphic = options[:polymorphic]
       @as = options[:as]
+      @disable_foreign_key_constraints = options[:disable_foreign_key_constraints]
 
       if @foreign_keys_property
         if @foreign_keys_property.to_s == ActiveSupport::Inflector.singularize(name) + "_ids"
@@ -135,6 +139,11 @@ module Tenacity
     # The name of the property that stores the polymorphic type (for polymorphic associations)
     def polymorphic_type
       (name.to_s + "_type").to_sym
+    end
+
+    # Should this association disable foreign key like constraints?
+    def disable_foreign_key_constraints?
+      @disable_foreign_key_constraints == true
     end
 
     private
