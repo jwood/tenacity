@@ -10,4 +10,8 @@ module Tenacity
   # Raised when one of the objects specified in the relationship does not exist in the database
   class ObjectDoesNotExistError < TenacityError
   end
+
+  # Rasied when an attempt is made to delete an object whose id is in use by an association
+  class ObjectIdInUseError < TenacityError
+  end
 end

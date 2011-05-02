@@ -34,7 +34,22 @@ module Tenacity
     private
 
     def autosave_save_or_destroy(associate)
-      associate.marked_for_destruction? ? associate.destroy : associate.save
+      associate.marked_for_destruction? ? autosave_destroy(associate) : associate.save
+    end
+
+    def autosave_destroy(associate)
+      nullify_has_one_associations(associate)
+      associate.destroy
+    end
+
+    def nullify_has_one_associations(associate)
+      associate.class._tenacity_associations.select { |a| a.type == :t_has_one }.each do |association|
+        has_one_associate = associate.has_one_associate(association)
+        if has_one_associate
+          has_one_associate.send "#{association.foreign_key(associate.class)}=", nil
+          has_one_associate.save
+        end
+      end
     end
 
     def get_associate(association, params)
