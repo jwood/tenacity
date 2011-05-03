@@ -26,7 +26,6 @@ class HasOneTest < Test::Unit::TestCase
       end
 
       should "be able to invoke the post delete callback" do
-        @source.send("#{@foreign_key}=", @target)
         @source_class._t_delete([serialize_id(@source)])
       end
 

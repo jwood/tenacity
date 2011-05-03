@@ -21,7 +21,7 @@ module Tenacity
     end
 
     def _t_verify_associates_exist
-      self.class._tenacity_associations.select { |a| a.type == :t_belongs_to }.each do |association|
+      associations_requiring_associate_validation.each do |association|
         associate_id = self.send(association.foreign_key)
         unless associate_id.nil?
           associate_class = association.associate_class(self)
@@ -34,7 +34,22 @@ module Tenacity
     private
 
     def autosave_save_or_destroy(associate)
-      associate.marked_for_destruction? ? associate.destroy : associate.save
+      associate.marked_for_destruction? ? autosave_destroy(associate) : associate.save
+    end
+
+    def autosave_destroy(associate)
+      nullify_has_one_associations(associate)
+      associate.destroy
+    end
+
+    def nullify_has_one_associations(associate)
+      associate.class._tenacity_associations.select { |a| a.type == :t_has_one }.each do |association|
+        has_one_associate = associate.has_one_associate(association)
+        if has_one_associate
+          has_one_associate.send "#{association.foreign_key(associate.class)}=", nil
+          has_one_associate.save
+        end
+      end
     end
 
     def get_associate(association, params)
@@ -74,6 +89,10 @@ module Tenacity
 
     def _t_serialize(object, association=nil)
       self.class._t_serialize(object, association)
+    end
+
+    def associations_requiring_associate_validation
+      self.class._tenacity_associations.select { |a| a.foreign_key_constraints_enabled? && a.type == :t_belongs_to }
     end
 
   end

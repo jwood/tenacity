@@ -37,8 +37,8 @@ def setup_fixtures
         clazz.delete_all
       elsif clazz.respond_to?(:db)
         clazz.db["delete from #{clazz.table_name}"].delete
-      elsif clazz.respond_to?(:destroy)
-        clazz.destroy
+      elsif clazz.respond_to?(:destroy!)
+        clazz.destroy!
       elsif filename =~ /\/couch_rest/
         # CouchDB fixtures are destroyed with the database
       elsif filename =~ /\/ripple/

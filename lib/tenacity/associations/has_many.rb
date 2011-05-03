@@ -19,6 +19,8 @@ module Tenacity
               associate.send "#{association.foreign_key(self.class)}=", nil
               associate.save
             end
+          elsif association.foreign_key_constraints_enabled?
+            raise ObjectIdInUseError.new("Unable to delete #{self.class} with id of #{self.id} because its id is being referenced by instances of #{associates.first.class}(id: #{associates.map(&:id).join(',')})!")
           end
         end
       end

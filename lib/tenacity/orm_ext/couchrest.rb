@@ -110,7 +110,7 @@ module Tenacity
             property association.foreign_keys_property, :type => [id_class_for(association)]
             view_by association.foreign_keys_property
             after_save { |record| record.class._t_save_associates(record, association) }
-            after_destroy { |record| record._t_cleanup_has_many_association(association) }
+            before_destroy { |record| record._t_cleanup_has_many_association(association) }
           end
         end
 

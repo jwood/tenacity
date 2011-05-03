@@ -76,14 +76,14 @@ module Tenacity
         end
 
         def _t_initialize_has_one_association(association)
-          after_destroy { |record| record._t_cleanup_has_one_association(association) }
+          before_destroy { |record| record._t_cleanup_has_one_association(association) }
         end
 
         def _t_initialize_has_many_association(association)
           unless self.respond_to?(association.foreign_keys_property)
             field association.foreign_keys_property, :type => Array
             after_save { |record| self.class._t_save_associates(record, association) }
-            after_destroy { |record| record._t_cleanup_has_many_association(association) }
+            before_destroy { |record| record._t_cleanup_has_many_association(association) }
           end
         end
 

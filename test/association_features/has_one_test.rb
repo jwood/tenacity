@@ -94,6 +94,17 @@ class HasOneTest < Test::Unit::TestCase
       assert_equal circuit_board, component
       assert_equal 'MongoMapperAlternator', component.diagnosable_type
     end
+
+    should "not be able to delete an object with an active t_belongs_to association" do
+      assert_raises(Tenacity::ObjectIdInUseError) { MongoMapperDashboard._t_delete(@dashboard.id) }
+      assert_not_nil MongoMapperDashboard._t_find(@dashboard.id)
+    end
+
+    should "be able to delete an object with an active t_belongs_to association if foreign key constraints are disabled" do
+      Tenacity::Association.any_instance.stubs(:foreign_key_constraints_enabled?).returns(false)
+      MongoMapperDashboard._t_delete(@dashboard.id)
+      assert_nil MongoMapperDashboard._t_find(@dashboard.id)
+    end
   end
 
 end

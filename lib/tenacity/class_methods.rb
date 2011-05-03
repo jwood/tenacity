@@ -210,6 +210,9 @@ module Tenacity
     #   If true, always save the associated object or destroy it if marked for destruction, when saving the parent object. Off by default.
     # [:as]
     #   Specifies a polymorphic interface (See <tt>t_belongs_to</tt>).
+    # [:disable_foreign_key_constraints]
+    #   If true, bypass foreign key constraints, like verifying no other objects are storing the key of the source object
+    #   before deleting it.  Defaults to false.
     #
     # Option examples:
     #   t_has_one :credit_card, :dependent => :destroy  # destroys the associated credit card
@@ -282,6 +285,9 @@ module Tenacity
     # [:polymorphic]
     #   Specify this association is a polymorphic association by passing +true+. (*Note*: IDs for polymorphic associations are always
     #   stored as strings in the database.)
+    # [:disable_foreign_key_constraints]
+    #   If true, bypass foreign key constraints, like verifying the target object exists when the relationship is created.
+    #   Defaults to false.
     #
     # Option examples:
     #   t_belongs_to :project_manager, :class_name => "Person"
@@ -418,6 +424,9 @@ module Tenacity
     #   If true, always save any loaded members and destroy members marked for destruction, when saving the parent object. Off by default.
     # [:as]
     #   Specifies a polymorphic interface (See <tt>t_belongs_to</tt>).
+    # [:disable_foreign_key_constraints]
+    #   If true, bypass foreign key constraints, like verifying no other objects are storing the key of the source object
+    #   before deleting it.  Defaults to false.
     #
     # Option examples:
     #   t_has_many :products, :class_name => "SpecialProduct"
