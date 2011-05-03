@@ -101,7 +101,7 @@ class HasOneTest < Test::Unit::TestCase
     end
 
     should "be able to delete an object with an active t_belongs_to association if foreign key constraints are disabled" do
-      Tenacity::Association.any_instance.stubs(:disable_foreign_key_constraints?).returns(:true)
+      Tenacity::Association.any_instance.stubs(:foreign_key_constraints_enabled?).returns(false)
       MongoMapperDashboard._t_delete(@dashboard.id)
       assert_nil MongoMapperDashboard._t_find(@dashboard.id)
     end

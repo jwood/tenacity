@@ -92,7 +92,7 @@ module Tenacity
     end
 
     def associations_requiring_associate_validation
-      self.class._tenacity_associations.select { |a| !a.disable_foreign_key_constraints? && a.type == :t_belongs_to }
+      self.class._tenacity_associations.select { |a| a.foreign_key_constraints_enabled? && a.type == :t_belongs_to }
     end
 
   end

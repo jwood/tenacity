@@ -12,7 +12,7 @@ module Tenacity
           elsif association.dependent == :nullify
             associate.send "#{association.foreign_key(self.class)}=", nil
             associate.save
-          elsif !association.disable_foreign_key_constraints?
+          elsif association.foreign_key_constraints_enabled?
             raise ObjectIdInUseError.new("Unable to delete #{self.class} with id of #{self.id} because its id is being referenced by an instance of #{associate.class}(id: #{associate.id})!")
           end
         end

@@ -141,9 +141,9 @@ module Tenacity
       (name.to_s + "_type").to_sym
     end
 
-    # Should this association disable foreign key like constraints?
-    def disable_foreign_key_constraints?
-      @disable_foreign_key_constraints == true
+    # Are foreign key constraints enabled for this association?
+    def foreign_key_constraints_enabled?
+      @disable_foreign_key_constraints != true
     end
 
     private
