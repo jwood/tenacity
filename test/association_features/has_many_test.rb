@@ -152,6 +152,34 @@ class HasManyTest < Test::Unit::TestCase
       assert_set_equal ['ActiveRecordEngine', 'ActiveRecordEngine', 'ActiveRecordEngine'], components.map {|c| c.diagnosable_type}
     end
 
+    context "with an a active t_belongs_to association that is not auto destroyed" do
+      setup do
+        @car = ActiveRecordCar.create
+        window_1 = MongoMapperWindow.create
+        window_2 = MongoMapperWindow.create
+        window_3 = MongoMapperWindow.create
+        window_4 = MongoMapperWindow.create
+        window_5 = MongoMapperWindow.create
+        window_6 = MongoMapperWindow.create
+        window_7 = MongoMapperWindow.create
+        window_8 = MongoMapperWindow.create
+        window_9 = MongoMapperWindow.create
+        @car.mongo_mapper_windows = [window_1, window_2, window_3, window_4, window_5, window_6, window_7, window_8, window_9]
+        @car.save
+      end
+
+      should "should not eligible for deletion" do
+        assert_raises(Tenacity::ObjectIdInUseError) { ActiveRecordCar._t_delete(@car.id) }
+        assert_not_nil ActiveRecordCar._t_find(@car.id)
+      end
+
+      should "should be eligible for deletion if foreign key constraints are disabled" do
+        Tenacity::Association.any_instance.stubs(:foreign_key_constraints_enabled?).returns(false)
+        ActiveRecordCar._t_delete(@car.id)
+        assert_nil ActiveRecordCar._t_find(@car.id)
+      end
+    end
+
     context "with an autosave association" do
       setup do
         @source = ActiveRecordObject.create

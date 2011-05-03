@@ -98,7 +98,7 @@ module Tenacity
             record.class._t_save_associates(record, association)
           end
 
-          after :destroy do |record|
+          before :destroy do |record|
             record._t_cleanup_has_many_association(association)
           end
         end

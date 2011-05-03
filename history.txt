@@ -4,6 +4,8 @@
 
   * Added code to verify target object in a t_belongs_to association exists when
     saving the source object
+  * Don't allow the source object in a t_has_one or t_has_many association to be
+    deleted if the target object in the association is holding its id
   * Added support for Ripple
 
 == 0.4.1

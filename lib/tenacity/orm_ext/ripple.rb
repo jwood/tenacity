@@ -181,6 +181,9 @@ module Tenacity
         def before_destroy
           associations = self.class._t_has_one_associations || []
           associations.each { |association| self._t_cleanup_has_one_association(association) }
+
+          associations = self.class._t_has_many_associations || []
+          associations.each { |association| self._t_cleanup_has_many_association(association) }
         end
 
         def after_destroy
@@ -188,9 +191,6 @@ module Tenacity
 
           associations = self.class._t_belongs_to_associations || []
           associations.each { |association| self._t_cleanup_belongs_to_association(association) }
-
-          associations = self.class._t_has_many_associations || []
-          associations.each { |association| self._t_cleanup_has_many_association(association) }
         end
 
         def create_associate_indexes
