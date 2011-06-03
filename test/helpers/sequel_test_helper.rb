@@ -1,6 +1,7 @@
 require 'sequel'
 
 DB = Sequel.sqlite
+Sequel::Model.raise_on_save_failure = true
 
 DB.create_table :sequel_objects do
   primary_key :id

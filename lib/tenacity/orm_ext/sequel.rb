@@ -79,7 +79,7 @@ module Tenacity
         end
 
         def _t_find_all_by_associate(property, id)
-          filter(property => _t_serialize(id)).to_a
+          filter(property.to_sym => _t_serialize(id)).to_a
         end
 
         def _t_initialize_tenacity

@@ -12,11 +12,11 @@ module Tenacity
         end
       end
 
-      def _t_serialize_ids(ids)
+      def _t_serialize_ids(ids, association=nil)
         if ids.respond_to?(:map)
-          ids.map { |id| _t_serialize(id) }
+          ids.map { |id| _t_serialize(id, association) }
         else
-          _t_serialize(ids)
+          _t_serialize(ids, association)
         end
       end
 

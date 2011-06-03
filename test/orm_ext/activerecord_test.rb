@@ -73,9 +73,14 @@ class ActiveRecordTest < Test::Unit::TestCase
     end
 
     should "be able to get the ids of the objects associated with the given object" do
-      object = ActiveRecordObject.create
-      object._t_associate_many(association, ['abc123', 'def456', 'ghi789'])
-      assert_set_equal ['abc123', 'def456', 'ghi789'], object._t_get_associate_ids(association)
+      object = ActiveRecordObject.create!
+      has_many_target_1 = MongoMapperHasManyTarget.create!
+      has_many_target_2 = MongoMapperHasManyTarget.create!
+      has_many_target_3 = MongoMapperHasManyTarget.create!
+      object.mongo_mapper_has_many_targets = [has_many_target_1, has_many_target_2, has_many_target_3]
+      object.save
+
+      assert_set_equal [has_many_target_1.id.to_s, has_many_target_2.id.to_s, has_many_target_3.id.to_s], object._t_get_associate_ids(association)
     end
 
     should "return an empty array if there are no objects associated with the given object ids" do

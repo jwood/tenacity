@@ -81,7 +81,7 @@ module Tenacity
           bucket = ::Ripple.client.bucket(_t_bucket_name(property))
           if bucket.exist?(id)
             object = bucket.get(id)
-            find(object.data)
+            find(object.data) || []
           else
             []
           end
@@ -168,10 +168,11 @@ module Tenacity
 
         def before_save
           _t_verify_associates_exist
+          remember_old_associate_ids
         end
 
         def after_save
-          create_associate_indexes
+          update_associate_indexes
           _t_save_autosave_associations
 
           associations = self.class._t_has_many_associations || []
@@ -193,8 +194,20 @@ module Tenacity
           associations.each { |association| self._t_cleanup_belongs_to_association(association) }
         end
 
-        def create_associate_indexes
-          manage_associate_indexes(:create)
+        def remember_old_associate_ids
+          @old_associate_ids = {}
+
+          unless self.id.nil?
+            old_instance = self.class._t_find(self.id)
+            associations = self.class._t_belongs_to_associations || []
+            associations.each do |association|
+              @old_associate_ids[association.name] = old_instance.send(association.foreign_key)
+            end
+          end
+        end
+
+        def update_associate_indexes
+          manage_associate_indexes(:update)
         end
 
         def delete_associate_indexes
@@ -205,35 +218,57 @@ module Tenacity
           associations = self.class._t_belongs_to_associations || []
           associations.each do |association|
             associate_id = self.send(association.foreign_key)
-            unless associate_id.nil?
-              if operation == :create
-                create_associate_index(association, associate_id)
-              else
-                delete_associate_index(association, associate_id)
-              end
+            if operation == :update
+              update_associate_index(association, associate_id)
+            else
+              delete_associate_index(association, associate_id)
             end
           end
         end
 
-        def create_associate_index(association, associate_id)
-          bucket = ::Ripple.client.bucket(self.class.send(:_t_bucket_name, association.foreign_key))
-          if bucket.exist?(associate_id)
-            object = bucket.get(associate_id)
-            object.data << self.id
+        def update_associate_index(association, associate_id)
+          bucket = get_bucket_for_association(association)
+          if !@old_associate_ids[association.name].nil? && associate_id.nil?
+            clear_associate_index_of_nilified_id(association, bucket)
           else
-            object = bucket.new(associate_id)
-            object.data = [self.id]
+            store_id_in_associate_index(associate_id, bucket)
           end
-          object.store
         end
 
-        def delete_associate_index(association, associate_id)
-          bucket = ::Ripple.client.bucket(self.class.send(:_t_bucket_name, association.foreign_key))
-          if bucket.exist?(associate_id)
-            object = bucket.get(associate_id)
+        def store_id_in_associate_index(associate_id, bucket)
+          unless associate_id.nil?
+            if bucket.exist?(associate_id)
+              object = bucket.get(associate_id)
+              object.data << self.id unless object.data.include?(self.id)
+            else
+              object = bucket.new(associate_id)
+              object.data = [self.id]
+            end
+            object.store
+          end
+        end
+
+        def clear_associate_index_of_nilified_id(association, bucket)
+          if bucket.exist?(@old_associate_ids[association.name])
+            object = bucket.get(@old_associate_ids[association.name])
             object.data.delete(self.id)
             object.store
           end
+        end
+
+        def delete_associate_index(association, associate_id)
+          unless associate_id.nil?
+            bucket = get_bucket_for_association(association)
+            if bucket.exist?(associate_id)
+              object = bucket.get(associate_id)
+              object.data.delete(self.id)
+              object.store
+            end
+          end
+        end
+
+        def get_bucket_for_association(association)
+          ::Ripple.client.bucket(self.class.send(:_t_bucket_name, association.foreign_key))
         end
       end
 
