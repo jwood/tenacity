@@ -103,19 +103,6 @@ module Tenacity
           reload
         end
 
-        def _t_clear_associates(association)
-          self.connection.execute("delete from #{association.join_table} where #{association.association_key} = #{_t_serialize_id_for_sql(self.id)}")
-        end
-
-        def _t_associate_many(association, associate_ids)
-          self.transaction do
-            _t_clear_associates(association)
-            associate_ids.each do |associate_id|
-              self.connection.execute("insert into #{association.join_table} (#{association.association_key}, #{association.association_foreign_key}) values (#{_t_serialize_id_for_sql(self.id)}, #{_t_serialize_id_for_sql(associate_id)})")
-            end
-          end
-        end
-
         def _t_get_associate_ids(association)
           return [] if self.id.nil?
           associates = association.associate_class._t_find_all_by_associate(association.foreign_key(self.class), _t_serialize_ids(self.id, association))

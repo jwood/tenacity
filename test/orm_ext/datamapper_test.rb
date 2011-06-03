@@ -90,24 +90,10 @@ class DataMapperTest < Test::Unit::TestCase
         @has_many_target_3 = MongoMapperHasManyTarget.create
       end
 
-      should "be able to clear the associates of a given object" do
-        object = DataMapperObject.create
-        object._t_associate_many(association, [@has_many_target_1.id, @has_many_target_2.id, @has_many_target_3.id])
-        object.save
-        object._t_clear_associates(association)
-        assert_set_equal [], object._t_get_associate_ids(association)
-      end
-
-      should "be able to associate many objects with the given object" do
-        object = DataMapperObject.create
-        object._t_associate_many(association, [@has_many_target_1.id, @has_many_target_2.id, @has_many_target_3.id])
-        rows = DataMapperObject.repository.adapter.select("select mongo_mapper_has_many_target_id from data_mapper_objects_mongo_mapper_has_many_targets where data_mapper_object_id = #{object.id}")
-        assert_set_equal [@has_many_target_1.id.to_s, @has_many_target_2.id.to_s, @has_many_target_3.id.to_s], rows
-      end
-
       should "be able to get the ids of the objects associated with the given object" do
         object = DataMapperObject.create
-        object._t_associate_many(association, [@has_many_target_1.id, @has_many_target_2.id, @has_many_target_3.id])
+        object.mongo_mapper_has_many_targets = [@has_many_target_1, @has_many_target_2, @has_many_target_3]
+        object.save
         assert_set_equal [@has_many_target_1.id.to_s, @has_many_target_2.id.to_s, @has_many_target_3.id.to_s], object._t_get_associate_ids(association)
       end
     end

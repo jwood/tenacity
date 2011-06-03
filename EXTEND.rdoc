@@ -75,21 +75,9 @@ when the after the object has been deleted.
 Reload the object from the database, overwriting the objects properties with
 the data fetched from the database.  Return nothing.
 
-  _t_associate_many(association, associate_ids)
-
-Create has_many associations between this object and the objects with ids
-specified in the array of associate_ids.  This method could involve writing
-the associate_ids into a join table, or into one of the object's properties.
-Return nothing.
-
   _t_get_associate_ids(association)
 
 Get the ids of the objects associated with this object through the specified
 association, and return them in an array.  Return an empty array if there
 are no associated objects.
-
-  _t_clear_associates(association)
-
-Destroy the association between this object and its current associates through
-the specified association.  Return nothing.
 

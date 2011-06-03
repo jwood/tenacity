@@ -32,15 +32,8 @@ module Tenacity
     #
     # == t_has_many
     #
-    # The +t_has_many+ association requires that a join table exist to store the
-    # associations.  The name of the join table follows ActiveRecord conventions.
-    # The name of the join table in this example would be cars_wheels, since cars
-    # comes before wheels when shorted alphabetically.
-    #
-    #   DB.create_table :cars_wheels do
-    #     Integer :car_id
-    #     String :wheel_id
-    #   end
+    # The +t_has_many+ association requires nothing special, as the associates
+    # are looked up using the associate class.
     #
     module Sequel
 
@@ -144,23 +137,11 @@ module Tenacity
           reload
         end
 
-        def _t_clear_associates(association)
-          db["delete from #{association.join_table} where #{association.association_key} = #{_t_serialize_id_for_sql(self.id)}"].delete
-        end
-
-        def _t_associate_many(association, associate_ids)
-          db.transaction do
-            _t_clear_associates(association)
-            associate_ids.each do |associate_id|
-              db["insert into #{association.join_table} (#{association.association_key}, #{association.association_foreign_key}) values (#{_t_serialize_id_for_sql(self.id)}, #{_t_serialize_id_for_sql(associate_id)})"].insert
-            end
-          end
-        end
-
         def _t_get_associate_ids(association)
           return [] if self.id.nil?
-          rows = db["select #{association.association_foreign_key} from #{association.join_table} where #{association.association_key} = #{_t_serialize_id_for_sql(self.id)}"].all
-          rows.map { |row| row[association.association_foreign_key.to_sym] }
+          associates = association.associate_class._t_find_all_by_associate(association.foreign_key(self.class), self.class._t_serialize_ids(self.id, association))
+          ids = associates.map { |a| a.id }
+          self.class._t_serialize_ids(ids, association)
         end
       end
 

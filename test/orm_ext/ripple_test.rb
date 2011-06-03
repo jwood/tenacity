@@ -58,39 +58,19 @@ require_ripple do
         assert_nil target.ripple_object_id
       end
 
-      should "be able to associate many objects with the given object" do
-        target_1 = RippleHasManyTarget.create
-        target_2 = RippleHasManyTarget.create
-        target_3 = RippleHasManyTarget.create
-        object = RippleObject.create
-        object._t_associate_many(association, [target_1.id, target_2.id, target_3.id])
-        assert_set_equal [target_1.id, target_2.id, target_3.id], object.t_ripple_has_many_target_ids
-      end
-
       should "be able to get the ids of the objects associated with the given object" do
         target_1 = RippleHasManyTarget.create
         target_2 = RippleHasManyTarget.create
         target_3 = RippleHasManyTarget.create
         object = RippleObject.create
+        object.ripple_has_many_targets = [target_1, target_2, target_3]
+        object.save
 
-        object._t_associate_many(association, [target_1.id, target_2.id, target_3.id])
         assert_set_equal [target_1.id, target_2.id, target_3.id], object._t_get_associate_ids(association)
       end
 
       should "return an empty array when trying to fetch associate ids for an object with no associates" do
         object = RippleObject.create
-        assert_equal [], object._t_get_associate_ids(association)
-      end
-
-      should "be able to clear the associates of an object" do
-        target_1 = RippleHasManyTarget.create
-        target_2 = RippleHasManyTarget.create
-        target_3 = RippleHasManyTarget.create
-        object = RippleObject.create
-
-        object._t_associate_many(association, [target_1.id, target_2.id, target_3.id])
-        assert_set_equal [target_1.id, target_2.id, target_3.id], object._t_get_associate_ids(association)
-        object._t_clear_associates(association)
         assert_equal [], object._t_get_associate_ids(association)
       end
 

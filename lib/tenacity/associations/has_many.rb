@@ -4,7 +4,6 @@ module Tenacity
 
       def _t_remove_associates(association)
         instance_variable_set(_t_ivar_name(association), [])
-        _t_clear_associates(association)
       end
 
       def _t_cleanup_has_many_association(association)
@@ -89,7 +88,6 @@ module Tenacity
 
           associates = (record.instance_variable_get(record._t_ivar_name(association))) || []
           establish_relationship_in_target_objects(record, association, associates)
-          establish_relationship_in_source_object(record, association, associates)
           destroy_orphaned_associates(association, old_associates, associates)
         end
 
@@ -100,9 +98,6 @@ module Tenacity
             old_associate.send("#{property_name}=", nil)
             save_associate(old_associate)
           end
-
-          record._t_clear_associates(association)
-          save_associate(record)
         end
 
         def save_associate(associate)
@@ -130,14 +125,6 @@ module Tenacity
             associate.send("#{association.foreign_key(record.class)}=", _t_serialize(record.id, association))
             associate.send "#{association.polymorphic_type}=", self.to_s if association.polymorphic?
             save_associate(associate)
-          end
-        end
-
-        def establish_relationship_in_source_object(record, association, associates)
-          unless associates.blank?
-            associate_ids = associates.map { |associate| _t_serialize(associate.id) }
-            record._t_associate_many(association, associate_ids)
-            save_associate(record)
           end
         end
       end

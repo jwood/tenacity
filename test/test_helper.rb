@@ -49,17 +49,6 @@ def setup_fixtures
     rescue NameError
     end
   end
-
-  join_tables = %w{
-                    active_record_cars_mongo_mapper_wheels
-                    active_record_cars_couch_rest_doors
-                    nuts_and_wheels
-                    active_record_has_many_targets_active_record_objects
-                    active_record_objects_mongo_mapper_has_many_targets
-                    active_record_objects_couch_rest_has_many_targets
-                    active_record_objects_mongoid_has_many_targets
-                  }
-  join_tables.each { |join_table| ActiveRecordCar.connection.execute("delete from #{join_table}") }
 end
 
 def setup_couchdb_fixtures

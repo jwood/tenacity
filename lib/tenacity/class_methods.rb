@@ -140,32 +140,6 @@ module Tenacity
   #   project.milestones(true).size  # fetches milestones from the database
   #   project.milestones             # uses the milestone cache
   #
-  # == Join Tables
-  #
-  # One-to-many assocations that contain a relational database backed object as one of
-  # the assocaites are implemented using an intermediate join table. This differs from
-  # ActiveRecord::Associations, where only many-to-many relationships are implemented
-  # using an intermediate join table.
-  #
-  # Tenacity will not create the join table. It assume one exists, and is named properly.
-  # Unless the join table is explicitly specified as an option, it is guessed using the
-  # lexical order of the class names. So a join between Developer and Project will give
-  # the default join table name of "developers_projects" because "D" outranks "P". Note
-  # that this precedence is calculated using the < operator for String. This means that
-  # if the strings are of different lengths, and the strings are equal when compared up
-  # to the shortest length, then the longer string is considered of higher lexical
-  # precedence than the shorter one. For example, one would expect the tables "paper_boxes"
-  # and "papers" to generate a join table name of "papers_paper_boxes" because of the
-  # length of the name "paper_boxes", but it in fact generates a join table name of
-  # "paper_boxes_papers". Be aware of this caveat, and use the custom :join_table option
-  # if you need to.
-  #
-  # The column names used in the join table are guessed to be the names of the associated
-  # classes, suffixed with "_id".  For example, the "developers_projects" join table
-  # mentioned above is expected to have a column named "developer_id" and a column named
-  # "project_id". The <tt>:associate_key</tt> and <tt>:associate_foreign_key</tt> options
-  # can be used to override these defaults.
-  #
   module ClassMethods
     attr_reader :_tenacity_associations
 
@@ -313,10 +287,7 @@ module Tenacity
       end
     end
 
-    # Specifies a one-to-many association. One-to-many associations that contain a
-    # relational database backed object as one of the associates are implemented
-    # using an intermediate join table. See the Join Tables section at the top
-    # for more information.
+    # Specifies a one-to-many association.
     #
     # The following methods for retrieval and query of collections of associated objects will be added:
     #
@@ -381,37 +352,12 @@ module Tenacity
     #   Specify the foreign key used for the association. By default this is guessed to be the name
     #   of this class in lower-case and "_id" suffixed. So a Person class that makes a +t_has_many+
     #   association will use "person_id" as the default <tt>:foreign_key</tt>.
-    # [:foreign_keys_property]
-    #   Specify the name of the property that stores the ids of the associated objects. By default
-    #   this is guessed to be the name of the association with a "t_" prefix and an "_ids" suffix.
-    #   So a class that defines a <tt>t_has_many :people</tt> association will use t_people_ids as
-    #   the property to store the ids of the associated People objects. This option is only valid
-    #   for objects that store associated ids in an array instaed of a join table (CouchRest,
-    #   MongoMapper, etc). <b>WARNING:</b> The name of the association with an "_ids" suffix should
-    #   not be used as the property name, since tenacity adds a method with this name to the object.
     # [:dependent]
     #   If set to <tt>:destroy</tt> all the associated objects are deleted alongside this object
     #   in addition to calling their delete callbacks.  If set to <tt>:delete_all</tt> all
     #   associated objects are deleted *without* calling their delete callbacks.  If set to
     #   <tt>:nullify</tt> all associated objects' foreign keys are set to +NULL+ *without* calling
     #   their save backs.
-    # [:join_table]
-    #   Specify the name of the join table if the default based on lexical order isn't what you want.
-    #   This option is only valid if one of the models in the association is backed by a relational
-    #   database.
-    # [:association_foreign_key]
-    #   Specify the foreign key in the join table used for the association on the receiving side of
-    #   the association. By default this is guessed to be the name of the associated class in
-    #   lower-case and "_id" suffixed. So if a Person class makes a +t_has_many+ association to
-    #   Project, the association will use "project_id" as the default <tt>:association_foreign_key</tt>.
-    #   This option is only valid if one of the associated objects is backed by a relational
-    #   database.
-    # [:association_key]
-    #   Specify the key in the join table used for the association on the declaring side of
-    #   the association. By default this is guessed to be the name of this class in lower-case and
-    #   "_id" suffixed. So if a Person class makes a +t_has_many+ association to Project, the
-    #   association will use "person_id" as the default <tt>:association_key</tt>.  This option is
-    #   only valid if one of the associated objects is backed by a relational database.
     # [:readonly]
     #   If true, all the associated objects are readonly through the association.
     # [:limit]
@@ -431,10 +377,6 @@ module Tenacity
     # Option examples:
     #   t_has_many :products, :class_name => "SpecialProduct"
     #   t_has_many :engineers, :foreign_key => "project_id"  # within class named SecretProject
-    #   t_has_many :engineers, :foreign_keys_property => "worker_ids"
-    #   t_has_many :managers, :join_table => "project_managers_and_projects"
-    #   t_has_many :managers, :join_table => "project_managers_and_projects",
-    #       :association_foreign_key => "mgr_id", :association_key => "proj_id"
     #   t_has_many :tasks, :dependent => :destroy
     #   t_has_many :reports, :readonly => true
     #   t_has_many :tags, :as => :taggable
