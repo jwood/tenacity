@@ -35,6 +35,13 @@ class ClassmethodsTest < Test::Unit::TestCase
     should("respond to mongo_mapper_has_many_target_ids=") { assert @object.respond_to?(:mongo_mapper_has_many_target_ids=) }
   end
 
+  context "A class including Tenacity with no associations" do
+    should "be able to be saved successfully" do
+      object = NoAssociations.new(:name => "Daniel")
+      assert object.save
+    end
+  end
+
   context "The object returned by a has_many association" do
     setup do
       setup_fixtures
