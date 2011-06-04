@@ -69,6 +69,10 @@ module Tenacity
           find(:all, :conditions => ["#{property} = ?", _t_serialize(id)])
         end
 
+        def _t_find_all_ids_by_associate(property, id)
+          connection.select_values("select id from #{table_name} where #{property} = #{_t_serialize_id_for_sql(id)}")
+        end
+
         def _t_initialize_has_one_association(association)
           before_destroy { |record| record._t_cleanup_has_one_association(association) }
         end
@@ -101,13 +105,6 @@ module Tenacity
 
         def _t_reload
           reload
-        end
-
-        def _t_get_associate_ids(association)
-          return [] if self.id.nil?
-          associates = association.associate_class._t_find_all_by_associate(association.foreign_key(self.class), _t_serialize_ids(self.id, association))
-          ids = associates.map { |a| a.id }
-          _t_serialize_ids(ids, association)
         end
       end
 

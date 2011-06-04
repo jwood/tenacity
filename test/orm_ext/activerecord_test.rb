@@ -64,12 +64,12 @@ class ActiveRecordTest < Test::Unit::TestCase
       object.mongo_mapper_has_many_targets = [has_many_target_1, has_many_target_2, has_many_target_3]
       object.save
 
-      assert_set_equal [has_many_target_1.id.to_s, has_many_target_2.id.to_s, has_many_target_3.id.to_s], object._t_get_associate_ids(association)
+      assert_set_equal [has_many_target_1.id, has_many_target_2.id, has_many_target_3.id], MongoMapperHasManyTarget._t_find_all_ids_by_associate("active_record_object_id", object.id)
     end
 
     should "return an empty array if there are no objects associated with the given object ids" do
       object = ActiveRecordObject.create
-      assert_set_equal [], object._t_get_associate_ids(association)
+      assert_set_equal [], MongoMapperHasManyTarget._t_find_all_ids_by_associate("active_record_object_id", object.id)
     end
 
     should "be able to delete a set of objects, issuing their callbacks" do

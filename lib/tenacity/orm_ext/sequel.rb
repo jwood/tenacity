@@ -75,6 +75,11 @@ module Tenacity
           filter(property.to_sym => _t_serialize(id)).to_a
         end
 
+        def _t_find_all_ids_by_associate(property, id)
+          associates = _t_find_all_by_associate(property, id)
+          associates.map { |a| a.id }
+        end
+
         def _t_initialize_tenacity
         end
 
@@ -135,13 +140,6 @@ module Tenacity
 
         def _t_reload
           reload
-        end
-
-        def _t_get_associate_ids(association)
-          return [] if self.id.nil?
-          associates = association.associate_class._t_find_all_by_associate(association.foreign_key(self.class), self.class._t_serialize_ids(self.id, association))
-          ids = associates.map { |a| a.id }
-          self.class._t_serialize_ids(ids, association)
         end
       end
 

@@ -65,12 +65,12 @@ class SequelTest < Test::Unit::TestCase
       object.sequel_has_many_targets = [has_many_target_1, has_many_target_2, has_many_target_3]
       object.save
 
-      assert_set_equal [has_many_target_1.id, has_many_target_2.id, has_many_target_3.id], object._t_get_associate_ids(association)
+      assert_set_equal [has_many_target_1.id, has_many_target_2.id, has_many_target_3.id], SequelHasManyTarget._t_find_all_ids_by_associate("sequel_object_id", object.id)
     end
 
     should "return an empty array if there are no objects associated with the given object ids" do
       object = SequelObject.create
-      assert_set_equal [], object._t_get_associate_ids(association)
+      assert_set_equal [], SequelHasManyTarget._t_find_all_ids_by_associate("sequel_object_id", object.id)
     end
 
     should "be able to delete a set of objects, issuing their callbacks" do

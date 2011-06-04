@@ -24,6 +24,17 @@ module Tenacity
         end
       end
 
+      def _t_get_associate_ids(association)
+        if self.id.nil?
+          []
+        else
+          foreign_key = association.foreign_key(self.class)
+          associate_id = self.class._t_serialize_ids(self.id, association)
+          ids = association.associate_class._t_find_all_ids_by_associate(foreign_key, associate_id)
+          self.class._t_serialize_ids(ids, association)
+        end
+      end
+
       private
 
       def has_many_associates(association)

@@ -65,6 +65,11 @@ module Tenacity
           all(property => _t_serialize(id))
         end
 
+        def _t_find_all_ids_by_associate(property, id)
+          associates = _t_find_all_by_associate(property, id)
+          associates.map { |a| a.id }
+        end
+
         def _t_initialize_tenacity
           before_save { |record| record._t_verify_associates_exist }
           after_save { |record| record._t_save_autosave_associations }
@@ -101,13 +106,6 @@ module Tenacity
           reload
         rescue ::MongoMapper::DocumentNotFound
           nil
-        end
-
-        def _t_get_associate_ids(association)
-          return [] if self.id.nil?
-          associates = association.associate_class._t_find_all_by_associate(association.foreign_key(self.class), self.class._t_serialize_ids(self.id, association))
-          ids = associates.map { |a| a.id }
-          self.class._t_serialize_ids(ids, association)
         end
       end
 

@@ -65,12 +65,12 @@ class MongoMapperTest < Test::Unit::TestCase
       object.mongo_mapper_has_many_targets = [target_1, target_2, target_3]
       object.save
 
-      assert_set_equal [target_1.id.to_s, target_2.id.to_s, target_3.id.to_s], object._t_get_associate_ids(association)
+      assert_set_equal [target_1.id, target_2.id, target_3.id], MongoMapperHasManyTarget._t_find_all_ids_by_associate("mongo_mapper_object_id", object.id)
     end
 
     should "return an empty array when trying to fetch associate ids for an object with no associates" do
       object = MongoMapperObject.create
-      assert_equal [], object._t_get_associate_ids(association)
+      assert_equal [], MongoMapperHasManyTarget._t_find_all_ids_by_associate("mongo_mapper_object_id", object.id)
     end
 
     should "be able to delete a set of objects, issuing their callbacks" do

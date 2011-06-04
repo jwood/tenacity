@@ -66,12 +66,12 @@ require_ripple do
         object.ripple_has_many_targets = [target_1, target_2, target_3]
         object.save
 
-        assert_set_equal [target_1.id, target_2.id, target_3.id], object._t_get_associate_ids(association)
+        assert_set_equal [target_1.id, target_2.id, target_3.id], RippleHasManyTarget._t_find_all_ids_by_associate("ripple_object_id", object.id)
       end
 
       should "return an empty array when trying to fetch associate ids for an object with no associates" do
         object = RippleObject.create
-        assert_equal [], object._t_get_associate_ids(association)
+        assert_equal [], RippleHasManyTarget._t_find_all_ids_by_associate("ripple_object_id", object.id)
       end
 
       should "be able to delete a set of objects, issuing their callbacks" do
