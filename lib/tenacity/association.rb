@@ -109,14 +109,6 @@ module Tenacity
 
     private
 
-    def fetch_table_name
-      if @source.respond_to?(:table_name)
-        @source.table_name.to_s
-      else
-        "#{ActiveSupport::Inflector.underscore(@source)}s"
-      end
-    end
-
     def belongs_to_foreign_key
       if polymorphic?
         (name.to_s + "_id").to_sym
