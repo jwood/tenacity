@@ -70,7 +70,7 @@ module Tenacity
         end
 
         def _t_find_all_ids_by_associate(property, id)
-          connection.select_values("select id from #{table_name} where #{property} = #{_t_serialize_id_for_sql(id)}")
+          connection.select_values("SELECT id FROM #{table_name} WHERE #{property} = #{_t_serialize_id_for_sql(id)}")
         end
 
         def _t_initialize_has_one_association(association)

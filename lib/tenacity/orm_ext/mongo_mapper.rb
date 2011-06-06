@@ -66,8 +66,8 @@ module Tenacity
         end
 
         def _t_find_all_ids_by_associate(property, id)
-          associates = _t_find_all_by_associate(property, id)
-          associates.map { |a| a.id }
+          results = collection.find({property => _t_serialize(id)}, {:fields => 'id'}).to_a
+          results.map { |r| r['_id'] }
         end
 
         def _t_initialize_tenacity

@@ -78,18 +78,17 @@ module Tenacity
         end
 
         def _t_find_all_by_associate(property, id)
-          bucket = ::Ripple.client.bucket(_t_bucket_name(property))
-          if bucket.exist?(id)
-            object = bucket.get(id)
-            find(object.data) || []
-          else
-            []
-          end
+          find(_t_find_all_ids_by_associate(property, id)) || []
         end
 
         def _t_find_all_ids_by_associate(property, id)
-          associates = _t_find_all_by_associate(property, id)
-          associates.map { |a| a.id }
+          bucket = ::Ripple.client.bucket(_t_bucket_name(property))
+          if bucket.exist?(id)
+            object = bucket.get(id)
+            object.data || []
+          else
+            []
+          end
         end
 
         def _t_initialize_tenacity

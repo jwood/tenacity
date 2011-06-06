@@ -70,8 +70,7 @@ module Tenacity
         end
 
         def _t_find_all_ids_by_associate(property, id)
-          associates = _t_find_all_by_associate(property, id)
-          associates.map { |a| a.id }
+          repository.adapter.select("SELECT id from #{storage_names[:default]} WHERE #{property} = #{_t_serialize_id_for_sql(id)}")
         end
 
         def _t_initialize_tenacity
