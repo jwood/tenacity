@@ -7,17 +7,15 @@ module Tenacity
 
     def _t_save_autosave_associations
       associations = self.class._tenacity_associations
-      unless associations.nil?
-        self.class._tenacity_associations.select { |a| a.autosave == true }.each do |association|
-          if association.type == :t_has_one || association.type == :t_belongs_to
-            associate = instance_variable_get(_t_ivar_name(association))
-            autosave_save_or_destroy(associate) unless associate.nil?
-          elsif association.type == :t_has_many
-            associates = instance_variable_get(_t_ivar_name(association))
-            unless associates.nil?
-              associates.each { |associate| autosave_save_or_destroy(associate) }
-              instance_variable_set(_t_ivar_name(association), associates.reject { |associate| associate.marked_for_destruction? })
-            end
+      self.class._tenacity_associations.select { |a| a.autosave == true }.each do |association|
+        if association.type == :t_has_one || association.type == :t_belongs_to
+          associate = instance_variable_get(_t_ivar_name(association))
+          autosave_save_or_destroy(associate) unless associate.nil?
+        elsif association.type == :t_has_many
+          associates = instance_variable_get(_t_ivar_name(association))
+          unless associates.nil?
+            associates.each { |associate| autosave_save_or_destroy(associate) }
+            instance_variable_set(_t_ivar_name(association), associates.reject { |associate| associate.marked_for_destruction? })
           end
         end
       end
@@ -96,11 +94,7 @@ module Tenacity
 
     def associations_requiring_associate_validation
       associations = self.class._tenacity_associations
-      unless associations.nil?
-        associations.select { |a| a.foreign_key_constraints_enabled? && a.type == :t_belongs_to }
-      else
-        []
-      end
+      associations.select { |a| a.foreign_key_constraints_enabled? && a.type == :t_belongs_to }
     end
 
   end

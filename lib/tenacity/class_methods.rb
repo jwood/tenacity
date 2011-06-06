@@ -141,7 +141,6 @@ module Tenacity
   #   project.milestones             # uses the milestone cache
   #
   module ClassMethods
-    attr_reader :_tenacity_associations
 
     # Specifies a one-to-one association with another class. This method should only be used
     # if the other class contains the foreign key. If the current class contains the foreign key,
@@ -423,6 +422,10 @@ module Tenacity
       else
         object_id.to_s
       end
+    end
+
+    def _tenacity_associations
+      @_tenacity_associations || []
     end
 
     private
