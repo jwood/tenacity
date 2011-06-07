@@ -88,10 +88,10 @@ module Tenacity
         end
 
         def _t_initialize_belongs_to_association(association)
-          before_destroy { |record| record._t_cleanup_belongs_to_association(association) }
           attribute association.foreign_key, id_class_for(association)
           attribute association.polymorphic_type, String if association.polymorphic?
           index(association.foreign_key.to_sym)
+          after_destroy { |record| record._t_cleanup_belongs_to_association(association) }
         end
 
         def _t_delete(ids, run_callbacks=true)
