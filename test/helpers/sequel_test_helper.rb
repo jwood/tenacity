@@ -17,6 +17,7 @@ DB.create_table :sequel_has_one_targets do
   String :mongoid_object_id
   String :ripple_object_id
   Integer :sequel_object_id
+  String :toystore_object_id
 
   String :active_record_has_one_target_testable_id
   String :active_record_has_one_target_testable_type
@@ -32,6 +33,8 @@ DB.create_table :sequel_has_one_targets do
   String :ripple_has_one_target_testable_type
   String :sequel_has_one_target_testable_id
   String :sequel_has_one_target_testable_type
+  String :toystore_has_one_target_testable_id
+  String :toystore_has_one_target_testable_type
 end
 
 DB.create_table :sequel_has_many_targets do
@@ -44,6 +47,7 @@ DB.create_table :sequel_has_many_targets do
   String :mongoid_object_id
   String :ripple_object_id
   Integer :sequel_object_id
+  String :toystore_object_id
 
   String :active_record_has_many_target_testable_id
   String :active_record_has_many_target_testable_type
@@ -59,5 +63,7 @@ DB.create_table :sequel_has_many_targets do
   String :ripple_has_many_target_testable_type
   String :sequel_has_many_target_testable_id
   String :sequel_has_many_target_testable_type
+  String :toystore_has_many_target_testable_id
+  String :toystore_has_many_target_testable_type
 end
 

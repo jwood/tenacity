@@ -33,6 +33,7 @@ ActiveRecord::Schema.define :version => 0 do
     t.string :mongoid_object_id
     t.string :ripple_object_id
     t.integer :sequel_object_id
+    t.string :toystore_object_id
 
     t.string :active_record_has_one_target_testable_id
     t.string :active_record_has_one_target_testable_type
@@ -48,6 +49,8 @@ ActiveRecord::Schema.define :version => 0 do
     t.string :ripple_has_one_target_testable_type
     t.string :sequel_has_one_target_testable_id
     t.string :sequel_has_one_target_testable_type
+    t.string :toystore_has_one_target_testable_id
+    t.string :toystore_has_one_target_testable_type
   end
 
   create_table :active_record_has_many_targets, :force => true do |t|
@@ -58,6 +61,7 @@ ActiveRecord::Schema.define :version => 0 do
     t.string :mongoid_object_id
     t.string :ripple_object_id
     t.integer :sequel_object_id
+    t.string :toystore_object_id
 
     t.string :active_record_has_many_target_testable_id
     t.string :active_record_has_many_target_testable_type
@@ -73,6 +77,8 @@ ActiveRecord::Schema.define :version => 0 do
     t.string :ripple_has_many_target_testable_type
     t.string :sequel_has_many_target_testable_id
     t.string :sequel_has_many_target_testable_type
+    t.string :toystore_has_many_target_testable_id
+    t.string :toystore_has_many_target_testable_type
   end
 
 end

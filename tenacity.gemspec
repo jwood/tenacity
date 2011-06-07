@@ -44,6 +44,10 @@ Gem::Specification.new do |s|
   # Riak
   s.add_development_dependency "ripple", "~> 0.9.2"
 
+  # Multiple
+  s.add_development_dependency "toystore", "~> 0.8.0"
+  s.add_development_dependency "adapter-mongo", "~> 0.5.2"
+
   s.files        = `git ls-files`.split("\n")
   s.executables  = `git ls-files`.split("\n").map{|f| f =~ /^bin\/(.*)/ ? $1 : nil}.compact
   s.require_path = 'lib'

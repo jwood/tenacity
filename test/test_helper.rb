@@ -23,6 +23,7 @@ require File.join(File.dirname(__FILE__), 'helpers', 'mongo_mapper_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'mongoid_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'ripple_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'sequel_test_helper')
+require File.join(File.dirname(__FILE__), 'helpers', 'toystore_test_helper')
 
 Dir[File.join(File.dirname(__FILE__), 'fixtures', '*.rb')].each { |file| autoload(file[file.rindex('/') + 1..-4].camelcase, file) }
 
@@ -81,6 +82,7 @@ def orm_extensions
     extensions = [:active_record, :couch_rest, :data_mapper, :mongo_mapper, :sequel]
     require_mongoid { extensions << :mongoid }
     require_ripple { extensions << :ripple } if ENV['LONG'] == 'true'
+    require_toystore { extensions << :toystore }
     extensions
   end
 end

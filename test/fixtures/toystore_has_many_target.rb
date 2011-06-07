@@ -1,6 +1,10 @@
-require_ripple do
-  class RippleHasManyTarget
-    include Ripple::Document
+require_toystore do
+  require 'adapter/mongo'
+
+  class ToystoreHasManyTarget
+    include Toy::Store
+    store :mongo, Mongo::Connection.new.db('tenacity_test')['toystore']
+
     include Tenacity
 
     t_belongs_to :active_record_object
