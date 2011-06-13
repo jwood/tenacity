@@ -40,6 +40,9 @@ def setup_fixtures
         clazz.db["delete from #{clazz.table_name}"].delete
       elsif clazz.respond_to?(:destroy!)
         clazz.destroy!
+      elsif filename =~ /\/toystore/
+        # No way to easily delete toystore instances per class, so delete them all.
+        Mongo::Connection.new.db('tenacity_test')['toystore'].remove
       elsif filename =~ /\/couch_rest/
         # CouchDB fixtures are destroyed with the database
       elsif filename =~ /\/ripple/
