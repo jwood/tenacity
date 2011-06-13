@@ -14,6 +14,11 @@ lib/tenacity/association.rb.
 
 == Class Methods
 
+  _t_id_type
+
+The type to use when storing instances of this class in a database.
+Usually String or Integer.
+
   _t_find(id)
 
 Find an object by its id, and return it.  If the object cannot be found,
@@ -48,6 +53,12 @@ objects should be deleted in such a way that their delete callback methods
 are run.  If false, the objects should be deleted in such a way that their
 delete callback meethods are not run.  Return nothing.
 
+  _t_initialize_tenacity
+
+Perform any database client specific initialization necessary to support Tenacity
+associations.  This could include defining callbacks on the object required for
+all association types.
+
   _t_initialize_has_many_association(association)
 
 Perform any database client specific initialization necessary to support a has
@@ -78,10 +89,4 @@ when the after the object has been deleted.
 
 Reload the object from the database, overwriting the objects properties with
 the data fetched from the database.  Return nothing.
-
-  _t_get_associate_ids(association)
-
-Get the ids of the objects associated with this object through the specified
-association, and return them in an array.  Return an empty array if there
-are no associated objects.
 
