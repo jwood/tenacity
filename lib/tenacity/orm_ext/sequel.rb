@@ -140,6 +140,7 @@ module Tenacity
 
         def _t_reload
           reload
+          self
         end
       end
 

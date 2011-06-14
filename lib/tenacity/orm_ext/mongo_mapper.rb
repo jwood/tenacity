@@ -103,9 +103,12 @@ module Tenacity
 
       module InstanceMethods #:nodoc:
         def _t_reload
-          reload
-        rescue ::MongoMapper::DocumentNotFound
-          nil
+          begin
+            reload
+          rescue ::MongoMapper::DocumentNotFound
+            # Ignore
+          end
+          self
         end
       end
 

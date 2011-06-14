@@ -131,8 +131,8 @@ module Tenacity
         end
 
         def establish_relationship_in_target_objects(record, association, associates)
-          associates.each do |associate|
-            associate._t_reload
+          associates.each do |a|
+            associate = a._t_reload
             associate.send("#{association.foreign_key(record.class)}=", _t_serialize(record.id, association))
             associate.send "#{association.polymorphic_type}=", self.to_s if association.polymorphic?
             save_associate(associate)

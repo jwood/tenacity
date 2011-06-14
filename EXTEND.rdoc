@@ -88,5 +88,5 @@ when the after the object has been deleted.
   _t_reload
 
 Reload the object from the database, overwriting the objects properties with
-the data fetched from the database.  Return nothing.
+the data fetched from the database.  Returns the instance of the class (self).
 

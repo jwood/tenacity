@@ -106,6 +106,7 @@ module Tenacity
       module InstanceMethods #:nodoc:
         def _t_reload
           reload
+          self
         end
       end
     end

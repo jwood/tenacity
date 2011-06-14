@@ -131,6 +131,7 @@ module Tenacity
 
         def _t_reload
           reload
+          self.class._t_find(self.id)
         end
 
         private
