@@ -10,6 +10,7 @@ class DataMapperHasManyTarget
   property :mongoid_object_id, String
   property :ripple_object_id, String
   property :sequel_object_id, Integer
+  property :toystore_object_id, String
 
   property :active_record_has_many_target_testable_id, String
   property :active_record_has_many_target_testable_type, String
@@ -25,6 +26,8 @@ class DataMapperHasManyTarget
   property :ripple_has_many_target_testable_type, String
   property :sequel_has_many_target_testable_id, String
   property :sequel_has_many_target_testable_type, String
+  property :toystore_has_many_target_testable_id, String
+  property :toystore_has_many_target_testable_type, String
 
   t_belongs_to :active_record_object
   t_belongs_to :couch_rest_object
@@ -33,6 +36,7 @@ class DataMapperHasManyTarget
   require_mongoid { t_belongs_to :mongoid_object }
   require_ripple { t_belongs_to :ripple_object }
   t_belongs_to :sequel_object
+  require_toystore { t_belongs_to :toystore_object }
 
   t_belongs_to :active_record_has_many_target_testable, :polymorphic => true
   t_belongs_to :couch_rest_has_many_target_testable, :polymorphic => true
@@ -41,4 +45,5 @@ class DataMapperHasManyTarget
   require_mongoid { t_belongs_to :mongoid_has_many_target_testable, :polymorphic => true }
   require_ripple { t_belongs_to :ripple_has_many_target_testable, :polymorphic => true }
   t_belongs_to :sequel_has_many_target_testable, :polymorphic => true
+  require_toystore { t_belongs_to :toystore_has_many_target_testable, :polymorphic => true }
 end

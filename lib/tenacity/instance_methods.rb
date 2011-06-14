@@ -6,6 +6,7 @@ module Tenacity
     end
 
     def _t_save_autosave_associations
+      associations = self.class._tenacity_associations
       self.class._tenacity_associations.select { |a| a.autosave == true }.each do |association|
         if association.type == :t_has_one || association.type == :t_belongs_to
           associate = instance_variable_get(_t_ivar_name(association))
@@ -92,7 +93,8 @@ module Tenacity
     end
 
     def associations_requiring_associate_validation
-      self.class._tenacity_associations.select { |a| a.foreign_key_constraints_enabled? && a.type == :t_belongs_to }
+      associations = self.class._tenacity_associations
+      associations.select { |a| a.foreign_key_constraints_enabled? && a.type == :t_belongs_to }
     end
 
   end

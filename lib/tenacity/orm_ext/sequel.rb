@@ -32,15 +32,8 @@ module Tenacity
     #
     # == t_has_many
     #
-    # The +t_has_many+ association requires that a join table exist to store the
-    # associations.  The name of the join table follows ActiveRecord conventions.
-    # The name of the join table in this example would be cars_wheels, since cars
-    # comes before wheels when shorted alphabetically.
-    #
-    #   DB.create_table :cars_wheels do
-    #     Integer :car_id
-    #     String :wheel_id
-    #   end
+    # The +t_has_many+ association requires nothing special, as the associates
+    # are looked up using the associate class.
     #
     module Sequel
 
@@ -79,7 +72,12 @@ module Tenacity
         end
 
         def _t_find_all_by_associate(property, id)
-          filter(property => _t_serialize(id)).to_a
+          filter(property.to_sym => _t_serialize(id)).to_a
+        end
+
+        def _t_find_all_ids_by_associate(property, id)
+          results = db["SELECT id FROM #{table_name} WHERE #{property} = #{_t_serialize_id_for_sql(id)}"].all
+          results.map { |r| r[:id] }
         end
 
         def _t_initialize_tenacity
@@ -142,25 +140,7 @@ module Tenacity
 
         def _t_reload
           reload
-        end
-
-        def _t_clear_associates(association)
-          db["delete from #{association.join_table} where #{association.association_key} = #{_t_serialize_id_for_sql(self.id)}"].delete
-        end
-
-        def _t_associate_many(association, associate_ids)
-          db.transaction do
-            _t_clear_associates(association)
-            associate_ids.each do |associate_id|
-              db["insert into #{association.join_table} (#{association.association_key}, #{association.association_foreign_key}) values (#{_t_serialize_id_for_sql(self.id)}, #{_t_serialize_id_for_sql(associate_id)})"].insert
-            end
-          end
-        end
-
-        def _t_get_associate_ids(association)
-          return [] if self.id.nil?
-          rows = db["select #{association.association_foreign_key} from #{association.join_table} where #{association.association_key} = #{_t_serialize_id_for_sql(self.id)}"].all
-          rows.map { |row| row[association.association_foreign_key.to_sym] }
+          self
         end
       end
 

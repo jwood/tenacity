@@ -50,10 +50,6 @@ module Tenacity
       end
 
       @foreign_key = options[:foreign_key]
-      @foreign_keys_property = options[:foreign_keys_property]
-      @join_table = options[:join_table]
-      @association_key = options[:association_key]
-      @association_foreign_key = options[:association_foreign_key]
       @dependent = options[:dependent]
       @readonly = options[:readonly]
       @limit = options[:limit]
@@ -62,12 +58,6 @@ module Tenacity
       @polymorphic = options[:polymorphic]
       @as = options[:as]
       @disable_foreign_key_constraints = options[:disable_foreign_key_constraints]
-
-      if @foreign_keys_property
-        if @foreign_keys_property.to_s == ActiveSupport::Inflector.singularize(name) + "_ids"
-          raise "#{ActiveSupport::Inflector.singularize(name) + "_ids"} is an invalid foreign keys property name"
-        end
-      end
     end
 
     # The name of the association
@@ -97,35 +87,6 @@ module Tenacity
       end
     end
 
-    # Get the property name used to store the foreign key
-    def foreign_keys_property
-      @foreign_keys_property || "t_" + ActiveSupport::Inflector.singularize(name) + "_ids"
-    end
-
-    # Get the name of the join table used by this association
-    def join_table
-      table_name = fetch_table_name
-
-      if @type == :t_has_many && polymorphic?
-        association_name_for_join_table = name.to_s.pluralize
-      else
-        association_name_for_join_table = name
-      end
-
-      @join_table || (name.to_s < table_name ? "#{association_name_for_join_table}_#{table_name}" : "#{table_name}_#{association_name_for_join_table}")
-    end
-
-    # Get the name of the column in the join table that represents this object
-    def association_key
-      table_name = fetch_table_name
-      @association_key || table_name.singularize + '_id'
-    end
-
-    # Get the name of the column in the join table that represents the associated object
-    def association_foreign_key
-      @association_foreign_key || name.to_s.singularize + '_id'
-    end
-
     # Are the associated objects read only?
     def readonly?
       @readonly == true
@@ -147,14 +108,6 @@ module Tenacity
     end
 
     private
-
-    def fetch_table_name
-      if @source.respond_to?(:table_name)
-        @source.table_name.to_s
-      else
-        "#{ActiveSupport::Inflector.underscore(@source)}s"
-      end
-    end
 
     def belongs_to_foreign_key
       if polymorphic?

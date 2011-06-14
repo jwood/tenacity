@@ -56,31 +56,20 @@ class ActiveRecordTest < Test::Unit::TestCase
       assert_nil object.mongo_mapper_object_id
     end
 
-    should "be able to clear the associates of a given object" do
-      object = ActiveRecordObject.create
-      object._t_associate_many(association, ['abc123', 'def456', 'ghi789'])
-      object.save
-      object._t_clear_associates(association)
-      assert_set_equal [], object._t_get_associate_ids(association)
-    end
-
-    should "be able to associate many objects with the given object" do
-      object = ActiveRecordObject.create
-      object._t_associate_many(association, ['abc123', 'def456', 'ghi789'])
-      rows = ActiveRecordObject.connection.execute("select mongo_mapper_has_many_target_id from active_record_objects_mongo_mapper_has_many_targets where active_record_object_id = #{object.id}")
-      ids = []; rows.each { |r| ids << r[0] }; ids
-      assert_set_equal ['abc123', 'def456', 'ghi789'], ids
-    end
-
     should "be able to get the ids of the objects associated with the given object" do
-      object = ActiveRecordObject.create
-      object._t_associate_many(association, ['abc123', 'def456', 'ghi789'])
-      assert_set_equal ['abc123', 'def456', 'ghi789'], object._t_get_associate_ids(association)
+      object = ActiveRecordObject.create!
+      has_many_target_1 = ActiveRecordHasManyTarget.create!
+      has_many_target_2 = ActiveRecordHasManyTarget.create!
+      has_many_target_3 = ActiveRecordHasManyTarget.create!
+      object.mongo_mapper_has_many_targets = [has_many_target_1, has_many_target_2, has_many_target_3]
+      object.save
+
+      assert_set_equal [has_many_target_1.id, has_many_target_2.id, has_many_target_3.id], ActiveRecordHasManyTarget._t_find_all_ids_by_associate("active_record_object_id", object.id)
     end
 
     should "return an empty array if there are no objects associated with the given object ids" do
       object = ActiveRecordObject.create
-      assert_set_equal [], object._t_get_associate_ids(association)
+      assert_set_equal [], ActiveRecordHasManyTarget._t_find_all_ids_by_associate("active_record_object_id", object.id)
     end
 
     should "be able to delete a set of objects, issuing their callbacks" do
@@ -107,7 +96,7 @@ class ActiveRecordTest < Test::Unit::TestCase
   private
 
   def association
-    Tenacity::Association.new(:t_has_many, :mongo_mapper_has_many_targets, ActiveRecordObject)
+    Tenacity::Association.new(:t_has_many, :active_record_has_many_targets, ActiveRecordObject)
   end
 
 end

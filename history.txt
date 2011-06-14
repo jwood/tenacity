@@ -6,7 +6,14 @@
     saving the source object
   * Don't allow the source object in a t_has_one or t_has_many association to be
     deleted if the target object in the association is holding its id
+  * Removed the need for join tables for t_has_many associations
   * Added support for Ripple
+  * Added support for Toystore
+
+* Bug fixes
+
+  * Fixed bug preventing an object including the Tenacity module from being saved
+    successfully if it had no associations
 
 == 0.4.1
 

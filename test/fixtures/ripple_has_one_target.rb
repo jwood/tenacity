@@ -10,6 +10,7 @@ require_ripple do
     t_belongs_to :mongoid_object
     t_belongs_to :ripple_object
     t_belongs_to :sequel_object
+    t_belongs_to :toystore_object
 
     t_belongs_to :active_record_has_one_target_testable, :polymorphic => true
     t_belongs_to :couch_rest_has_one_target_testable, :polymorphic => true
@@ -18,5 +19,6 @@ require_ripple do
     require_mongoid { t_belongs_to :mongoid_has_one_target_testable, :polymorphic => true }
     require_ripple { t_belongs_to :ripple_has_one_target_testable, :polymorphic => true }
     t_belongs_to :sequel_has_one_target_testable, :polymorphic => true
+    require_toystore { t_belongs_to :toystore_has_one_target_testable, :polymorphic => true }
   end
 end

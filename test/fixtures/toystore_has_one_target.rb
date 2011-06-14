@@ -1,6 +1,10 @@
-require_mongoid do
-  class MongoidHasOneTarget
-    include Mongoid::Document
+require_toystore do
+  require 'adapter/mongo'
+
+  class ToystoreHasOneTarget
+    include Toy::Store
+    store :mongo, Mongo::Connection.new.db('tenacity_test')['toystore']
+
     include Tenacity
 
     t_belongs_to :active_record_object

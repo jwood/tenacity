@@ -23,6 +23,7 @@ require File.join(File.dirname(__FILE__), 'helpers', 'mongo_mapper_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'mongoid_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'ripple_test_helper')
 require File.join(File.dirname(__FILE__), 'helpers', 'sequel_test_helper')
+require File.join(File.dirname(__FILE__), 'helpers', 'toystore_test_helper')
 
 Dir[File.join(File.dirname(__FILE__), 'fixtures', '*.rb')].each { |file| autoload(file[file.rindex('/') + 1..-4].camelcase, file) }
 
@@ -39,6 +40,9 @@ def setup_fixtures
         clazz.db["delete from #{clazz.table_name}"].delete
       elsif clazz.respond_to?(:destroy!)
         clazz.destroy!
+      elsif filename =~ /\/toystore/
+        # No way to easily delete toystore instances per class, so delete them all.
+        Mongo::Connection.new.db('tenacity_test')['toystore'].remove
       elsif filename =~ /\/couch_rest/
         # CouchDB fixtures are destroyed with the database
       elsif filename =~ /\/ripple/
@@ -49,17 +53,6 @@ def setup_fixtures
     rescue NameError
     end
   end
-
-  join_tables = %w{
-                    active_record_cars_mongo_mapper_wheels
-                    active_record_cars_couch_rest_doors
-                    nuts_and_wheels
-                    active_record_has_many_targets_active_record_objects
-                    active_record_objects_mongo_mapper_has_many_targets
-                    active_record_objects_couch_rest_has_many_targets
-                    active_record_objects_mongoid_has_many_targets
-                  }
-  join_tables.each { |join_table| ActiveRecordCar.connection.execute("delete from #{join_table}") }
 end
 
 def setup_couchdb_fixtures
@@ -92,6 +85,7 @@ def orm_extensions
     extensions = [:active_record, :couch_rest, :data_mapper, :mongo_mapper, :sequel]
     require_mongoid { extensions << :mongoid }
     require_ripple { extensions << :ripple } if ENV['LONG'] == 'true'
+    require_toystore { extensions << :toystore }
     extensions
   end
 end

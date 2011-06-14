@@ -65,6 +65,11 @@ module Tenacity
           all(property => _t_serialize(id))
         end
 
+        def _t_find_all_ids_by_associate(property, id)
+          results = collection.find({property => _t_serialize(id)}, {:fields => 'id'}).to_a
+          results.map { |r| r['_id'] }
+        end
+
         def _t_initialize_tenacity
           before_save { |record| record._t_verify_associates_exist }
           after_save { |record| record._t_save_autosave_associations }
@@ -75,11 +80,8 @@ module Tenacity
         end
 
         def _t_initialize_has_many_association(association)
-          unless self.respond_to?(association.foreign_keys_property)
-            key association.foreign_keys_property, Array
-            after_save { |record| record.class._t_save_associates(record, association) }
-            before_destroy { |record| record._t_cleanup_has_many_association(association) }
-          end
+          after_save { |record| record.class._t_save_associates(record, association) }
+          before_destroy { |record| record._t_cleanup_has_many_association(association) }
         end
 
         def _t_initialize_belongs_to_association(association)
@@ -101,21 +103,12 @@ module Tenacity
 
       module InstanceMethods #:nodoc:
         def _t_reload
-          reload
-        rescue ::MongoMapper::DocumentNotFound
-          nil
-        end
-
-        def _t_associate_many(association, associate_ids)
-          self.send(association.foreign_keys_property + '=', associate_ids)
-        end
-
-        def _t_get_associate_ids(association)
-          self.send(association.foreign_keys_property)
-        end
-
-        def _t_clear_associates(association)
-          self.send(association.foreign_keys_property + '=', [])
+          begin
+            reload
+          rescue ::MongoMapper::DocumentNotFound
+            # Ignore
+          end
+          self
         end
       end
 

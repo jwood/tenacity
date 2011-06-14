@@ -8,3 +8,4 @@ doc/
 coverage/
 pkg/
 Gemfile.lock
+log/

@@ -51,7 +51,7 @@ class DataMapperTest < Test::Unit::TestCase
 
     should "be able to reload an object from the database" do
       object = DataMapperHasOneTarget.create
-      other_object = MongoMapperObject.create
+      other_object = DataMapperObject.create
       object.mongo_mapper_object_id = other_object.id
       assert_equal other_object.id.to_s, object.mongo_mapper_object_id
       object._t_reload
@@ -60,7 +60,7 @@ class DataMapperTest < Test::Unit::TestCase
 
     should "return an empty array if there are no objects associated with the given object ids" do
       object = DataMapperObject.create
-      assert_set_equal [], object._t_get_associate_ids(association)
+      assert_set_equal [], DataMapperHasManyTarget._t_find_all_ids_by_associate("data_mapper_object_id", object.id)
     end
 
     should "be able to delete a set of objects, issuing their callbacks" do
@@ -85,30 +85,16 @@ class DataMapperTest < Test::Unit::TestCase
 
     context "that works with t_has_many associations" do
       setup do
-        @has_many_target_1 = MongoMapperHasManyTarget.create
-        @has_many_target_2 = MongoMapperHasManyTarget.create
-        @has_many_target_3 = MongoMapperHasManyTarget.create
-      end
-
-      should "be able to clear the associates of a given object" do
-        object = DataMapperObject.create
-        object._t_associate_many(association, [@has_many_target_1.id, @has_many_target_2.id, @has_many_target_3.id])
-        object.save
-        object._t_clear_associates(association)
-        assert_set_equal [], object._t_get_associate_ids(association)
-      end
-
-      should "be able to associate many objects with the given object" do
-        object = DataMapperObject.create
-        object._t_associate_many(association, [@has_many_target_1.id, @has_many_target_2.id, @has_many_target_3.id])
-        rows = DataMapperObject.repository.adapter.select("select mongo_mapper_has_many_target_id from data_mapper_objects_mongo_mapper_has_many_targets where data_mapper_object_id = #{object.id}")
-        assert_set_equal [@has_many_target_1.id.to_s, @has_many_target_2.id.to_s, @has_many_target_3.id.to_s], rows
+        @has_many_target_1 = DataMapperHasManyTarget.create
+        @has_many_target_2 = DataMapperHasManyTarget.create
+        @has_many_target_3 = DataMapperHasManyTarget.create
       end
 
       should "be able to get the ids of the objects associated with the given object" do
         object = DataMapperObject.create
-        object._t_associate_many(association, [@has_many_target_1.id, @has_many_target_2.id, @has_many_target_3.id])
-        assert_set_equal [@has_many_target_1.id.to_s, @has_many_target_2.id.to_s, @has_many_target_3.id.to_s], object._t_get_associate_ids(association)
+        object.mongo_mapper_has_many_targets = [@has_many_target_1, @has_many_target_2, @has_many_target_3]
+        object.save
+        assert_set_equal [@has_many_target_1.id, @has_many_target_2.id, @has_many_target_3.id], DataMapperHasManyTarget._t_find_all_ids_by_associate("data_mapper_object_id", object.id)
       end
     end
   end
@@ -116,7 +102,7 @@ class DataMapperTest < Test::Unit::TestCase
   private
 
   def association
-    Tenacity::Association.new(:t_has_many, :mongo_mapper_has_many_targets, DataMapperObject)
+    Tenacity::Association.new(:t_has_many, :data_mapper_has_many_targets, DataMapperObject)
   end
 
 end

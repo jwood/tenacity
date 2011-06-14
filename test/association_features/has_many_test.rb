@@ -2,7 +2,7 @@ require 'test_helper'
 
 class HasManyTest < Test::Unit::TestCase
 
-  context "A class with a belongs_to association to another class" do
+  context "A class with a has_many association to another class" do
     setup do
       setup_fixtures
       setup_couchdb_fixtures

@@ -58,40 +58,20 @@ class CouchRestTest < Test::Unit::TestCase
       assert_equal "123", object["abc"]
     end
 
-    should "be able to associate many objects with the given object" do
-      target_1 = CouchRestHasManyTarget.create({})
-      target_2 = CouchRestHasManyTarget.create({})
-      target_3 = CouchRestHasManyTarget.create({})
-      object = CouchRestObject.create({})
-      object._t_associate_many(association, [target_1.id, target_2.id, target_3.id])
-      assert_set_equal [target_1.id.to_s, target_2.id.to_s, target_3.id.to_s], object.t_couch_rest_has_many_target_ids
-    end
-
     should "be able to get the ids of the objects associated with the given object" do
       target_1 = CouchRestHasManyTarget.create({})
       target_2 = CouchRestHasManyTarget.create({})
       target_3 = CouchRestHasManyTarget.create({})
       object = CouchRestObject.create({})
 
-      object._t_associate_many(association, [target_1.id, target_2.id, target_3.id])
-      assert_set_equal [target_1.id.to_s, target_2.id.to_s, target_3.id.to_s], object._t_get_associate_ids(association)
+      object.couch_rest_has_many_targets = [target_1, target_2, target_3]
+      object.save
+      assert_set_equal [target_1.id, target_2.id, target_3.id], CouchRestHasManyTarget._t_find_all_ids_by_associate("couch_rest_object_id", object.id)
     end
 
     should "return an empty array when trying to fetch associate ids for an object with no associates" do
       object = CouchRestObject.create({})
-      assert_equal [], object._t_get_associate_ids(association)
-    end
-
-    should "be able to clear the associates of an object" do
-      target_1 = CouchRestHasManyTarget.create({})
-      target_2 = CouchRestHasManyTarget.create({})
-      target_3 = CouchRestHasManyTarget.create({})
-      object = CouchRestObject.create({})
-
-      object._t_associate_many(association, [target_1.id, target_2.id, target_3.id])
-      assert_set_equal [target_1.id.to_s, target_2.id.to_s, target_3.id.to_s], object._t_get_associate_ids(association)
-      object._t_clear_associates(association)
-      assert_equal [], object._t_get_associate_ids(association)
+      assert_equal [], CouchRestHasManyTarget._t_find_all_ids_by_associate("couch_rest_object_id", object.id)
     end
 
     should "be able to delete a set of objects, issuing their callbacks" do

@@ -14,6 +14,11 @@ lib/tenacity/association.rb.
 
 == Class Methods
 
+  _t_id_type
+
+The type to use when storing instances of this class in a database.
+Usually String or Integer.
+
   _t_find(id)
 
 Find an object by its id, and return it.  If the object cannot be found,
@@ -34,8 +39,12 @@ and return it.  If no object could be found, return nil.
 
 Find all objects by the specified property name, with the specified id, and
 return them in an array.  If no objects could be found, return an empty array.
-If only some of the objects could be found, then simply return those objects
-in the array.
+
+  _t_find_all_ids_by_associate(property, id)
+
+Find all ids of rows/documents/etc by the specified property name, with the
+specified id, and return them in an array.  If no data could be found, return
+an empty array.
 
   _t_delete(ids, run_callbacks=true)
 
@@ -43,6 +52,12 @@ Delete all objects with the specified ids.  If <tt>run_callbacks</tt> is true, t
 objects should be deleted in such a way that their delete callback methods
 are run.  If false, the objects should be deleted in such a way that their
 delete callback meethods are not run.  Return nothing.
+
+  _t_initialize_tenacity
+
+Perform any database client specific initialization necessary to support Tenacity
+associations.  This could include defining callbacks on the object required for
+all association types.
 
   _t_initialize_has_many_association(association)
 
@@ -73,23 +88,5 @@ when the after the object has been deleted.
   _t_reload
 
 Reload the object from the database, overwriting the objects properties with
-the data fetched from the database.  Return nothing.
-
-  _t_associate_many(association, associate_ids)
-
-Create has_many associations between this object and the objects with ids
-specified in the array of associate_ids.  This method could involve writing
-the associate_ids into a join table, or into one of the object's properties.
-Return nothing.
-
-  _t_get_associate_ids(association)
-
-Get the ids of the objects associated with this object through the specified
-association, and return them in an array.  Return an empty array if there
-are no associated objects.
-
-  _t_clear_associates(association)
-
-Destroy the association between this object and its current associates through
-the specified association.  Return nothing.
+the data fetched from the database.  Returns the instance of the class (self).
 

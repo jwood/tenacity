@@ -4,7 +4,6 @@ module Tenacity
 
       def _t_remove_associates(association)
         instance_variable_set(_t_ivar_name(association), [])
-        _t_clear_associates(association)
       end
 
       def _t_cleanup_has_many_association(association)
@@ -22,6 +21,17 @@ module Tenacity
           elsif association.foreign_key_constraints_enabled?
             raise ObjectIdInUseError.new("Unable to delete #{self.class} with id of #{self.id} because its id is being referenced by instances of #{associates.first.class}(id: #{associates.map(&:id).join(',')})!")
           end
+        end
+      end
+
+      def _t_get_associate_ids(association)
+        if self.id.nil?
+          []
+        else
+          foreign_key = association.foreign_key(self.class)
+          associate_id = self.class._t_serialize_ids(self.id, association)
+          ids = association.associate_class._t_find_all_ids_by_associate(foreign_key, associate_id)
+          self.class._t_serialize_ids(ids, association)
         end
       end
 
@@ -89,7 +99,6 @@ module Tenacity
 
           associates = (record.instance_variable_get(record._t_ivar_name(association))) || []
           establish_relationship_in_target_objects(record, association, associates)
-          establish_relationship_in_source_object(record, association, associates)
           destroy_orphaned_associates(association, old_associates, associates)
         end
 
@@ -100,9 +109,6 @@ module Tenacity
             old_associate.send("#{property_name}=", nil)
             save_associate(old_associate)
           end
-
-          record._t_clear_associates(association)
-          save_associate(record)
         end
 
         def save_associate(associate)
@@ -125,19 +131,11 @@ module Tenacity
         end
 
         def establish_relationship_in_target_objects(record, association, associates)
-          associates.each do |associate|
-            associate._t_reload
+          associates.each do |a|
+            associate = a._t_reload
             associate.send("#{association.foreign_key(record.class)}=", _t_serialize(record.id, association))
             associate.send "#{association.polymorphic_type}=", self.to_s if association.polymorphic?
             save_associate(associate)
-          end
-        end
-
-        def establish_relationship_in_source_object(record, association, associates)
-          unless associates.blank?
-            associate_ids = associates.map { |associate| _t_serialize(associate.id) }
-            record._t_associate_many(association, associate_ids)
-            save_associate(record)
           end
         end
       end

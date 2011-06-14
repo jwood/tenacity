@@ -1,8 +1,7 @@
 module Tenacity
   module OrmExt
     # Tenacity relationships on DataMapper objects require that certain columns
-    # exist on the associated table, and that join tables exist for one-to-many
-    # relationships.  Take the following class for example:
+    # exist on the associated table. Take the following class for example:
     #
     #   class Car
     #     include DataMapper::Resource
@@ -31,15 +30,8 @@ module Tenacity
     #
     # == t_has_many
     #
-    # The +t_has_many+ association requires that a join table exist to store the
-    # associations.  The name of the join table follows ActiveRecord conventions.
-    # The name of the join table in this example would be cars_wheels, since cars
-    # comes before wheels when shorted alphabetically.
-    #
-    #   create_table :car_wheels do
-    #     column :car_id, Integer
-    #     column :wheel_id, String
-    #   end
+    # The +t_has_many+ association requires nothing special, as the associates
+    # are looked up using the associate class.
     #
     module DataMapper
 
@@ -75,6 +67,10 @@ module Tenacity
 
         def _t_find_all_by_associate(property, id)
           all(property => _t_serialize(id))
+        end
+
+        def _t_find_all_ids_by_associate(property, id)
+          repository.adapter.select("SELECT id from #{storage_names[:default]} WHERE #{property} = #{_t_serialize_id_for_sql(id)}")
         end
 
         def _t_initialize_tenacity
@@ -135,24 +131,7 @@ module Tenacity
 
         def _t_reload
           reload
-        end
-
-        def _t_clear_associates(association)
-          self.repository.adapter.execute("delete from #{association.join_table} where #{association.association_key} = #{_t_serialize_id_for_sql(self.id)}")
-        end
-
-        def _t_associate_many(association, associate_ids)
-          self.transaction do
-            _t_clear_associates(association)
-            associate_ids.each do |associate_id|
-              self.repository.adapter.execute("insert into #{association.join_table} (#{association.association_key}, #{association.association_foreign_key}) values (#{_t_serialize_id_for_sql(self.id)}, #{_t_serialize_id_for_sql(associate_id)})")
-            end
-          end
-        end
-
-        def _t_get_associate_ids(association)
-          return [] if self.id.nil?
-          self.repository.adapter.select("select #{association.association_foreign_key} from #{association.join_table} where #{association.association_key} = #{_t_serialize_id_for_sql(self.id)}")
+          self.class._t_find(self.id)
         end
 
         private

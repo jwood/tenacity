@@ -58,40 +58,20 @@ require_mongoid do
         assert_nil target.mongoid_object_id
       end
 
-      should "be able to associate many objects with the given object" do
-        target_1 = MongoidHasManyTarget.create
-        target_2 = MongoidHasManyTarget.create
-        target_3 = MongoidHasManyTarget.create
-        object = MongoidObject.create
-        object._t_associate_many(association, [target_1.id, target_2.id, target_3.id])
-        assert_set_equal [target_1.id, target_2.id, target_3.id], object.t_mongoid_has_many_target_ids
-      end
-
       should "be able to get the ids of the objects associated with the given object" do
         target_1 = MongoidHasManyTarget.create
         target_2 = MongoidHasManyTarget.create
         target_3 = MongoidHasManyTarget.create
         object = MongoidObject.create
+        object.mongoid_has_many_targets = [target_1, target_2, target_3]
+        object.save
 
-        object._t_associate_many(association, [target_1.id, target_2.id, target_3.id])
-        assert_set_equal [target_1.id, target_2.id, target_3.id], object._t_get_associate_ids(association)
+        assert_set_equal [target_1.id, target_2.id, target_3.id], MongoidHasManyTarget._t_find_all_ids_by_associate("mongoid_object_id", object.id)
       end
 
       should "return an empty array when trying to fetch associate ids for an object with no associates" do
         object = MongoidObject.create
-        assert_equal [], object._t_get_associate_ids(association)
-      end
-
-      should "be able to clear the associates of an object" do
-        target_1 = MongoidHasManyTarget.create
-        target_2 = MongoidHasManyTarget.create
-        target_3 = MongoidHasManyTarget.create
-        object = MongoidObject.create
-
-        object._t_associate_many(association, [target_1.id, target_2.id, target_3.id])
-        assert_set_equal [target_1.id, target_2.id, target_3.id], object._t_get_associate_ids(association)
-        object._t_clear_associates(association)
-        assert_equal [], object._t_get_associate_ids(association)
+        assert_equal [], MongoidHasManyTarget._t_find_all_ids_by_associate("mongoid_object_id", object.id)
       end
 
       should "be able to delete a set of objects, issuing their callbacks" do
