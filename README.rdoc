@@ -89,6 +89,7 @@ much the same way, supporting many of the same options.
 * Mongoid
 * Ripple
 * Sequel
+* Toystore
 
 See EXTEND.rdoc for information on extending Tenacity to work with other database clients.
 

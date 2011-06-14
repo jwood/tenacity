@@ -8,7 +8,7 @@
     deleted if the target object in the association is holding its id
   * Removed the need for join tables for t_has_many associations
   * Added support for Ripple
-
+  * Added support for Toystore
 
 * Bug fixes
 
