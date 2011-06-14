@@ -40,10 +40,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "couchrest", "~> 1.0.0"
   s.add_development_dependency "couchrest_extended_document", "~> 1.0.0"
 
-  # Multiple
-  s.add_development_dependency "toystore", "~> 0.8.0"
-  s.add_development_dependency "adapter-mongo", "~> 0.5.2"
-
   s.files        = `git ls-files`.split("\n")
   s.executables  = `git ls-files`.split("\n").map{|f| f =~ /^bin\/(.*)/ ? $1 : nil}.compact
   s.require_path = 'lib'
