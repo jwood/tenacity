@@ -72,7 +72,7 @@ much the same way, supporting many of the same options.
   new_wheel = Wheel.create
   car.wheels << new_wheel
   car.save
-  car.wheels        # [wheel_1, wheel_2, wheel_3, wheel_4]
+  car.wheels        # [wheel_1, wheel_2, wheel_3, new_wheel]
 
 
 == Additional Usage Details
