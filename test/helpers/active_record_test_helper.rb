@@ -6,6 +6,7 @@ ActiveRecord::Base.establish_connection(
 
 ActiveRecord::Schema.define :version => 0 do
   create_table :active_record_cars, :force => true do |t|
+    t.string :prop
   end
 
   create_table :active_record_engines, :force => true do |t|

@@ -54,7 +54,6 @@ module Tenacity
     end
 
     def get_associate(association, params)
-      _t_reload unless id.nil?
       force_reload = params.first unless params.empty?
       value = create_proxy(instance_variable_get(_t_ivar_name(association)), association)
       if value.nil? || force_reload
