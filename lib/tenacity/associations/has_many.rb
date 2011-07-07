@@ -10,9 +10,9 @@ module Tenacity
         associates = has_many_associates(association)
         unless associates.nil? || associates.empty?
           if association.dependent == :destroy
-            associates.each { |associate| association.associate_class._t_delete([_t_serialize(associate.id)]) }
+            associates.each { |associate| association.associate_class._t_delete(_t_serialize(associate.id)) }
           elsif association.dependent == :delete_all
-            associates.each { |associate| association.associate_class._t_delete([_t_serialize(associate.id)], false) }
+            associates.each { |associate| association.associate_class._t_delete(_t_serialize(associate.id), false) }
           elsif association.dependent == :nullify
             associates.each do |associate|
               associate.send "#{association.foreign_key(self.class)}=", nil

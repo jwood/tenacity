@@ -6,9 +6,9 @@ module Tenacity
         associate = has_one_associate(association)
         unless associate.nil?
           if association.dependent == :destroy
-            association.associate_class._t_delete([_t_serialize(associate.id)])
+            association.associate_class._t_delete(_t_serialize(associate.id))
           elsif association.dependent == :delete
-            association.associate_class._t_delete([_t_serialize(associate.id)], false)
+            association.associate_class._t_delete(_t_serialize(associate.id), false)
           elsif association.dependent == :nullify
             associate.send "#{association.foreign_key(self.class)}=", nil
             associate.save
