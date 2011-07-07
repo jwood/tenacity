@@ -38,6 +38,12 @@ task :long_test do
   Rake::Task["test"].invoke
 end
 
+# Usage: rake 'single_test["test/association_features/belongs_to_test.rb", "/memoize the association/"]'
+desc "Run a single test"
+task :single_test, [:test_file, :test_name] do |test, args|
+ system "ruby -I'lib:lib:test:test/fixtures' #{args['test_file']} -n #{args['test_name']}"
+end
+
 Rcov::RcovTask.new do |test|
   test.libs << 'test' << 'test/fixtures'
   test.pattern = 'test/**/*_test.rb'
