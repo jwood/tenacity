@@ -95,16 +95,15 @@ module Tenacity
           # be fetched here, before we clear them out in the database.
           old_associates.first
 
-          _t_clear_old_associations(record, association)
+          _t_clear_old_associations(record, association, old_associates)
 
           associates = (record.instance_variable_get(record._t_ivar_name(association))) || []
           establish_relationship_in_target_objects(record, association, associates)
           destroy_orphaned_associates(association, old_associates, associates)
         end
 
-        def _t_clear_old_associations(record, association)
+        def _t_clear_old_associations(record, association, old_associates)
           property_name = association.foreign_key(record.class)
-          old_associates = get_current_associates(record, association)
           old_associates.each do |old_associate|
             old_associate.send("#{property_name}=", nil)
             save_associate(old_associate)
