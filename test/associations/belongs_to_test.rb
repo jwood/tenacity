@@ -9,11 +9,11 @@ class BelongsToTest < Test::Unit::TestCase
 
         @source_class = class_for_extension(source)
         @source = @source_class.create({})
-        @target_class = class_for_extension(target, :belongs_to)
+        @target_class = class_for_extension(target, :t_belongs_to)
         @target = @target_class.create({})
 
-        @foreign_key = foreign_key_for(source, :belongs_to)
-        @foreign_key_id = foreign_key_id_for(source, :belongs_to)
+        @foreign_key = foreign_key_for(source, :t_belongs_to)
+        @foreign_key_id = foreign_key_id_for(source, :t_belongs_to)
       end
 
       should "be able to fetch the id of the associated object" do

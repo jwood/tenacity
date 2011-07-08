@@ -9,13 +9,13 @@ class HasManyTest < Test::Unit::TestCase
 
         @source_class = class_for_extension(source)
         @source = @source_class.create({})
-        @target_class = class_for_extension(target, :has_many)
+        @target_class = class_for_extension(target, :t_has_many)
         @target_1 = @target_class.create({})
         @target_2 = @target_class.create({})
         @target_3 = @target_class.create({})
 
-        @foreign_key = foreign_key_for(target, :has_many)
-        @foreign_key_id = foreign_key_id_for(target, :has_many)
+        @foreign_key = foreign_key_for(target, :t_has_many)
+        @foreign_key_id = foreign_key_id_for(target, :t_has_many)
       end
 
       should "be able to set the associated objects by their ids" do
@@ -109,9 +109,9 @@ class HasManyTest < Test::Unit::TestCase
           assert_not_nil @target_class._t_find(serialize_id(@target_1))
           assert_not_nil @target_class._t_find(serialize_id(@target_2))
           assert_not_nil @target_class._t_find(serialize_id(@target_3))
-          assert_nil @target_class._t_find(serialize_id(@target_1)).send(foreign_key_id_for(target, :belongs_to))
-          assert_nil @target_class._t_find(serialize_id(@target_2)).send(foreign_key_id_for(target, :belongs_to))
-          assert_nil @target_class._t_find(serialize_id(@target_3)).send(foreign_key_id_for(target, :belongs_to))
+          assert_nil @target_class._t_find(serialize_id(@target_1)).send(foreign_key_id_for(target, :t_belongs_to))
+          assert_nil @target_class._t_find(serialize_id(@target_2)).send(foreign_key_id_for(target, :t_belongs_to))
+          assert_nil @target_class._t_find(serialize_id(@target_3)).send(foreign_key_id_for(target, :t_belongs_to))
         end
       end
 
