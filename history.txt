@@ -1,3 +1,9 @@
+== Next version
+
+* Minor enhancements
+
+  * Performance optimizations
+
 == 0.5.1
 
 * Bug fixes
