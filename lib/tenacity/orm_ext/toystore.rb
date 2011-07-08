@@ -108,6 +108,10 @@ module Tenacity
           reload
           self
         end
+
+        def _t_save_if_dirty
+          changed? ? save : false
+        end
       end
     end
   end

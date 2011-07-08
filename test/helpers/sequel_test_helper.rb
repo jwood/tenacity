@@ -5,6 +5,7 @@ Sequel::Model.raise_on_save_failure = true
 
 DB.create_table :sequel_objects do
   primary_key :id
+  String :prop
 end
 
 DB.create_table :sequel_has_one_targets do

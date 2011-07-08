@@ -90,3 +90,10 @@ when the after the object has been deleted.
 Reload the object from the database, overwriting the objects properties with
 the data fetched from the database.  Returns the instance of the class (self).
 
+  _t_save_if_dirty
+
+Save the object to the database only if the object has changed.  This is solely
+for performance.  If the client library does not support dirty tracking, this
+method can simply save the object.  Returns the result of the save operation
+if the object was saved, or false if the object was not saved.
+

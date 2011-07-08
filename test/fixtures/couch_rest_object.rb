@@ -2,6 +2,8 @@ class CouchRestObject < CouchRest::Model::Base
   include Tenacity
   use_database COUCH_DB
 
+  property :prop, :type => String
+
   t_has_one :active_record_has_one_target
   t_has_one :couch_rest_has_one_target
   t_has_one :data_mapper_has_one_target

@@ -93,6 +93,17 @@ require_mongoid do
         MongoidObject._t_delete([object_1.id, object_2.id, object_3.id], false)
         assert_equal old_count - 3, MongoidObject.count
       end
+
+      should "save the object if it is dirty" do
+        object = MongoidObject.create
+        object.prop = "something"
+        assert object._t_save_if_dirty
+      end
+
+      should "not save the object if it is not dirty" do
+        object = MongoidObject.create
+        assert !object._t_save_if_dirty
+      end
     end
 
     def association

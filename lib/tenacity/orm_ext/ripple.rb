@@ -139,6 +139,10 @@ module Tenacity
           self
         end
 
+        def _t_save_if_dirty
+          changed? ? save : false
+        end
+
         def save
           before_save
           super

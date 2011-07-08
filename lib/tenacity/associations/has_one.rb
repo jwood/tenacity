@@ -11,7 +11,7 @@ module Tenacity
             association.associate_class._t_delete(_t_serialize(associate.id), false)
           elsif association.dependent == :nullify
             associate.send "#{association.foreign_key(self.class)}=", nil
-            associate.save
+            associate._t_save_if_dirty
           elsif association.foreign_key_constraints_enabled?
             raise ObjectIdInUseError.new("Unable to delete #{self.class} with id of #{self.id} because its id is being referenced by an instance of #{associate.class}(id: #{associate.id})!")
           end
@@ -28,7 +28,7 @@ module Tenacity
       def set_has_one_associate(association, associate)
         associate.send "#{association.foreign_key(self.class)}=", _t_serialize(self.id, association)
         associate.send "#{association.polymorphic_type}=", self.class.to_s if association.polymorphic?
-        associate.save unless association.autosave == false
+        associate._t_save_if_dirty unless association.autosave == false
         associate
       end
 

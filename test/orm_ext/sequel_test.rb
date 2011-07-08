@@ -92,6 +92,17 @@ class SequelTest < Test::Unit::TestCase
       SequelObject._t_delete([object_1.id, object_2.id, object_3.id], false)
       assert_equal old_count - 3, SequelObject.count
     end
+
+    should "save the object if it is dirty" do
+      object = SequelObject.create
+      object.prop = "something"
+      assert object._t_save_if_dirty
+    end
+
+    should "not save the object if it is not dirty" do
+      object = SequelObject.create
+      assert !object._t_save_if_dirty
+    end
   end
 
   private

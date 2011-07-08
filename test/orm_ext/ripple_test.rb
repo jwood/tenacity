@@ -132,6 +132,17 @@ if ENV['LONG'] == 'true'
           target_3.destroy
           assert_set_equal [], bucket.get(object.id).data
         end
+
+        should "save the object if it is dirty" do
+          object = RippleObject.create
+          object.prop = "something"
+          assert object._t_save_if_dirty
+        end
+
+        should "not save the object if it is not dirty" do
+          object = RippleObject.create
+          assert !object._t_save_if_dirty
+        end
       end
 
       def association

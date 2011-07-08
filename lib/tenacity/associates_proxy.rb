@@ -19,18 +19,18 @@ module Tenacity
     end
 
     def <<(object)
-      object.save unless @parent.id.nil?
+      object._t_save_if_dirty unless @parent.id.nil?
       @target << AssociateProxy.new(object, @association)
     end
 
     def push(*objects)
-      objects.each { |object| object.save } unless @parent.id.nil?
+      objects.each { |object| object._t_save_if_dirty } unless @parent.id.nil?
       proxies = objects.map { |object| AssociateProxy.new(object, @association) }
       @target.push(*proxies)
     end
 
     def concat(objects)
-      objects.each { |object| object.save } unless @parent.id.nil?
+      objects.each { |object| object._t_save_if_dirty } unless @parent.id.nil?
       proxies = objects.map { |object| AssociateProxy.new(object, @association) }
       @target.concat(proxies)
     end
@@ -53,7 +53,7 @@ module Tenacity
 
     def remove_associates_from_parent
       @parent._t_remove_associates(@association)
-      @parent.save
+      @parent._t_save_if_dirty
     end
 
     def method_missing(method, *args)

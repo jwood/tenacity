@@ -83,6 +83,17 @@ class DataMapperTest < Test::Unit::TestCase
       assert_equal old_count - 3, DataMapperObject.count
     end
 
+    should "save the object if it is dirty" do
+      object = DataMapperObject.create
+      object.prop = "something"
+      assert object._t_save_if_dirty
+    end
+
+    should "not save the object if it is not dirty" do
+      object = DataMapperObject.create
+      assert !object._t_save_if_dirty
+    end
+
     context "that works with t_has_many associations" do
       setup do
         @has_many_target_1 = DataMapperHasManyTarget.create

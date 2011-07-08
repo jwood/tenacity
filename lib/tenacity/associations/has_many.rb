@@ -16,7 +16,7 @@ module Tenacity
           elsif association.dependent == :nullify
             associates.each do |associate|
               associate.send "#{association.foreign_key(self.class)}=", nil
-              associate.save
+              associate._t_save_if_dirty
             end
           elsif association.foreign_key_constraints_enabled?
             raise ObjectIdInUseError.new("Unable to delete #{self.class} with id of #{self.id} because its id is being referenced by instances of #{associates.first.class}(id: #{associates.map(&:id).join(',')})!")
@@ -60,7 +60,7 @@ module Tenacity
 
       def save_without_callback
         @perform_save_associates_callback = false
-        save
+        _t_save_if_dirty
       ensure
         @perform_save_associates_callback = true
       end
@@ -111,7 +111,7 @@ module Tenacity
         end
 
         def save_associate(associate)
-          associate.respond_to?(:_t_save_without_callback) ? associate._t_save_without_callback : associate.save
+          associate.respond_to?(:_t_save_without_callback) ? associate._t_save_without_callback : associate._t_save_if_dirty
         end
 
         def get_current_associates(record, association)
