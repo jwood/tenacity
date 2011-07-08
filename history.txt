@@ -1,5 +1,18 @@
 == Next version
 
+* Minor enhancements
+
+  * Performance optimizations
+
+== 0.5.1
+
+* Bug fixes
+
+  * Should not re-load the source of the association when source.target(true)
+    is called.
+
+== 0.5.0
+
 * Major enhancements
 
   * Added code to verify target object in a t_belongs_to association exists when

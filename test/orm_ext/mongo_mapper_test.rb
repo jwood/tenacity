@@ -92,6 +92,17 @@ class MongoMapperTest < Test::Unit::TestCase
       MongoMapperObject._t_delete([object_1.id, object_2.id, object_3.id], false)
       assert_equal old_count - 3, MongoMapperObject.count
     end
+
+    should "save the object if it is dirty" do
+      object = MongoMapperObject.create
+      object.prop = "something"
+      assert object._t_save_if_dirty
+    end
+
+    should "not save the object if it is not dirty" do
+      object = MongoMapperObject.create
+      assert !object._t_save_if_dirty
+    end
   end
 
   def association

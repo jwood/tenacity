@@ -27,7 +27,7 @@ module Tenacity
       if @association.readonly?
         raise ReadOnlyError
       else
-        @target.save
+        @target._t_save_if_dirty
       end
     end
 

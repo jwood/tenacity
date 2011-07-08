@@ -9,11 +9,11 @@ class HasOneTest < Test::Unit::TestCase
 
         @source_class = class_for_extension(source)
         @source = @source_class.create({})
-        @target_class = class_for_extension(target, :has_one)
+        @target_class = class_for_extension(target, :t_has_one)
         @target = @target_class.create({})
 
-        @foreign_key = foreign_key_for(target, :has_one)
-        @foreign_key_id = foreign_key_id_for(target, :has_one)
+        @foreign_key = foreign_key_for(target, :t_has_one)
+        @foreign_key_id = foreign_key_id_for(target, :t_has_one)
       end
 
       should "be able to set and get the associated object" do
@@ -60,7 +60,7 @@ class HasOneTest < Test::Unit::TestCase
 
         assert_nil @source_class._t_find(serialize_id(@source))
         assert_not_nil @target_class._t_find(serialize_id(@target))
-        assert_nil @target_class._t_find(serialize_id(@target)).send(foreign_key_id_for(target, :belongs_to))
+        assert_nil @target_class._t_find(serialize_id(@target)).send(foreign_key_id_for(target, :t_belongs_to))
       end
 
       context "with a polymorphic association" do

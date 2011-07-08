@@ -15,7 +15,7 @@ module Tenacity
     #     t_belongs_to  :driver
     #   end
     #
-    # *Please note that the data store must be established before including the Tenacity module.*
+    # <b>Please note that the data store must be established before including the Tenacity module.</b>
     #
     # == t_belongs_to
     #
@@ -107,6 +107,10 @@ module Tenacity
         def _t_reload
           reload
           self
+        end
+
+        def _t_save_if_dirty
+          changed? ? save : false
         end
       end
     end

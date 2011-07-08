@@ -91,6 +91,17 @@ class ActiveRecordTest < Test::Unit::TestCase
       ActiveRecordObject._t_delete([object_1.id, object_2.id, object_3.id], false)
       assert_equal old_count - 3, ActiveRecordObject.count
     end
+
+    should "save the object if it is dirty" do
+      object = ActiveRecordObject.create
+      object.prop = "something"
+      assert object._t_save_if_dirty
+    end
+
+    should "not save the object if it is not dirty" do
+      object = ActiveRecordObject.create
+      assert !object._t_save_if_dirty
+    end
   end
 
   private

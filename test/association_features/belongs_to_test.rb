@@ -11,14 +11,12 @@ class BelongsToTest < Test::Unit::TestCase
 
     should "memoize the association" do
       assert_equal @car, @wheel.active_record_car
+      assert_nil @car.prop
 
-      other_car = ActiveRecordCar.create
-      assert_equal @car, MongoMapperWheel.find(@wheel.id).active_record_car
-      MongoMapperWheel.update(@wheel.id, :active_record_car => other_car)
-      assert_equal other_car, MongoMapperWheel.find(@wheel.id).active_record_car
+      ActiveRecordCar.update(@car.id, {:prop => 'abc123'})
 
-      assert_equal @car, @wheel.active_record_car
-      assert_equal other_car, @wheel.active_record_car(true)
+      assert_nil @wheel.active_record_car.prop
+      assert_equal 'abc123', @wheel.active_record_car(true).prop
     end
 
     should "be able to specify the class name of the associated class" do

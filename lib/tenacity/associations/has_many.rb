@@ -10,13 +10,13 @@ module Tenacity
         associates = has_many_associates(association)
         unless associates.nil? || associates.empty?
           if association.dependent == :destroy
-            associates.each { |associate| association.associate_class._t_delete([_t_serialize(associate.id)]) }
+            associates.each { |associate| association.associate_class._t_delete(_t_serialize(associate.id)) }
           elsif association.dependent == :delete_all
-            associates.each { |associate| association.associate_class._t_delete([_t_serialize(associate.id)], false) }
+            associates.each { |associate| association.associate_class._t_delete(_t_serialize(associate.id), false) }
           elsif association.dependent == :nullify
             associates.each do |associate|
               associate.send "#{association.foreign_key(self.class)}=", nil
-              associate.save
+              associate._t_save_if_dirty
             end
           elsif association.foreign_key_constraints_enabled?
             raise ObjectIdInUseError.new("Unable to delete #{self.class} with id of #{self.id} because its id is being referenced by instances of #{associates.first.class}(id: #{associates.map(&:id).join(',')})!")
@@ -60,7 +60,7 @@ module Tenacity
 
       def save_without_callback
         @perform_save_associates_callback = false
-        save
+        _t_save_if_dirty
       ensure
         @perform_save_associates_callback = true
       end
@@ -95,16 +95,15 @@ module Tenacity
           # be fetched here, before we clear them out in the database.
           old_associates.first
 
-          _t_clear_old_associations(record, association)
+          _t_clear_old_associations(record, association, old_associates)
 
           associates = (record.instance_variable_get(record._t_ivar_name(association))) || []
           establish_relationship_in_target_objects(record, association, associates)
           destroy_orphaned_associates(association, old_associates, associates)
         end
 
-        def _t_clear_old_associations(record, association)
+        def _t_clear_old_associations(record, association, old_associates)
           property_name = association.foreign_key(record.class)
-          old_associates = get_current_associates(record, association)
           old_associates.each do |old_associate|
             old_associate.send("#{property_name}=", nil)
             save_associate(old_associate)
@@ -112,7 +111,7 @@ module Tenacity
         end
 
         def save_associate(associate)
-          associate.respond_to?(:_t_save_without_callback) ? associate._t_save_without_callback : associate.save
+          associate.respond_to?(:_t_save_without_callback) ? associate._t_save_without_callback : associate._t_save_if_dirty
         end
 
         def get_current_associates(record, association)

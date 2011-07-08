@@ -142,6 +142,10 @@ module Tenacity
           reload
           self
         end
+
+        def _t_save_if_dirty
+          !changed_columns.empty? ? save : false
+        end
       end
 
     end

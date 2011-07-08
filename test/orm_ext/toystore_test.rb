@@ -94,6 +94,17 @@ require_toystore do
         ToystoreHasManyTarget._t_delete([object_1.id, object_2.id, object_3.id], false)
         assert_equal 0, ToystoreHasManyTarget.get_multi(object_1.id, object_2.id, object_3.id).compact.size
       end
+
+      should "save the object if it is dirty" do
+        object = ToystoreObject.create
+        object.prop = "something"
+        assert object._t_save_if_dirty
+      end
+
+      should "not save the object if it is not dirty" do
+        object = ToystoreObject.create
+        assert !object._t_save_if_dirty
+      end
     end
 
     def association

@@ -35,7 +35,7 @@ module Tenacity
     private
 
     def autosave_save_or_destroy(associate)
-      associate.marked_for_destruction? ? autosave_destroy(associate) : associate.save
+      associate.marked_for_destruction? ? autosave_destroy(associate) : associate._t_save_if_dirty
     end
 
     def autosave_destroy(associate)
@@ -48,13 +48,12 @@ module Tenacity
         has_one_associate = associate.has_one_associate(association)
         if has_one_associate
           has_one_associate.send "#{association.foreign_key(associate.class)}=", nil
-          has_one_associate.save
+          has_one_associate._t_save_if_dirty
         end
       end
     end
 
     def get_associate(association, params)
-      _t_reload unless id.nil?
       force_reload = params.first unless params.empty?
       value = create_proxy(instance_variable_get(_t_ivar_name(association)), association)
       if value.nil? || force_reload
