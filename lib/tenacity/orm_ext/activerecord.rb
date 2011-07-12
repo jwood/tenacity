@@ -49,7 +49,7 @@ module Tenacity
         include Tenacity::OrmExt::Helpers
 
         def _t_id_type
-          Integer
+          @_t_id_type_clazz ||= Kernel.const_get(columns.find{ |x| x.primary }.type.to_s.capitalize)
         end
 
         def _t_find(id)

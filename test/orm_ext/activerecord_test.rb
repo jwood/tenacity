@@ -102,6 +102,11 @@ class ActiveRecordTest < Test::Unit::TestCase
       object = ActiveRecordObject.create
       assert !object._t_save_if_dirty
     end
+
+    should "be able to successfully determine the id type" do
+      assert_equal Integer, ActiveRecordObject._t_id_type
+      assert_equal String, ActiveRecordObjectWithStringId._t_id_type
+    end
   end
 
   private

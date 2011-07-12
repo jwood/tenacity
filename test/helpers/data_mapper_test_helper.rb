@@ -12,6 +12,7 @@ def migrate_data_mapper_tables
   DataMapperHasManyTarget
   DataMapperHasOneTarget
   DataMapperObject
+  DataMapperObjectWithStringId
 
   DataMapper.auto_migrate!
 end

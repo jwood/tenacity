@@ -8,6 +8,10 @@ DB.create_table :sequel_objects do
   String :prop
 end
 
+DB.create_table :sequel_object_with_string_ids do
+  String :id, :primary_key => true
+end
+
 DB.create_table :sequel_has_one_targets do
   primary_key :id
 
