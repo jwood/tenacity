@@ -94,6 +94,11 @@ class DataMapperTest < Test::Unit::TestCase
       assert !object._t_save_if_dirty
     end
 
+    should "be able to successfully determine the id type" do
+      assert_equal Integer, DataMapperObject._t_id_type
+      assert_equal String, DataMapperObjectWithStringId._t_id_type
+    end
+
     context "that works with t_has_many associations" do
       setup do
         @has_many_target_1 = DataMapperHasManyTarget.create

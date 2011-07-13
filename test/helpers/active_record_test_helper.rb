@@ -26,6 +26,10 @@ ActiveRecord::Schema.define :version => 0 do
     t.string :prop
   end
 
+  create_table :active_record_object_with_string_ids, :force => true, :id => false do |t|
+    t.string :id, :limit => 36, :primary => true
+  end
+
   create_table :active_record_has_one_targets, :force => true do |t|
     t.integer :active_record_object_id
     t.string :couch_rest_object_id

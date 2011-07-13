@@ -39,4 +39,6 @@ class MongoMapperObject
   require_ripple { t_has_many :ripple_has_many_targets, :as => :ripple_has_many_target_testable }
   t_has_many :sequel_has_many_targets, :as => :sequel_has_many_target_testable
   require_toystore { t_has_many :toystore_has_many_targets, :as => :toystore_has_many_target_testable }
+
+  t_belongs_to :active_record_object_with_string_id
 end

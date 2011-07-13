@@ -58,5 +58,19 @@ class ClassmethodsTest < Test::Unit::TestCase
     should("respond to destroy_all") { assert @targets.respond_to?(:destroy_all) }
   end
 
+  context "A class including Tenacity" do
+    should "be able to override the default object id type" do
+      active_record_object = ActiveRecordObjectWithStringId.new
+      active_record_object.id = 'abc999'
+      active_record_object.save!
+
+      mongo_mapper_object = MongoMapperObject.create
+      mongo_mapper_object.active_record_object_with_string_id = active_record_object
+      mongo_mapper_object.save
+
+      assert_equal active_record_object, MongoMapperObject._t_find(mongo_mapper_object.id).active_record_object_with_string_id
+    end
+  end
+
 end
 
