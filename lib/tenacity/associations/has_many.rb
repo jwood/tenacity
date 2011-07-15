@@ -10,14 +10,11 @@ module Tenacity
         associates = has_many_associates(association)
         unless associates.nil? || associates.empty?
           if association.dependent == :destroy
-            associates.each { |associate| association.associate_class._t_delete(_t_serialize(associate.id)) }
+            delete_or_destroy_has_many_associates(association, associates)
           elsif association.dependent == :delete_all
-            associates.each { |associate| association.associate_class._t_delete(_t_serialize(associate.id), false) }
+            delete_or_destroy_has_many_associates(association, associates, false)
           elsif association.dependent == :nullify
-            associates.each do |associate|
-              associate.send "#{association.foreign_key(self.class)}=", nil
-              associate._t_save_if_dirty
-            end
+            nullify_foreign_keys_for_has_many_associates(association, associates)
           elsif association.foreign_key_constraints_enabled?
             raise ObjectIdInUseError.new("Unable to delete #{self.class} with id of #{self.id} because its id is being referenced by instances of #{associates.first.class}(id: #{associates.map(&:id).join(',')})!")
           end
@@ -74,6 +71,17 @@ module Tenacity
           sorted_ids[offset...(offset + limit)]
         else
           associate_ids
+        end
+      end
+
+      def delete_or_destroy_has_many_associates(association, associates, run_callbacks=true)
+        associates.each { |associate| association.associate_class._t_delete(_t_serialize(associate.id), run_callbacks) }
+      end
+
+      def nullify_foreign_keys_for_has_many_associates(association, associates)
+        associates.each do |associate|
+          associate.send "#{association.foreign_key(self.class)}=", nil
+          associate._t_save_if_dirty
         end
       end
 
