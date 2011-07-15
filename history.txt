@@ -1,4 +1,4 @@
-== Next version
+== 0.5.2
 
 * Bug fixes
 
