@@ -232,10 +232,10 @@ module Tenacity
 
         def store_id_in_associate_index(associate_id, bucket)
           unless associate_id.nil?
-            if bucket.exist?(associate_id)
+            begin
               object = bucket.get(associate_id)
               object.data << self.id unless object.data.include?(self.id)
-            else
+            rescue Riak::FailedRequest
               object = bucket.new(associate_id)
               object.data = [self.id]
             end
