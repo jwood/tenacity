@@ -57,17 +57,17 @@ module Tenacity
           String
         end
 
-        def _t_find(id)
+        def _t_find(id, association = nil)
           find(_t_serialize(id))
         end
 
-        def _t_find_bulk(ids)
+        def _t_find_bulk(ids, association = nil)
           objects = find(_t_serialize_ids(ids)) || []
           objects = [objects] unless objects.respond_to?(:each)
           objects.reject(&:nil?)
         end
 
-        def _t_find_first_by_associate(property, id)
+        def _t_find_first_by_associate(property, id, association = nil)
           bucket = ::Ripple.client.bucket(_t_bucket_name(property))
           if bucket.exist?(id)
             object = bucket.get(id)
@@ -77,11 +77,11 @@ module Tenacity
           end
         end
 
-        def _t_find_all_by_associate(property, id)
-          find(_t_find_all_ids_by_associate(property, id)) || []
+        def _t_find_all_by_associate(property, id, association = nil)
+          find(_t_find_all_ids_by_associate(property, id, association)) || []
         end
 
-        def _t_find_all_ids_by_associate(property, id)
+        def _t_find_all_ids_by_associate(property, id, association = nil)
           bucket = ::Ripple.client.bucket(_t_bucket_name(property))
           if bucket.exist?(id)
             object = bucket.get(id)

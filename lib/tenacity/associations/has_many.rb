@@ -27,7 +27,7 @@ module Tenacity
         else
           foreign_key = association.foreign_key(self.class)
           associate_id = self.class._t_serialize_ids(self.id, association)
-          ids = association.associate_class._t_find_all_ids_by_associate(foreign_key, associate_id)
+          ids = association.associate_class._t_find_all_ids_by_associate(foreign_key, associate_id, association)
           self.class._t_serialize_ids(ids, association)
         end
       end
@@ -38,7 +38,7 @@ module Tenacity
         ids = _t_get_associate_ids(association)
         pruned_ids = prune_associate_ids(association, ids)
         clazz = association.associate_class
-        clazz._t_find_bulk(pruned_ids)
+        clazz._t_find_bulk(pruned_ids,association)
       end
 
       def set_has_many_associates(association, associates)
@@ -52,7 +52,7 @@ module Tenacity
 
       def set_has_many_associate_ids(association, associate_ids)
         clazz = association.associate_class
-        instance_variable_set(_t_ivar_name(association), clazz._t_find_bulk(associate_ids))
+        instance_variable_set(_t_ivar_name(association), clazz._t_find_bulk(associate_ids,association))
       end
 
       def save_without_callback
@@ -125,7 +125,7 @@ module Tenacity
         def get_current_associates(record, association)
           clazz = association.associate_class
           property_name = association.foreign_key(record.class)
-          clazz._t_find_all_by_associate(property_name, _t_serialize(record.id, association))
+          clazz._t_find_all_by_associate(property_name, _t_serialize(record.id, association),association)
         end
 
         def destroy_orphaned_associates(association, old_associates, associates)

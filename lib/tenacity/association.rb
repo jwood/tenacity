@@ -37,6 +37,9 @@ module Tenacity
 
     # Should this association disable foreign key like constraints
     attr_reader :disable_foreign_key_constraints
+    
+    # Filter records based on a defined condition. At this time only activerecord supports this
+    attr_reader :conditions
 
     def initialize(type, name, source, options={})
       @type = type
@@ -58,6 +61,7 @@ module Tenacity
       @polymorphic = options[:polymorphic]
       @as = options[:as]
       @disable_foreign_key_constraints = options[:disable_foreign_key_constraints]
+      @conditions = options[:conditions]
     end
 
     # The name of the association

@@ -18,7 +18,7 @@ module Tenacity
       def belongs_to_associate(association)
         associate_id = self.send(association.foreign_key)
         clazz = association.associate_class(self)
-        clazz._t_find(associate_id)
+        clazz._t_find(associate_id,association)
       end
 
       def set_belongs_to_associate(association, associate)

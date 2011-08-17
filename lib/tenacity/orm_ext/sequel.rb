@@ -58,24 +58,24 @@ module Tenacity
           @_t_id_type_clazz ||= Kernel.const_get(db_schema.values.find{ |x| x[:primary_key] == true }[:type].to_s.capitalize)
         end
 
-        def _t_find(id)
+        def _t_find(id, association = nil)
           self[_t_serialize(id)]
         end
 
-        def _t_find_bulk(ids)
+        def _t_find_bulk(ids, association = nil)
           return [] if ids.nil? || ids.empty?
           filter(:id => _t_serialize_ids(ids)).to_a
         end
 
-        def _t_find_first_by_associate(property, id)
+        def _t_find_first_by_associate(property, id, association = nil)
           first(property.to_sym => _t_serialize(id))
         end
 
-        def _t_find_all_by_associate(property, id)
+        def _t_find_all_by_associate(property, id, association = nil)
           filter(property.to_sym => _t_serialize(id)).to_a
         end
 
-        def _t_find_all_ids_by_associate(property, id)
+        def _t_find_all_ids_by_associate(property, id, association = nil)
           results = db["SELECT id FROM #{table_name} WHERE #{property} = #{_t_serialize_id_for_sql(id)}"].all
           results.map { |r| r[:id] }
         end

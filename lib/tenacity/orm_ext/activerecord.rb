@@ -52,25 +52,45 @@ module Tenacity
           @_t_id_type_clazz ||= Kernel.const_get(columns.find{ |x| x.primary }.type.to_s.capitalize)
         end
 
-        def _t_find(id)
-          find_by_id(_t_serialize(id))
+        def _t_merge_association_conditions(base_conditions, association , boolean_operator="AND")
+          new_conditions = association.conditions unless association == nil
+          merged_condition = "(#{sanitize_sql(base_conditions)})"
+          if merged_condition != nil
+            merged_condition = "#{merged_condition} #{boolean_operator} (#{sanitize_sql(new_conditions)})" if new_conditions != nil
+          else 
+            merged_condition = new_conditions
+          end
+          
+          merged_condition 
+        end
+  
+        def _t_find(id, association = nil )
+          if association != nil and association.conditions != nil
+            find_by_id(_t_serialize(id), association.conditions )
+          else
+            find_by_id(_t_serialize(id) )
+          end
         end
 
-        def _t_find_bulk(ids)
+        def _t_find_bulk(ids, association = nil )
           return [] if ids.nil? || ids.empty?
-          find(:all, :conditions => ["id in (?)", _t_serialize_ids(ids)])
+          internal_condition = _t_merge_association_conditions( ["id in (?)", _t_serialize_ids(ids)] , association )
+          find(:all, :conditions => internal_condition )
         end
 
-        def _t_find_first_by_associate(property, id)
-          find(:first, :conditions => ["#{property} = ?", _t_serialize(id)])
+        def _t_find_first_by_associate(property, id, association = nil )
+          internal_condition = _t_merge_association_conditions( ["#{property} = ?", _t_serialize(id)] , association )
+          find(:first, :conditions => internal_condition )
         end
 
-        def _t_find_all_by_associate(property, id)
-          find(:all, :conditions => ["#{property} = ?", _t_serialize(id)])
+        def _t_find_all_by_associate(property, id, association = nil )
+          internal_condition = _t_merge_association_conditions( ["#{property} = ?", _t_serialize(id)] , association ) 
+          find(:all, :conditions => internal_condition )
         end
 
-        def _t_find_all_ids_by_associate(property, id)
-          connection.select_values("SELECT id FROM #{table_name} WHERE #{property} = #{_t_serialize_id_for_sql(id)}")
+        def _t_find_all_ids_by_associate(property, id, association = nil )
+          internal_condition = _t_merge_association_conditions( ["#{property} = ?", _t_serialize(id)] , association )
+          connection.select_values("SELECT id FROM #{table_name} WHERE #{internal_condition}")
         end
 
         def _t_initialize_has_one_association(association)
