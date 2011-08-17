@@ -1,6 +1,36 @@
 require 'test_helper'
 
 class HasManyTest < Test::Unit::TestCase
+  
+  context "A class with a has_many conditional association to another class" do
+    setup do
+      setup_fixtures
+      setup_couchdb_fixtures
+
+      @car = ActiveRecordCar.create
+      @driver_seet = ActiveRecordSeet.create(:back => false, :is_driver => true )
+      @front_seets = [@driver_seet, ActiveRecordSeet.create(:back => false)]
+      @back_seets = [ActiveRecordSeet.create(:back => true), ActiveRecordSeet.create(:back => true)]
+
+      @car.active_record_front_seets = @front_seets
+      @car.active_record_back_seets = @back_seets
+      @car.save
+    end
+
+    should "memoize the conditional association" do
+      assert_equal @driver_seet, @car.active_record_driver_seet(true)
+      assert_equal @front_seets, @car.active_record_front_seets
+      assert_equal @back_seets, @car.active_record_back_seets
+
+      other_seets = [ActiveRecordSeet.create(:back => false), ActiveRecordSeet.create(:back => false)]
+      assert_equal @front_seets, ActiveRecordCar.find(@car.id).active_record_front_seets
+      ActiveRecordCar.find(@car.id).update_attribute(:active_record_front_seets, other_seets)
+      assert_equal other_seets, ActiveRecordCar.find(@car.id).active_record_front_seets
+
+      assert_equal @front_seets, @car.active_record_front_seets
+      assert_equal other_seets, @car.active_record_front_seets(true)
+    end
+  end
 
   context "A class with a has_many association to another class" do
     setup do
