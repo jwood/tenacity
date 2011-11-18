@@ -107,6 +107,9 @@ class SequelTest < Test::Unit::TestCase
     should "be able to successfully determine the id type" do
       assert_equal Integer, SequelObject._t_id_type
       assert_equal String, SequelObjectWithStringId._t_id_type
+
+      class SequelObjectWithNoTable < Sequel::Model; include Tenacity; end
+      assert_equal Integer, SequelObjectWithNoTable._t_id_type
     end
   end
 

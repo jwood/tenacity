@@ -49,7 +49,11 @@ module Tenacity
         include Tenacity::OrmExt::Helpers
 
         def _t_id_type
-          @_t_id_type_clazz ||= properties.find{ |x| x.key? }.primitive
+          @_t_id_type_clazz ||= begin
+                                  properties.find{ |x| x.key? }.primitive
+                                rescue
+                                  Integer
+                                end
         end
 
         def _t_find(id)

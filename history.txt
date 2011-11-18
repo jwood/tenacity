@@ -1,3 +1,10 @@
+== 0.5.3
+
+* Bug fixes
+
+  * Modified ORM extensions to use a default id type if the id type could not
+    be determined (was causing ActiveRecord migrations to fail)
+
 == 0.5.2
 
 * Bug fixes
