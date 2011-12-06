@@ -1,3 +1,11 @@
+== 0.5.4
+
+* Bug fixes
+
+  * Fixed a bug that was causing the associate objects in a _t_has_many association
+    to be wiped out when saving an object that had not yet loaded the
+    associated objects from the database.
+
 == 0.5.3
 
 * Bug fixes

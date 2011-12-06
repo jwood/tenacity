@@ -70,6 +70,9 @@ module Tenacity
       if value.nil? || force_reload
         value = create_proxy(yield, association)
         instance_variable_set _t_ivar_name(association), value
+
+        @_t_loaded_associations ||= {}
+        @_t_loaded_associations[association] = true
       end
       value
     end

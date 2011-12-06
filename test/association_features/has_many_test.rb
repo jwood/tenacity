@@ -152,6 +152,13 @@ class HasManyTest < Test::Unit::TestCase
       assert_set_equal ['ActiveRecordEngine', 'ActiveRecordEngine', 'ActiveRecordEngine'], components.map {|c| c.diagnosable_type}
     end
 
+    should "not lose the associated objects when the main object is updated" do
+      car = ActiveRecordCar.find(@car.id)
+      car.update_attributes(:prop => "abc123")
+      assert_equal @wheels, ActiveRecordCar.find(car.id).mongo_mapper_wheels
+      assert_equal "abc123", ActiveRecordCar.find(car.id).prop
+    end
+
     context "with an a active t_belongs_to association that is not auto destroyed" do
       setup do
         @car = ActiveRecordCar.create

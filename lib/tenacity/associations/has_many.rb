@@ -95,6 +95,7 @@ module Tenacity
         def _t_save_associates(record, association)
           return if record.perform_save_associates_callback == false
 
+          _t_ensure_associates_loaded(record, association)
           old_associates = get_current_associates(record, association)
 
           # Some ORM libraries (CouchRest, ActiveRecord, etc) return a proxy in
@@ -108,6 +109,13 @@ module Tenacity
           associates = (record.instance_variable_get(record._t_ivar_name(association))) || []
           establish_relationship_in_target_objects(record, association, associates)
           destroy_orphaned_associates(association, old_associates, associates)
+        end
+
+        def _t_ensure_associates_loaded(record, association)
+          loaded_associations = record.instance_variable_get('@_t_loaded_associations')
+          if loaded_associations.nil? || loaded_associations[association].nil?
+            record.send(association.name)
+          end
         end
 
         def _t_clear_old_associations(record, association, old_associates)
