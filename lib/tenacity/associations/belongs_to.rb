@@ -6,9 +6,9 @@ module Tenacity
         associate_id = self.send(association.foreign_key)
         if associate_id != nil && associate_id.to_s.strip != ''
           if association.dependent == :destroy
-            association.associate_class._t_delete(associate_id)
+            delete_or_destroy_belongs_to_associate(association, associate_id)
           elsif association.dependent == :delete
-            association.associate_class._t_delete(associate_id, false)
+            delete_or_destroy_belongs_to_associate(association, associate_id, false)
           end
         end
       end
@@ -25,6 +25,10 @@ module Tenacity
         self.send "#{association.foreign_key}=", _t_serialize(associate.id)
         self.send "#{association.polymorphic_type}=", associate.class.to_s if association.polymorphic?
         associate
+      end
+
+      def delete_or_destroy_belongs_to_associate(association, associate_id, run_callbacks=true)
+        association.associate_class._t_delete(associate_id, run_callbacks)
       end
 
       module ClassMethods #:nodoc:

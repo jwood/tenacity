@@ -55,7 +55,11 @@ module Tenacity
         attr_accessor :_t_belongs_to_associations
 
         def _t_id_type
-          @_t_id_type_clazz ||= Kernel.const_get(db_schema.values.find{ |x| x[:primary_key] == true }[:type].to_s.capitalize)
+          @_t_id_type_clazz ||= begin
+                                  Kernel.const_get(db_schema.values.find{ |x| x[:primary_key] == true }[:type].to_s.capitalize)
+                                rescue
+                                  Integer
+                                end
         end
 
         def _t_find(id)

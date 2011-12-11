@@ -106,6 +106,9 @@ class ActiveRecordTest < Test::Unit::TestCase
     should "be able to successfully determine the id type" do
       assert_equal Integer, ActiveRecordObject._t_id_type
       assert_equal String, ActiveRecordObjectWithStringId._t_id_type
+
+      class ActiveRecordObjectWithNoTable < ActiveRecord::Base; include Tenacity; end
+      assert_equal Integer, ActiveRecordObjectWithNoTable._t_id_type
     end
   end
 

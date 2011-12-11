@@ -6,17 +6,11 @@ module Tenacity
     end
 
     def _t_save_autosave_associations
-      associations = self.class._tenacity_associations
-      self.class._tenacity_associations.select { |a| a.autosave == true }.each do |association|
+      autosave_associations.each do |association|
         if association.type == :t_has_one || association.type == :t_belongs_to
-          associate = instance_variable_get(_t_ivar_name(association))
-          autosave_save_or_destroy(associate) unless associate.nil?
+          autosave_has_one_or_belongs_to(association)
         elsif association.type == :t_has_many
-          associates = instance_variable_get(_t_ivar_name(association))
-          unless associates.nil?
-            associates.each { |associate| autosave_save_or_destroy(associate) }
-            instance_variable_set(_t_ivar_name(association), associates.reject { |associate| associate.marked_for_destruction? })
-          end
+          autosave_has_many(association)
         end
       end
     end
@@ -33,6 +27,23 @@ module Tenacity
     end
 
     private
+
+    def autosave_associations
+      self.class._tenacity_associations.select { |a| a.autosave == true }
+    end
+
+    def autosave_has_one_or_belongs_to(association)
+      associate = instance_variable_get(_t_ivar_name(association))
+      autosave_save_or_destroy(associate) unless associate.nil?
+    end
+
+    def autosave_has_many(association)
+      associates = instance_variable_get(_t_ivar_name(association))
+      unless associates.nil?
+        associates.each { |associate| autosave_save_or_destroy(associate) }
+        instance_variable_set(_t_ivar_name(association), associates.reject { |associate| associate.marked_for_destruction? })
+      end
+    end
 
     def autosave_save_or_destroy(associate)
       associate.marked_for_destruction? ? autosave_destroy(associate) : associate._t_save_if_dirty
@@ -59,6 +70,9 @@ module Tenacity
       if value.nil? || force_reload
         value = create_proxy(yield, association)
         instance_variable_set _t_ivar_name(association), value
+
+        @_t_loaded_associations ||= {}
+        @_t_loaded_associations[association] = true
       end
       value
     end

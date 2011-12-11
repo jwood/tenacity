@@ -6,12 +6,11 @@ module Tenacity
         associate = has_one_associate(association)
         unless associate.nil?
           if association.dependent == :destroy
-            association.associate_class._t_delete(_t_serialize(associate.id))
+            delete_or_destroy_has_one_associate(association, associate)
           elsif association.dependent == :delete
-            association.associate_class._t_delete(_t_serialize(associate.id), false)
+            delete_or_destroy_has_one_associate(association, associate, false)
           elsif association.dependent == :nullify
-            associate.send "#{association.foreign_key(self.class)}=", nil
-            associate._t_save_if_dirty
+            nullify_foreign_key_for_has_one_associate(association, associate)
           elsif association.foreign_key_constraints_enabled?
             raise ObjectIdInUseError.new("Unable to delete #{self.class} with id of #{self.id} because its id is being referenced by an instance of #{associate.class}(id: #{associate.id})!")
           end
@@ -30,6 +29,15 @@ module Tenacity
         associate.send "#{association.polymorphic_type}=", self.class.to_s if association.polymorphic?
         associate._t_save_if_dirty unless association.autosave == false
         associate
+      end
+
+      def delete_or_destroy_has_one_associate(association, associate, run_callbacks=true)
+        association.associate_class._t_delete(_t_serialize(associate.id), run_callbacks)
+      end
+
+      def nullify_foreign_key_for_has_one_associate(association, associate)
+        associate.send "#{association.foreign_key(self.class)}=", nil
+        associate._t_save_if_dirty
       end
 
       module ClassMethods #:nodoc:

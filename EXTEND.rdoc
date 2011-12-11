@@ -1,7 +1,7 @@
 For Tenacity to interact with a database client, the client needs to be extended
 to support the methods listed below.  Beyond that, no additional configuration
-or code is necessary.  Tenacity communicates with the client using these methods
-only, so as long as they have been implemented and are available on the model
+or code is necessary.  Tenacity communicates with the client using only these
+methods, so as long as they have been implemented and are available on the model
 object, Tenacity will be able to manage the object's relationships.
 
 
@@ -16,7 +16,7 @@ lib/tenacity/association.rb.
 
   _t_id_type
 
-The type to use when storing instances of this class in a database.
+The type to use when storing ids from instances of this class in a database.
 Usually String or Integer.
 
   _t_find(id)

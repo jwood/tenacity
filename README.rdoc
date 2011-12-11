@@ -32,7 +32,7 @@ much the same way, supporting many of the same options.
     t_belongs_to :car
   end
 
-  class Dashboard < CouchRest::ExtendedDocument
+  class Dashboard < CouchRest::Model::Base
     include Tenacity
     use_database MY_COUCHDB_DATABASE
 
@@ -83,7 +83,7 @@ much the same way, supporting many of the same options.
 == Supported Database Clients
 
 * ActiveRecord
-* CouchRest (CouchModel and ExtendedDocument)
+* CouchRest (CouchRest::Model and ExtendedDocument)
 * DataMapper
 * MongoMapper
 * Mongoid
@@ -107,6 +107,7 @@ See EXTEND.rdoc for information on extending Tenacity to work with other databas
 * Start a feature/bugfix branch
 * Commit and push until you are happy with your contribution
 * Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
+* Run the tests in ruby 1.8.7 and 1.9.2 on the master and active_support_2_x branches
 * Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
 
 

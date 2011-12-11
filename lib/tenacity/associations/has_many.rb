@@ -10,14 +10,11 @@ module Tenacity
         associates = has_many_associates(association)
         unless associates.nil? || associates.empty?
           if association.dependent == :destroy
-            associates.each { |associate| association.associate_class._t_delete(_t_serialize(associate.id)) }
+            delete_or_destroy_has_many_associates(association, associates)
           elsif association.dependent == :delete_all
-            associates.each { |associate| association.associate_class._t_delete(_t_serialize(associate.id), false) }
+            delete_or_destroy_has_many_associates(association, associates, false)
           elsif association.dependent == :nullify
-            associates.each do |associate|
-              associate.send "#{association.foreign_key(self.class)}=", nil
-              associate._t_save_if_dirty
-            end
+            nullify_foreign_keys_for_has_many_associates(association, associates)
           elsif association.foreign_key_constraints_enabled?
             raise ObjectIdInUseError.new("Unable to delete #{self.class} with id of #{self.id} because its id is being referenced by instances of #{associates.first.class}(id: #{associates.map(&:id).join(',')})!")
           end
@@ -77,6 +74,17 @@ module Tenacity
         end
       end
 
+      def delete_or_destroy_has_many_associates(association, associates, run_callbacks=true)
+        associates.each { |associate| association.associate_class._t_delete(_t_serialize(associate.id), run_callbacks) }
+      end
+
+      def nullify_foreign_keys_for_has_many_associates(association, associates)
+        associates.each do |associate|
+          associate.send "#{association.foreign_key(self.class)}=", nil
+          associate._t_save_if_dirty
+        end
+      end
+
       module ClassMethods #:nodoc:
         def initialize_has_many_association(association)
           _t_initialize_has_many_association(association) if self.respond_to?(:_t_initialize_has_many_association)
@@ -86,6 +94,12 @@ module Tenacity
 
         def _t_save_associates(record, association)
           return if record.perform_save_associates_callback == false
+
+          loaded_associations = record.instance_variable_get('@_t_loaded_associations')
+          if record.instance_variable_get(record._t_ivar_name(association)).nil? &&
+              (loaded_associations.nil? || loaded_associations[association].nil?)
+            return
+          end
 
           old_associates = get_current_associates(record, association)
 
