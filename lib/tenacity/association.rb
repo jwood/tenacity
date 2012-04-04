@@ -133,11 +133,15 @@ module Tenacity
       path.inject(Object) { |ns,name| ns.const_get(name) }
     end
 
+    def unqualified_class_name(clazz)
+      clazz.to_s.split('::').last
+    end
+
     def belongs_to_foreign_key
       if polymorphic?
         (name.to_s + "_id").to_sym
       else
-        @class_name.underscore + "_id"
+        unqualified_class_name(@class_name).underscore + "_id"
       end
     end
 
@@ -146,7 +150,7 @@ module Tenacity
       if polymorphic?
         (@as.to_s + "_id").to_sym
       else
-        "#{ActiveSupport::Inflector.underscore(clazz)}_id"
+        "#{ActiveSupport::Inflector.underscore(unqualified_class_name(clazz))}_id"
       end
     end
   end
