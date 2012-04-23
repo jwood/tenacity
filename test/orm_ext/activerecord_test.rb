@@ -116,16 +116,18 @@ class ActiveRecordTest < Test::Unit::TestCase
       class ActiveRecordObjectWithNoTable < ActiveRecord::Base; include Tenacity; end
       assert_equal Integer, ActiveRecordObjectWithNoTable._t_id_type
     end
-    
-    should "successfully save if belongs_to another AR object which is assigned from a mongoid object" do
-      org = ActiveRecordOrganization.create
-      campus_hub = MongoidCampusHub.create
-      campus_hub.active_record_organization = org
-      campus_hub.save!
-      user = ActiveRecordUser.new
-      user.active_record_organization = campus_hub.active_record_organization
-      assert user.save
-      assert user.active_record_organization.save(:validate => false)
+
+    require_mongoid do
+      should "successfully save if belongs_to another AR object which is assigned from a mongoid object" do
+        org = ActiveRecordOrganization.create
+        campus_hub = MongoidCampusHub.create
+        campus_hub.active_record_organization = org
+        campus_hub.save!
+        user = ActiveRecordUser.new
+        user.active_record_organization = campus_hub.active_record_organization
+        assert user.save
+        assert user.active_record_organization.save(:validate => false)
+      end
     end
   end
 
