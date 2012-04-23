@@ -145,8 +145,8 @@ module Tenacity
           self
         end
 
-        def _t_save_if_dirty
-          save
+        def _t_save_if_dirty(*args)
+          save(*args)
         end
       end
 

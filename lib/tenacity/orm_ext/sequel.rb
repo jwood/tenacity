@@ -147,8 +147,8 @@ module Tenacity
           self
         end
 
-        def _t_save_if_dirty
-          !changed_columns.empty? ? save : false
+        def _t_save_if_dirty(*args)
+          !changed_columns.empty? ? save(*args) : true
         end
       end
 

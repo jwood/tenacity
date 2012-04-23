@@ -23,11 +23,11 @@ module Tenacity
       @target.inspect
     end
 
-    def save
+    def save(*args)
       if @association.readonly?
         raise ReadOnlyError
       else
-        @target._t_save_if_dirty
+        @target._t_save_if_dirty(*args)
       end
     end
 
