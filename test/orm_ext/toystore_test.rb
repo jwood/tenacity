@@ -108,7 +108,7 @@ require_toystore do
       
       should "not save the object if it is not dirty" do
         object = ToystoreObject.create
-        ToystoreObject.any_instance.stubs(:save).returns(false)
+        ToystoreObject.any_instance.stubs(:save).raises(RuntimeError.new("should not have called this"))
         assert object._t_save_if_dirty
       end
     end

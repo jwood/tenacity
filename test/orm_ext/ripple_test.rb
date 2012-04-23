@@ -146,7 +146,7 @@ if ENV['LONG'] == 'true'
         
         should "not save the object if it is not dirty" do
           object = RippleObject.create
-          RippleObject.any_instance.stubs(:save).returns(false)
+          RippleObject.any_instance.stubs(:save).raises(RuntimeError.new("should not have called this"))
           assert object._t_save_if_dirty
         end
       end

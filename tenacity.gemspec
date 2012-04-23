@@ -27,13 +27,14 @@ Gem::Specification.new do |s|
 
   # Relational DBs
   s.add_development_dependency "sqlite3-ruby", "1.3.1"
-  s.add_development_dependency "activerecord", "= 3.0.7"
+  s.add_development_dependency "activerecord", "3.0.7"
   s.add_development_dependency "datamapper", "1.0.2"
   s.add_development_dependency "dm-sqlite-adapter", "1.0.2"
   s.add_development_dependency "sequel", "3.19.0"
 
   # MongoDB
   s.add_development_dependency "mongo_mapper", "0.9.0"
+  s.add_development_dependency "mongo", "1.6.2"
   s.add_development_dependency "bson_ext", "1.6.2"
   s.add_development_dependency "mongoid", "2.0.0"
 
@@ -46,7 +47,7 @@ Gem::Specification.new do |s|
 
   # Multiple
   s.add_development_dependency "toystore", "0.8.0"
-  s.add_development_dependency "adapter-mongo", "0.5.2"
+  s.add_development_dependency "adapter-mongo", "0.5.4"
 
   s.files        = `git ls-files`.split("\n")
   s.executables  = `git ls-files`.split("\n").map{|f| f =~ /^bin\/(.*)/ ? $1 : nil}.compact

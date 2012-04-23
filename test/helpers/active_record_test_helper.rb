@@ -35,7 +35,6 @@ ActiveRecord::Schema.define :version => 0 do
   end
   
   create_table :active_record_organizations, :force => true do |t|
-    
   end
 
   create_table :active_record_has_one_targets, :force => true do |t|

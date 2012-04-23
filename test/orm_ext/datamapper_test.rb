@@ -96,7 +96,7 @@ class DataMapperTest < Test::Unit::TestCase
 
     should "not save the object if it is not dirty" do
       object = DataMapperObject.create
-      DataMapperObject.any_instance.stubs(:save).returns(false)
+      DataMapperObject.any_instance.stubs(:save).raises(RuntimeError.new("should not have called this"))
       assert object._t_save_if_dirty
     end
 

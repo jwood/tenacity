@@ -106,7 +106,7 @@ class MongoMapperTest < Test::Unit::TestCase
 
     should "not save the object if it is not dirty" do
       object = MongoMapperObject.create
-      MongoMapperObject.any_instance.stubs(:save).returns(false)
+      MongoMapperObject.any_instance.stubs(:save).raises(RuntimeError.new("should not have called this"))
       assert object._t_save_if_dirty
     end
   end
