@@ -1,3 +1,15 @@
+== 0.5.6
+
+* Bug fixes
+
+  * Fixed a few issues with regards to how ActiveRecord::Base.save behaves (raphaelcm)
+
+== 0.5.5
+
+* Bug fixes
+
+  * Modify association code to support qualified class names (Foo::Bar)
+
 == 0.5.4
 
 * Bug fixes

@@ -138,8 +138,8 @@ module Tenacity
           self.class._t_find(self.id)
         end
 
-        def _t_save_if_dirty
-          dirty? ? save : false
+        def _t_save_if_dirty(*args)
+          dirty? ? save(*args) : true
         end
 
         private

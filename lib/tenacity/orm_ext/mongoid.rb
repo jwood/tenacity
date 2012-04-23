@@ -113,8 +113,8 @@ module Tenacity
           self
         end
 
-        def _t_save_if_dirty
-          changed? ? save : false
+        def _t_save_if_dirty(*args)
+          changed? ? save(*args) : true
         end
       end
 
