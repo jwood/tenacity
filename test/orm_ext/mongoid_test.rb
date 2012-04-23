@@ -100,9 +100,15 @@ require_mongoid do
         assert object._t_save_if_dirty
       end
 
+      should "return true for save if valid object is not dirty" do
+        object = MongoidObject.create
+        assert object.save
+      end
+      
       should "not save the object if it is not dirty" do
         object = MongoidObject.create
-        assert !object._t_save_if_dirty
+        MongoidObject.any_instance.stubs(:save).returns(false)
+        assert object._t_save_if_dirty
       end
     end
 
