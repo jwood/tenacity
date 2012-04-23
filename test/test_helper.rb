@@ -35,7 +35,7 @@ def setup_fixtures
       filename =~ /.*\/(.*)\.rb/
       clazz = Kernel.const_get($1.camelcase)
       if clazz.respond_to?(:delete_all)
-        clazz.delete_all
+        clazz.delete_all rescue true
       elsif clazz.respond_to?(:db)
         clazz.db["delete from #{clazz.table_name}"].delete
       elsif clazz.respond_to?(:destroy!)

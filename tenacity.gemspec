@@ -34,7 +34,7 @@ Gem::Specification.new do |s|
 
   # MongoDB
   s.add_development_dependency "mongo_mapper", "0.9.0"
-  s.add_development_dependency "bson_ext", "1.3.1"
+  s.add_development_dependency "bson_ext", "1.6.2"
   s.add_development_dependency "mongoid", "2.0.0"
 
   # CouchDB
