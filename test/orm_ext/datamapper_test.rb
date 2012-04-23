@@ -89,9 +89,15 @@ class DataMapperTest < Test::Unit::TestCase
       assert object._t_save_if_dirty
     end
 
+    should "return true for save if valid object is not dirty" do
+      object = DataMapperObject.create
+      assert object.save
+    end
+
     should "not save the object if it is not dirty" do
       object = DataMapperObject.create
-      assert !object._t_save_if_dirty
+      DataMapperObject.any_instance.stubs(:save).returns(false)
+      assert object._t_save_if_dirty
     end
 
     should "be able to successfully determine the id type" do
