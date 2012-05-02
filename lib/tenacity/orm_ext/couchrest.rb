@@ -72,11 +72,11 @@ module Tenacity
           String
         end
 
-        def _t_find(id)
+        def _t_find(id, association = nil)
           (id.nil? || id.strip == "") ? nil : get(_t_serialize(id))
         end
 
-        def _t_find_bulk(ids)
+        def _t_find_bulk(ids, association = nil)
           return [] if ids.nil? || ids.empty?
           ids = [ids] unless ids.class == Array
 
@@ -88,15 +88,15 @@ module Tenacity
           docs.reject { |doc| doc.nil? }
         end
 
-        def _t_find_first_by_associate(property, id)
+        def _t_find_first_by_associate(property, id, association = nil)
           self.send("by_#{property}", :key => _t_serialize(id)).first
         end
 
-        def _t_find_all_by_associate(property, id)
+        def _t_find_all_by_associate(property, id, association = nil)
           self.send("by_#{property}", :key => _t_serialize(id))
         end
 
-        def _t_find_all_ids_by_associate(property, id)
+        def _t_find_all_ids_by_associate(property, id, association = nil)
           results = self.send("by_#{property}", :key => _t_serialize(id), :include_docs => false)
           results['rows'].map { |r| r['id'] }
         end

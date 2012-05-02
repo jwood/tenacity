@@ -56,24 +56,24 @@ module Tenacity
                                 end
         end
 
-        def _t_find(id)
+        def _t_find(id, association = nil)
           get(_t_serialize(id))
         end
 
-        def _t_find_bulk(ids)
+        def _t_find_bulk(ids, association = nil)
           return [] if ids.nil? || ids == []
           all(:id => _t_serialize_ids(ids))
         end
 
-        def _t_find_first_by_associate(property, id)
+        def _t_find_first_by_associate(property, id, association = nil)
           first(property => _t_serialize(id))
         end
 
-        def _t_find_all_by_associate(property, id)
+        def _t_find_all_by_associate(property, id, association = nil)
           all(property => _t_serialize(id))
         end
 
-        def _t_find_all_ids_by_associate(property, id)
+        def _t_find_all_ids_by_associate(property, id, association = nil)
           repository.adapter.select("SELECT id from #{storage_names[:default]} WHERE #{property} = #{_t_serialize_id_for_sql(id)}")
         end
 

@@ -93,4 +93,9 @@ ActiveRecord::Schema.define :version => 0 do
     t.string :toystore_has_many_target_testable_type
   end
 
+  create_table :active_record_seets, :force => true do |t|
+      t.boolean :back
+      t.boolean :is_driver
+      t.integer :car_id
+  end
 end

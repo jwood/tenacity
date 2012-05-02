@@ -53,23 +53,23 @@ module Tenacity
           String
         end
 
-        def _t_find(id)
+        def _t_find(id, association = nil)
           (id.nil? || id.to_s.strip == "") ? nil : get(_t_serialize(id))
         end
 
-        def _t_find_bulk(ids)
+        def _t_find_bulk(ids, association = nil)
           get_multi(_t_serialize_ids(ids)).compact
         end
 
-        def _t_find_first_by_associate(property, id)
+        def _t_find_first_by_associate(property, id, association = nil)
           send("first_by_#{property}", id)
         end
 
-        def _t_find_all_by_associate(property, id)
-          get_multi(_t_find_all_ids_by_associate(property, id))
+        def _t_find_all_by_associate(property, id, association = nil)
+          get_multi(_t_find_all_ids_by_associate(property, id, association))
         end
 
-        def _t_find_all_ids_by_associate(property, id)
+        def _t_find_all_ids_by_associate(property, id, association = nil)
           get_index(property.to_sym, id)
         end
 

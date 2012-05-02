@@ -49,28 +49,28 @@ module Tenacity
           String
         end
 
-        def _t_find(id)
+        def _t_find(id, association = nil)
           (id.nil? || id.to_s.strip == "") ? nil : find(_t_serialize(id))
         rescue ::Mongoid::Errors::DocumentNotFound
           nil
         end
 
-        def _t_find_bulk(ids)
+        def _t_find_bulk(ids, association = nil)
           docs = find(_t_serialize_ids(ids))
           docs.respond_to?(:each) ? docs : [docs]
         rescue ::Mongoid::Errors::DocumentNotFound
           []
         end
 
-        def _t_find_first_by_associate(property, id)
+        def _t_find_first_by_associate(property, id, association = nil)
           find(:first, :conditions => { property => _t_serialize(id) })
         end
 
-        def _t_find_all_by_associate(property, id)
+        def _t_find_all_by_associate(property, id, association = nil)
           find(:all, :conditions => { property => _t_serialize(id) })
         end
 
-        def _t_find_all_ids_by_associate(property, id)
+        def _t_find_all_ids_by_associate(property, id, association = nil)
           results = collection.find({property => _t_serialize(id)}, {:fields => 'id'}).to_a
           results.map { |r| r['_id'] }
         end
