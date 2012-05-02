@@ -1,3 +1,10 @@
+== 0.5.7
+
+* Misc
+
+  * Use ~> to specify the version of development dependencies to work around an issue with
+    rubygems on Heroku.
+
 == 0.5.6
 
 * Bug fixes
