@@ -397,11 +397,11 @@ module Tenacity
         end
       end
 
-      define_method("#{ActiveSupport::Inflector.singularize(association.name)}_ids") do
+      define_method("#{ActiveSupport::Inflector.singularize(association.name.to_s)}_ids") do
         has_many_associate_ids(association)
       end
 
-      define_method("#{ActiveSupport::Inflector.singularize(association.name)}_ids=") do |associate_ids|
+      define_method("#{ActiveSupport::Inflector.singularize(association.name.to_s)}_ids=") do |associate_ids|
         set_has_many_associate_ids(association, associate_ids)
       end
 
