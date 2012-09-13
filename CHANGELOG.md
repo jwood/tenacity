@@ -1,23 +1,27 @@
-== 0.5.7
+Version 0.5.7
+-------------
 
 * Misc
 
   * Use ~> to specify the version of development dependencies to work around an issue with
     rubygems on Heroku.
 
-== 0.5.6
+Version 0.5.6
+-------------
 
 * Bug fixes
 
   * Fixed a few issues with regards to how ActiveRecord::Base.save behaves (raphaelcm)
 
-== 0.5.5
+Version 0.5.5
+-------------
 
 * Bug fixes
 
   * Modify association code to support qualified class names (Foo::Bar)
 
-== 0.5.4
+Version 0.5.4
+-------------
 
 * Bug fixes
 
@@ -25,16 +29,19 @@
     to be wiped out when saving an object that had not yet loaded the
     associated objects from the database.
 
-== 0.5.3
+Version 0.5.3
+-------------
 
 * Bug fixes
 
   * Modified ORM extensions to use a default id type if the id type could not
     be determined (was causing ActiveRecord migrations to fail)
 
-== 0.5.2
+Version 0.5.2
+-------------
 
 * Bug fixes
+-------------
 
   * Changed relational DB clients to evaluate the schema to determine the type
     of the primary key, instead of just assuming it is an Integer
@@ -43,14 +50,16 @@
 
   * Performance optimizations
 
-== 0.5.1
+Version 0.5.1
+-------------
 
 * Bug fixes
 
   * Should not re-load the source of the association when source.target(true)
     is called.
 
-== 0.5.0
+Version 0.5.0
+-------------
 
 * Major enhancements
 
@@ -67,13 +76,15 @@
   * Fixed bug preventing an object including the Tenacity module from being saved
     successfully if it had no associations
 
-== 0.4.1
+Version 0.4.1
+-------------
 
 * Bug fixes
 
   * Fixed a couple of issues specific to Ruby 1.9
 
-== 0.4.0
+Version 0.4.0
+-------------
 
 * Major enhancements
 
@@ -90,7 +101,8 @@
   * Added support for the :autosave option to all associations
   * Added support for polymorphic associations to all associations
 
-== 0.3.0
+Version 0.3.0
+-------------
 
 * Major enhancements
 
@@ -111,7 +123,8 @@
   * Found and fixed many minor bugs thanks to a new test suite that tests all
     associations against all supported database clients.
 
-== 0.2.0
+Version 0.2.0
+-------------
 
 * Major enhancements
 
@@ -132,17 +145,18 @@
   * t_has_one association was being initialized on the wrong class in the association
   * Fixed bug that causing t_has_many associations not to work with SQLite
 
-== 0.1.1
+Version 0.1.1
+-------------
 
 * Bug fixes
 
   * Fixed issue that was causing a load error if mongo mapper was not installed
 
-== 0.1.0
+Version 0.1.0
+-------------
 
 * Major enhancements
 
   * Initial release
   * Support for has_one, belongs_to, and has_many associations
   * Support for ActiveRecord, CouchRest, and MongoMapper
-
