@@ -3,6 +3,7 @@
 .yardoc
 .rvmrc
 .bundle
+.idea/
 rdoc/
 doc/
 coverage/
