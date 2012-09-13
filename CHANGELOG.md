@@ -41,7 +41,6 @@ Version 0.5.2
 -------------
 
 * Bug fixes
--------------
 
   * Changed relational DB clients to evaluate the schema to determine the type
     of the primary key, instead of just assuming it is an Integer
