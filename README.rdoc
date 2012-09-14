@@ -127,5 +127,5 @@ See EXTEND.rdoc for information on extending Tenacity to work with other databas
 
 == Copyright
 
-Copyright (c) 2011 John Wood. See LICENSE.txt for further details.
+Copyright (c) 2012 John Wood. See LICENSE.txt for further details.
 

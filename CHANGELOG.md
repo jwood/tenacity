@@ -1,3 +1,10 @@
+Version 0.5.8
+-------------
+
+* Bug fixes
+
+  * ActiveSupport 3.2 compatibility fix.
+
 Version 0.5.7
 -------------
 
