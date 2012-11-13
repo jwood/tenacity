@@ -63,15 +63,15 @@ module Tenacity
         end
 
         def _t_find_first_by_associate(property, id)
-          find(:first, :conditions => { property => _t_serialize(id) })
+          first(:conditions => { property => _t_serialize(id) })
         end
 
         def _t_find_all_by_associate(property, id)
-          find(:all, :conditions => { property => _t_serialize(id) })
+          all(:conditions => { property => _t_serialize(id) })
         end
 
         def _t_find_all_ids_by_associate(property, id)
-          results = collection.find({property => _t_serialize(id)}, {:fields => 'id'}).to_a
+          results = collection.find(property => _t_serialize(id))
           results.map { |r| r['_id'] }
         end
 
