@@ -56,18 +56,19 @@ module Tenacity
         end
 
         def _t_find_bulk(ids)
-          docs = find(_t_serialize_ids(ids))
+          ids = [ids].flatten
+          docs = where(:_id.in => _t_serialize_ids(ids)).all
           docs.respond_to?(:each) ? docs : [docs]
         rescue ::Mongoid::Errors::DocumentNotFound
           []
         end
 
         def _t_find_first_by_associate(property, id)
-          first(:conditions => { property => _t_serialize(id) })
+          where(property => _t_serialize(id)).first
         end
 
         def _t_find_all_by_associate(property, id)
-          all(:conditions => { property => _t_serialize(id) })
+          where(property => _t_serialize(id)).all
         end
 
         def _t_find_all_ids_by_associate(property, id)

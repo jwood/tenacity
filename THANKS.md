@@ -7,6 +7,7 @@ suggesting improvements, or submitting changes.
 
  * [danielgranat](http://github.com/danielgranat)
  * [raphaelcm](http://github.com/raphaelcm)
+ * [artem-mindrov](https://github.com/artem-mindrov)
  
 Patches are welcome. The primary source for this software project is [on Github](http://github.com/jwood/tenacity)
 

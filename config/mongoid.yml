@@ -1,0 +1,9 @@
+test:
+  sessions:
+    default:
+      database: tenacity_test
+      hosts:
+        - localhost:27017
+      options:
+        safe: true
+

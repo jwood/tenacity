@@ -50,12 +50,12 @@ class CouchRestTest < Test::Unit::TestCase
     end
 
     should "be able to reload an object from the database" do
-      object = CouchRestObject.create({"abc" => "123"})
-      assert_equal "123", object["abc"]
-      object["abc"] = "456"
-      assert_equal "456", object["abc"]
+      object = CouchRestObject.create({"prop" => "123"})
+      assert_equal "123", object["prop"]
+      object["prop"] = "456"
+      assert_equal "456", object["prop"]
       object._t_reload
-      assert_equal "123", object["abc"]
+      assert_equal "123", object["prop"]
     end
 
     should "be able to get the ids of the objects associated with the given object" do

@@ -1,3 +1,13 @@
+Version 0.6.0
+-------------
+
+* Minor enhancements
+
+  * Added support for CouchRest 1.1
+  * Added support for Mongoid 3.x
+  * Modified Mongoid extension to work with the moped MongoDB driver (artem-mindrov)
+  * Modified MongoMapper extension to work with the moped MongoDB driver
+
 Version 0.5.8
 -------------
 

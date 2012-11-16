@@ -83,7 +83,7 @@ module Tenacity
           docs = []
           result = database.get_bulk(_t_serialize_ids(ids))
           result['rows'].each do |row|
-            docs << (row['doc'].nil? ? nil : create_from_database(row['doc']))
+            docs << (row['doc'].nil? ? nil : new(row['doc'], :directly_set_attributes => true))
           end
           docs.reject { |doc| doc.nil? }
         end
