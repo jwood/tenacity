@@ -111,6 +111,7 @@ module Tenacity
         end
 
         def _t_initialize_has_many_association(association)
+          property :_tenacity_ddt unless self.respond_to?(:_tenacity_ddt)
           after_save { |record| record.class._t_save_associates(record, association) }
           before_destroy { |record| record._t_cleanup_has_many_association(association) }
         end
@@ -136,6 +137,10 @@ module Tenacity
       end
 
       module InstanceMethods #:nodoc:
+        def _t_mark_dirty
+          send :_tenacity_ddt_will_change!
+        end
+
         def _t_reload
           unless self.id.nil?
             new_doc = database.get(self.id)

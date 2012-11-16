@@ -130,8 +130,19 @@ def foreign_key_id_for(extension, type)
 end
 
 def assert_set_equal(expecteds, actuals, message = nil)
+  expecteds = expecteds.map { |x| to_comparison_format(x) } if expecteds
+  actuals = actuals.map { |x| to_comparison_format(x) } if actuals
+
   assert ((expecteds && Set.new(expecteds)) == (actuals && Set.new(actuals))) || (expecteds == actuals),
     "#{expecteds.inspect} expected but was #{actuals.inspect}"
+end
+
+def to_comparison_format(object)
+  if object.is_a?(CouchRest::Model::Base)
+    object.to_hash.reject { |k,v| v.nil? }
+  else
+    object
+  end
 end
 
 def serialize_id(object)

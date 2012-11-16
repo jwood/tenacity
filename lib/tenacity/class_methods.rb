@@ -392,6 +392,7 @@ module Tenacity
       end
 
       define_method("#{association.name}=") do |associates|
+        _t_mark_dirty if respond_to?(:_t_mark_dirty)
         set_associate(association, associates) do
           set_has_many_associates(association, associates)
         end
@@ -402,6 +403,7 @@ module Tenacity
       end
 
       define_method("#{ActiveSupport::Inflector.singularize(association.name.to_s)}_ids=") do |associate_ids|
+        _t_mark_dirty if respond_to?(:_t_mark_dirty)
         set_has_many_associate_ids(association, associate_ids)
       end
 
