@@ -139,6 +139,8 @@ module Tenacity
       module InstanceMethods #:nodoc:
         def _t_mark_dirty
           send :_tenacity_ddt_will_change!
+        rescue NoMethodError
+          # No dirty tracking support for this version of CouchRest
         end
 
         def _t_reload
