@@ -14,7 +14,7 @@ end
 require 'rake'
 require 'rake/testtask'
 require 'rcov/rcovtask'
-require 'rake/rdoctask'
+require 'rdoc/task'
 require 'yard'
 
 task :default => :test
