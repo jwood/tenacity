@@ -57,7 +57,7 @@ module Tenacity
         end
 
         def _t_find(id)
-          find_by_id(_t_serialize(id))
+          find(_t_serialize(id))
         end
 
         def _t_find_bulk(ids)
