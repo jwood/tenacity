@@ -1,5 +1,13 @@
 = Tenacity
 
+== Tenacity inactive
+
+Please be aware that tenacity is an inactive project. I am not actively working on it,
+nor am I accepting pull requests at the moment. If you are interested in taking over
+the project, please let me know.
+
+== Description
+
 A database client independent way of managing relationships between models
 backed by different databases.
 
@@ -14,7 +22,6 @@ of managing relationships between models backed by different databases.
 
 Tenacity is heavily based on ActiveRecord's associations, and aims to behave in
 much the same way, supporting many of the same options.
-
 
 == Example
 
